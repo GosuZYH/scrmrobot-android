@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <Button
         android:id="@+id/button_callwework"
         android:layout_width="149dp"
         android:layout_height="65dp"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="100dp"
-        android:text="@string/callWeWorkApp"
+        android:layout_marginStart="100dp"
+        android:onClick="btnOpenWeWorkClick"
+        android:text="@string/callWeWorkBtnTxt"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/button_setting"
+        android:id="@+id/button_as_setting"
         android:layout_width="146dp"
         android:layout_height="58dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="100dp"
-        android:text="辅助设置"
+        android:layout_marginStart="100dp"
+        android:text="@string/accessSettingBtnTxt"
+        android:onClick="btnAccessSettingClick"
         android:visibility="visible"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_startScheduler"
+        android:layout_width="149dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="200dp"
+        android:onClick="btnScheduleJobClick"
+        android:text="@string/startSchedulerBtnText"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_cancelScheduler"
+        android:layout_width="149dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="270dp"
+        android:layout_marginStart="100dp"
+        android:text="@string/cancelSchedulerBtnText"
+        android:onClick="btnCancelScheduleJobClick"
+        tools:ignore="MissingConstraints" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

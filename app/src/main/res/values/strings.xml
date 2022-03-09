@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">SCRMRobot</string>
-    <string name="callWeWorkApp">打开企微微信</string>
+    <string name="callWeWorkBtnTxt">启动企微</string>
+    <string name="accessSettingBtnTxt">辅助设置</string>
+
+    <string name="startSchedulerBtnText">启动定时任务</string>
+    <string name="cancelSchedulerBtnText">停止定时任务</string>
 </resources>
