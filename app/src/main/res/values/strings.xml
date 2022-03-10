@@ -5,4 +5,20 @@
 
     <string name="startSchedulerBtnText">启动定时任务</string>
     <string name="cancelSchedulerBtnText">停止定时任务</string>
+
+    <!-- Text view -->
+    <string name="appTitle">SMR任务执行器</string>
+    <string name="AwakeWechat">唤起企业微信:</string>
+    <string name="taskSop">执行SOP朋友圈任务:</string>
+    <string name="taskGroupSend">执行1V1群发任务:</string>
+    <string name="taskCustomerCircle">执行客户朋友圈任务:</string>
+    <string name="alltask">执行所有任务:</string>
+    <string name="checkService">检查辅助功能开启状态:</string>
+    <string name="checkPermission">检查悬浮窗功能权限:</string>
+    <!-- Button view -->
+    <string name="wework">点击打开</string>
+    <string name="Do">点击执行</string>
+    <string name="taskAll">一键执行</string>
+    <string name="accessibility">点击设置</string>
+    <string name="ball">点击设置</string>
 </resources>
