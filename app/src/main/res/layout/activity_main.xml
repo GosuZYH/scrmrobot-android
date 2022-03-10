@@ -9,16 +9,6 @@
 
 
     <Button
-        android:id="@+id/button_callwework"
-        android:layout_width="149dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginStart="100dp"
-        android:onClick="btnOpenWeWorkClick"
-        android:text="@string/callWeWorkBtnTxt"
-        tools:ignore="MissingConstraints" />
-
-    <Button
         android:id="@+id/button_as_setting"
         android:layout_width="146dp"
         android:layout_height="58dp"

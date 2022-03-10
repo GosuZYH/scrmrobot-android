@@ -3,8 +3,13 @@
     package="com.scrm.robot">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -50,6 +55,14 @@
                 <action android:name="com.scrm.robot.receiver.jobScheduleMsgReceiver"/>
             </intent-filter>
         </receiver>
+
+
+        <service
+            android:name=".ScreenShotService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection"
+
+            android:exported="true" />
     </application>
 
 </manifest>

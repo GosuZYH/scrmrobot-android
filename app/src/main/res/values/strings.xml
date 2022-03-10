@@ -5,4 +5,6 @@
 
     <string name="startSchedulerBtnText">启动定时任务</string>
     <string name="cancelSchedulerBtnText">停止定时任务</string>
+    <string name="floatHandlerBtnTxt">启动</string>
+
 </resources>

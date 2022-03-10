@@ -14,4 +14,6 @@ public class Constants {
     public final static String MSG_SCHEDULER_JOB_STATE_KEY ="robotSchedulerJobState";
 
     public final static String JOB_SCHEDULER_MSG_RECEIVER = "com.scrm.robot.receiver.jobScheduleMsgReceiver";
+
+    public final static  int REQUEST_MEDIA_PROJECTION=100;
 }

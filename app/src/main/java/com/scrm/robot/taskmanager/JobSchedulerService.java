@@ -25,7 +25,7 @@ import java.util.Date;
 @SuppressLint("SpecifyJobSchedulerIdRange")
 public class JobSchedulerService extends JobService {
     private final static String TAG = JobSchedulerService.class.getName();
-    private Messenger mMessenger;
+//    private Messenger mMessenger;
 
     private LocalBroadcastManager localBroadcastManager;
     private static JobSchedulerMessageReceiver receiver;
@@ -48,7 +48,7 @@ public class JobSchedulerService extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        mMessenger = intent.getParcelableExtra(Constants.MESSENGER_INTENT_KEY);
+//        mMessenger = intent.getParcelableExtra(Constants.MESSENGER_INTENT_KEY);
         return START_NOT_STICKY;
     }
 
@@ -87,27 +87,27 @@ public class JobSchedulerService extends JobService {
         return false;
     }
 
-    /**
-     * 服务端给客户端发消息
-     * @param schedulerJobState
-     * @param jobParameters
-     */
-    private void sendMessage(RobotSchedulerJobState schedulerJobState,
-                             JobParameters jobParameters){
-        if(this.mMessenger ==null){
-            return;
-        }
-        Message message= Message.obtain();
-        message.what=schedulerJobState.value;
-        message.obj =jobParameters;
-        try {
-            mMessenger.send(message);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
+//    /**
+//     * 服务端给客户端发消息
+//     * @param schedulerJobState
+//     * @param jobParameters
+//     */
+//    private void sendMessage(RobotSchedulerJobState schedulerJobState,
+//                             JobParameters jobParameters){
+//        if(this.mMessenger ==null){
+//            return;
+//        }
+//        Message message= Message.obtain();
+//        message.what=schedulerJobState.value;
+//        message.obj =jobParameters;
+//        try {
+//            mMessenger.send(message);
+//        } catch (RemoteException e) {
+//            Log.e(TAG, e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     /**
      * 服务端给客户端广播消息

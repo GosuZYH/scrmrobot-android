@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityNodeFinder;
@@ -43,6 +44,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if (rootNodeInfo == null) {
             return;
         }
+        JobStateViewModel.isScreenShot.postValue(true);
+
+
         // 搜索按钮
         AccessibilityNodeInfo searchBtn = AccessibilityNodeFinder.findNodeByViewId(rootNodeInfo, "com.tencent.wework:id/kci");
         if (searchBtn != null) {
