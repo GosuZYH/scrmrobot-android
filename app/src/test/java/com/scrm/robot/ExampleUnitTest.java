@@ -12,6 +12,10 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        String str1 = "余庆测试标签";
+        String str2 = "余庆测试标签";
+        Boolean result = str1.contains(str2);
+        assertEquals(true, result);
+
     }
 }

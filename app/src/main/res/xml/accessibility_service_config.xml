@@ -2,7 +2,7 @@
     android:description="@string/app_name"
     android:packageNames="com.tencent.wework"
     android:accessibilityEventTypes="typeAllMask"
-    android:accessibilityFlags="flagDefault"
+    android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows|flagIncludeNotImportantViews"
     android:accessibilityFeedbackType="feedbackSpoken"
     android:canRetrieveWindowContent="true"
     android:canPerformGestures="true"

@@ -1,18 +1,17 @@
 package com.scrm.robot.taskmanager.job;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
-import com.scrm.robot.utils.AccessibilityNodeFinder;
 import com.scrm.robot.utils.ApplicationUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,15 +19,15 @@ import java.util.List;
 public class SopAgentSendMomentJob extends BaseRobotJob {
     private final static String TAG = SopAgentSendMomentJob.class.getName();
     public static String taskStatus = "START_SOP";
-    public static String targetTag = "转发文章";
-    public static List tagList;
-    public static List tempList;
-    public static int tempTagTimes = 0;
+    public static String targetTag = "获取失败";
+    public static Boolean tagFindFlag = true;
     public AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
 
     public SopAgentSendMomentJob(){
         super();
+        RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
+
     }
 
     @Override
@@ -50,12 +49,19 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
             return;
         }
+
+
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
+        this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         if (robotAccessibilityContext == null) {
             return;
+        }else {
+            if(robotAccessibilityContext.getCurrentEvent().getEventType()== AccessibilityEvent.TYPE_VIEW_SCROLLED){
+                tagFindFlag = true;
+            }
         }
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
@@ -201,20 +207,19 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
         if(targetUis.size()>0){
             Collections.reverse(targetUis);
-            performClick(targetUis.get(0));
-            sysSleep(7000);
-            this.accessibilityGestureUtil.click(360, 1550);
-            taskStatus = "READY_TO_SHARE";
-//            for(AccessibilityNodeInfo targetUi:targetUis){
-//                if(targetUi.getChildCount()>3){
-//                    System.out.println("点击进入一条SOP");
-//                    performClick(targetUi);
-//                    sysSleep(7000);
-//                    this.accessibilityGestureUtil.click(360, 1550);
-//                    taskStatus = "READY_TO_SHARE";
-//                    return;
-//                }
-//            }
+            for(AccessibilityNodeInfo targetUi:targetUis){
+                if(targetUi.getChildCount()>3){
+                    String tagText = targetUi.getChild(1).getText().toString();
+                    List<String> list = Arrays.asList(tagText.split("："));
+                    targetTag = list.get(list.size()-1);
+                    System.out.println("点击进入一条SOP,标签为:"+targetTag);
+                    performClick(targetUi);
+                    sysSleep(7000);
+                    this.accessibilityGestureUtil.click(360, 1550);
+                    taskStatus = "READY_TO_SHARE";
+                    return;
+                }
+            }
         }
     }
 
@@ -248,10 +253,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void clickToShare(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->sop朋友圈消息->点击一键分享到朋友圈
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText("一键分享朋友圈");
-        if(targetUis.size()>0){
-            System.out.println("分享朋友圈ui数量-"+targetUis.size());
-        }
+
     }
 
     private void chooseVisibleCustomer(AccessibilityNodeInfo rootNodeInfo){
@@ -287,6 +289,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> tagName = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PERSONAL_TAG);
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
 //        System.out.println("标签组ui数量："+tagGroup.size());
+        if (!tagFindFlag){
+            return;
+        }
         try {
             if(tagName.size()>0){
                 for(int i=0;i<tagName.size();i++){
@@ -295,6 +300,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         System.out.println("标签内容："+tag);
                         if(tag.equals(targetTag)){
                             performClick(tagName.get(i).getChild(k));
+                            taskStatus = "TAG_FOUND";
+                            return;
                         }
                     }
                 }
@@ -304,6 +311,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         }catch (Exception e){
             Log.d(TAG,"选标签时出了点小错误："+e);
         }
+        //没找到
+        tagFindFlag = false;
     }
 
     private void confirmTag(AccessibilityNodeInfo rootNodeInfo){

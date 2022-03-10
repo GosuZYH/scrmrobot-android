@@ -4,13 +4,7 @@ package com.scrm.robot;
 import static com.scrm.robot.Constants.WEWORK_PACKAGE_NAME;
 
 import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.GestureDescription;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.media.AudioManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -20,8 +14,6 @@ import androidx.annotation.RequiresApi;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
-
-import java.util.List;
 
 public class WeWorkAccessibilityService extends AccessibilityService {
 
@@ -43,6 +35,7 @@ public class WeWorkAccessibilityService extends AccessibilityService {
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
             robotAccessibilityContext.setCurrentEvent(event);
             robotAccessibilityContext.setRootNodeInfo(rootInfo);
+            this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
 
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
             application.setRobotAccessibilityContext(robotAccessibilityContext);
