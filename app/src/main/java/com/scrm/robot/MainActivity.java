@@ -92,10 +92,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "执行1V1私聊群发");
         try {
             Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
+            if (this.jobScheduler == null) {
+                return;
+            }
+            this.jobScheduler.start();
+            this.jobScheduler.addJob(RobotJobType.GROUP_SEND_MOMENT);
+            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
-        openWework();
     }
 
     public void customerFriendCircleTask(View view){

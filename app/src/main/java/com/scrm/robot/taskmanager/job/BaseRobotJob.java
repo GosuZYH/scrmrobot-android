@@ -14,6 +14,10 @@ public abstract class BaseRobotJob implements IRobotJob{
         this.jobId =  IdUtil.generateTimeId("Job-" );
     }
     private String jobId;
+
+
+
+    public String taskStatus = "";
     private JobParameters jobParameters;
     private RobotRunState jobState=RobotRunState.STOPPED;
     private Date startTime=null;
@@ -74,5 +78,13 @@ public abstract class BaseRobotJob implements IRobotJob{
 
     public void setStopTime(Date stopTime) {
         this.stopTime = stopTime;
+
+    }
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
     }
 }

@@ -5,21 +5,23 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.util.Date;
+import java.util.List;
 
 public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
-    private static String taskStatus = "TASK_START";
     public AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
 
     public GroupSendMomentJob(){
         super();
+        this.setTaskStatus("TASK_START");
         RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
     }
 
@@ -56,7 +58,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     }
 
     public void groupSendTask(AccessibilityNodeInfo rootNodeInfo){
-        switch (taskStatus) {
+        switch (this.getTaskStatus()) {
             case "TASK_START":
                 findGroupSendHelper(rootNodeInfo);
                 break;
@@ -64,6 +66,23 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     }
 
     private void findGroupSendHelper(AccessibilityNodeInfo rootNodeInfo){
+        //寻找->尝试点击搜索
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH);
+//        System.out.println("找到'搜索'ui数量"+targetUis.size());
+        if(targetUis.size() > 0){
+            System.out.println("点击搜索");
+            performClick(targetUis.get(0));
+            if(!JobStateViewModel.isScreenShot.getValue()){
+                JobStateViewModel.isScreenShot.postValue(true); }
+        }
+    }
 
+    private void performClick(AccessibilityNodeInfo targetInfo) {
+        //ui动作:点击
+        try {
+            targetInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }catch (Exception e){
+            System.out.println("点击失败");
+        }
     }
 }

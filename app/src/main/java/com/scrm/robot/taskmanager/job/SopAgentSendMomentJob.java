@@ -19,7 +19,6 @@ import java.util.List;
 
 public class SopAgentSendMomentJob extends BaseRobotJob {
     private final static String TAG = SopAgentSendMomentJob.class.getName();
-    private static String taskStatus = "START_SOP";
     private static String targetTag = "获取失败";
     private static Boolean tagFindFlag = true;
     private static Boolean selectAllCustomerFlag = false;
@@ -29,8 +28,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public SopAgentSendMomentJob(){
         super();
+        this.setTaskStatus("START_SOP");
         RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
-
     }
 
     @Override
@@ -67,9 +66,12 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     }
 
     public void SopFriendCircle(AccessibilityNodeInfo rootNodeInfo) {
-        switch (taskStatus) {
+        switch (this.getTaskStatus()) {
             case "START_SOP":
                 sopTaskStart(rootNodeInfo);
+                break;
+            case "SCREENSHOT_CV":
+                openCv(rootNodeInfo);
                 break;
             case "READY_TO_SHARE":
                 shareTask(rootNodeInfo);
@@ -110,9 +112,22 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         sopClickIn(rootNodeInfo);         //sop任务页
     }
 
+    private void openCv(AccessibilityNodeInfo rootNodeInfo) {
+        //点击之后的截图识别 ——> JobSchedulerMessageReceiver
+
+        //加载成功且未回执的流程
+        this.accessibilityGestureUtil.click(360, 1550);
+        this.setTaskStatus("READY_TO_SHARE");
+
+        //加载成功但已回执的流程
+//        this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
+
+        //加载失败的流程
+//        backToSopList(rootNodeInfo);
+    }
+
     private void shareTask(AccessibilityNodeInfo rootNodeInfo) {
         //分享之后的流程
-//        clickToShare(rootNodeInfo);       //分享
         chooseVisibleCustomer(rootNodeInfo);      //选择可见的客户
         choosePartialCustomer(rootNodeInfo);      //部分客户
         tagFilter(rootNodeInfo);      //根据标签筛选
@@ -134,7 +149,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         System.out.println("标签内容："+tag);
                         if(tag.equals(targetTag)){
                             performClick(tagName.get(i).getChild(k));
-                            taskStatus = "TAG_FOUND";
+                            this.setTaskStatus("TAG_FOUND");
                             System.out.println("标签已找到");
                             return;
                         }
@@ -245,8 +260,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                     System.out.println("点击进入一条SOP,标签为:"+targetTag);
                     performClick(targetUi);
                     sysSleep(5000);
-                    this.accessibilityGestureUtil.click(360, 1550);
-                    taskStatus = "READY_TO_SHARE";
+                    // 截图
+                    if(!JobStateViewModel.isScreenShot.getValue()){
+                        JobStateViewModel.isScreenShot.postValue(true); }
+                    this.setTaskStatus("SCREENSHOT_CV");
                     return;
                 }
             }
@@ -265,7 +282,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                     performLongClick(targetUis.get(0));
                     if(deleteUis.size()>0){
                         performClick(deleteUis.get(0).getParent());
-                        taskStatus = "DELETE_CONFIRM";
+                        this.setTaskStatus("DELETE_CONFIRM");
                     }
                 }
             }
@@ -277,13 +294,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_3);
         if(confirmUis.size()>0){
             performClick(confirmUis.get(0));
-            taskStatus = "START_SOP";
+            this.setTaskStatus("START_SOP");
         }
-    }
-
-    private void clickToShare(AccessibilityNodeInfo rootNodeInfo) {
-        //寻找->sop朋友圈消息->点击一键分享到朋友圈
-
     }
 
     private void chooseVisibleCustomer(AccessibilityNodeInfo rootNodeInfo){
@@ -311,7 +323,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(targetUis.size()>0){
             System.out.println("点击部分可见");
             performClick(targetUis.get(0).getParent().getParent());
-            taskStatus = "CHOOSE_TAG";
+            this.setTaskStatus("CHOOSE_TAG");
         }
     }
 
@@ -337,12 +349,12 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(allCustomer.size()>0 && confirm.size()>0){
             System.out.println("点击'全部客户'");
             performClick(allCustomer.get(0).getParent().getParent().getParent().getParent().getParent().getParent());
-            taskStatus = "CONFIRM_CUSTOMER";
+            this.setTaskStatus("CONFIRM_CUSTOMER");
         }else {
             canNotSelectAllCustomerTimes ++;
             if (canNotSelectAllCustomerTimes >3){
                 Log.d(TAG,"找不到标签对应的客户");
-                taskStatus = "REPLY_SOP";
+                this.setTaskStatus("REPLY_SOP");
             }
         }
     }
@@ -356,7 +368,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 System.out.println("点击'确定'");
                 performClick(confirmUis.get(0));
             }else {
-                taskStatus = "TAG_FOUND";
+                this.setTaskStatus("TAG_FOUND");
             }
         }
     }
@@ -387,15 +399,11 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(pyqUis.size()>0 && backUis.size()>0){
             System.out.println("点击'返回'");
             performClick(backUis.get(0));
-            taskStatus = "REPLY_SOP";
+            this.setTaskStatus("REPLY_SOP");
         }
     }
 
     private void sopReplied(AccessibilityNodeInfo rootNodeInfo){
-        // 截图
-        if(JobStateViewModel.isScreenShot.getValue()==false){
-            JobStateViewModel.isScreenShot.postValue(true);
-        }
         //点击回执
         List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
@@ -405,7 +413,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             sysSleep(600);
             this.accessibilityGestureUtil.click(620, 1350);
             sysSleep(1000);
-            taskStatus = "BACK_TO_SOP_LIST_AND_DELETE";
+            this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
         }else{
             System.out.println("点击'返回'");
             if(backUis.size()>0){
@@ -441,6 +449,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+            setTaskStatus("START_SOP");
         }else {
             if(backUis.size()>0){
                 performClick(backUis.get(0));
@@ -457,7 +466,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
-            taskStatus = "SOP_DELETE";
+            this.setTaskStatus("SOP_DELETE");
         }else {
             if(backUis.size()>0){
                 performClick(backUis.get(0));

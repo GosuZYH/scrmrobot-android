@@ -9,6 +9,7 @@ import com.scrm.robot.Constants;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
 import com.scrm.robot.taskmanager.enums.RobotSchedulerJobState;
+import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
 public class JobSchedulerMessageReceiver extends BroadcastReceiver {
@@ -37,6 +38,16 @@ public class JobSchedulerMessageReceiver extends BroadcastReceiver {
             JobStateViewModel.isScreenShot.postValue(false);
             // TODO 继续处理
             robotApplication.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().process();
+        }
+    }
+
+    private void sysSleep(int msecond) {
+        //睡眠 param:seconds
+        try {
+            System.out.println("睡眠"+msecond+"毫秒");
+            Thread.sleep(msecond);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
