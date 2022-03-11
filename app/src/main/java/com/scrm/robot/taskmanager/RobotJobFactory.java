@@ -10,6 +10,7 @@ import com.scrm.robot.MainActivity;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
+import com.scrm.robot.taskmanager.job.GroupSendMomentJob;
 import com.scrm.robot.taskmanager.job.SopAgentSendMomentJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -51,6 +52,9 @@ public class RobotJobFactory {
     public BaseRobotJob buildRobotJob(RobotJobType robotJobType){
         if(robotJobType==RobotJobType.SOP_AGENT_SEND_MOMENT){
             return new SopAgentSendMomentJob();
+        }
+        if(robotJobType==RobotJobType.GROUP_SEND_MOMENT){
+            return new GroupSendMomentJob();
         }
         return null;
     }
