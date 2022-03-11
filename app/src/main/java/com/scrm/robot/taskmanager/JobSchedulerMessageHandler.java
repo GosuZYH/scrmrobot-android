@@ -16,7 +16,7 @@ import com.scrm.robot.taskmanager.enums.RobotSchedulerJobState;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.lang.ref.WeakReference;
-
+@Deprecated
 public class JobSchedulerMessageHandler extends Handler {
     private final static String TAG = JobSchedulerMessageHandler.class.getName();
     private WeakReference<MainActivity> mActivity;

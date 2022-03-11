@@ -21,4 +21,6 @@
     <string name="taskAll">一键执行</string>
     <string name="accessibility">点击设置</string>
     <string name="ball">点击设置</string>
+    <string name="floatHandlerBtnTxt">启动</string>
+
 </resources>

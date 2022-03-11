@@ -6,6 +6,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
@@ -397,6 +398,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     }
 
     private void sopReplied(AccessibilityNodeInfo rootNodeInfo){
+        // 截图
+        if(JobStateViewModel.isScreenShot.getValue()==false){
+            JobStateViewModel.isScreenShot.postValue(true);
+        }
         //点击回执
         List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);

@@ -31,6 +31,9 @@ public class RobotJobScheduler {
 
     public void stop(){
         this.runState = RobotRunState.STOPPED;
+        if(this.robotJobExecutor.getCurrentJob() != null){
+            this.robotJobExecutor.getCurrentJob().stop();
+        }
     }
 
     public JobScheduler getJobScheduler() {
@@ -50,7 +53,9 @@ public class RobotJobScheduler {
     }
 
     public void genNextJob(){
-        this.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
+        if(this.runState==RobotRunState.STARTED) {
+            this.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
+        }
     }
 
     /**

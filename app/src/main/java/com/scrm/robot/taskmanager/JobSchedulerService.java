@@ -6,18 +6,14 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.scrm.robot.Constants;
 import com.scrm.robot.RobotApplication;
-import com.scrm.robot.taskmanager.enums.RobotRunState;
+import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
 import com.scrm.robot.taskmanager.enums.RobotSchedulerJobState;
-import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.util.Date;
@@ -25,10 +21,10 @@ import java.util.Date;
 @SuppressLint("SpecifyJobSchedulerIdRange")
 public class JobSchedulerService extends JobService {
     private final static String TAG = JobSchedulerService.class.getName();
-    private Messenger mMessenger;
-
-    private LocalBroadcastManager localBroadcastManager;
-    private static JobSchedulerMessageReceiver receiver;
+//    private Messenger mMessenger;
+//
+//    private LocalBroadcastManager localBroadcastManager;
+//    private static JobSchedulerMessageReceiver receiver;
 
     public JobSchedulerService(){
         super();
@@ -37,18 +33,18 @@ public class JobSchedulerService extends JobService {
     @Override
     public void onCreate(){
         super.onCreate();
-        this.localBroadcastManager= LocalBroadcastManager.getInstance(this);
-        if(receiver==null) {
-           receiver = new JobSchedulerMessageReceiver();
-           this.localBroadcastManager.registerReceiver(receiver, new IntentFilter(Constants.JOB_SCHEDULER_MSG_RECEIVER));
-        }
+//        this.localBroadcastManager= LocalBroadcastManager.getInstance(this);
+//        if(receiver==null) {
+//           receiver = new JobSchedulerMessageReceiver();
+//           this.localBroadcastManager.registerReceiver(receiver, new IntentFilter(Constants.JOB_SCHEDULER_MSG_RECEIVER));
+//        }
         RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
         robotApplication.getRobotJobScheduler().setJobSchedulerService(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        mMessenger = intent.getParcelableExtra(Constants.MESSENGER_INTENT_KEY);
+//        mMessenger = intent.getParcelableExtra(Constants.MESSENGER_INTENT_KEY);
         return START_NOT_STICKY;
     }
 
@@ -87,27 +83,27 @@ public class JobSchedulerService extends JobService {
         return false;
     }
 
-    /**
-     * 服务端给客户端发消息
-     * @param schedulerJobState
-     * @param jobParameters
-     */
-    private void sendMessage(RobotSchedulerJobState schedulerJobState,
-                             JobParameters jobParameters){
-        if(this.mMessenger ==null){
-            return;
-        }
-        Message message= Message.obtain();
-        message.what=schedulerJobState.value;
-        message.obj =jobParameters;
-        try {
-            mMessenger.send(message);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-    }
+//    /**
+//     * 服务端给客户端发消息
+//     * @param schedulerJobState
+//     * @param jobParameters
+//     */
+//    private void sendMessage(RobotSchedulerJobState schedulerJobState,
+//                             JobParameters jobParameters){
+//        if(this.mMessenger ==null){
+//            return;
+//        }
+//        Message message= Message.obtain();
+//        message.what=schedulerJobState.value;
+//        message.obj =jobParameters;
+//        try {
+//            mMessenger.send(message);
+//        } catch (RemoteException e) {
+//            Log.e(TAG, e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     /**
      * 服务端给客户端广播消息
@@ -118,8 +114,10 @@ public class JobSchedulerService extends JobService {
                              JobParameters jobParameters){
 
         Intent intent=new Intent(Constants.JOB_SCHEDULER_MSG_RECEIVER);
-        intent.putExtra(Constants.JOB_INFO_ID_KEY, jobParameters.getJobId());
+        intent.putExtra(Constants.BROADCAST_MSG_TYPE_KEY, RobotBroadcastType.JOB_STATE_BROADCAST.value);
+        intent.putExtra(Constants.INTENT_JOB_INFO_ID_KEY, jobParameters.getJobId());
         intent.putExtra(Constants.MSG_SCHEDULER_JOB_STATE_KEY, schedulerJobState.value);
-        this.localBroadcastManager.sendBroadcast(intent);
+        LocalBroadcastManager localBroadcastManager = ((RobotApplication)ApplicationUtil.getApplication()).getLocalBroadcastManager();
+        localBroadcastManager.sendBroadcast(intent);
     }
 }

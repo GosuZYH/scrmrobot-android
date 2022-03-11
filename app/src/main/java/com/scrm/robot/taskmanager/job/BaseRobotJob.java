@@ -28,10 +28,12 @@ public abstract class BaseRobotJob implements IRobotJob{
 
     @Override
     public  void stop() {
-        this.setJobState(RobotRunState.STOPPED);
-        this.setStopTime(new Date());
-        RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
-        robotApplication.getRobotJobScheduler().getJobSchedulerService().finishJob(this.jobParameters);
+        if (this.jobState == RobotRunState.STARTED) {
+            this.setJobState(RobotRunState.STOPPED);
+            this.setStopTime(new Date());
+            RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
+            robotApplication.getRobotJobScheduler().getJobSchedulerService().finishJob(this.jobParameters);
+        }
     }
 
     public String getJobId() {
