@@ -18,12 +18,12 @@ import java.util.List;
 
 public class SopAgentSendMomentJob extends BaseRobotJob {
     private final static String TAG = SopAgentSendMomentJob.class.getName();
-    public static String taskStatus = "START_SOP";
-    public static String targetTag = "获取失败";
-    public static Boolean tagFindFlag = true;
-    public static Boolean selectAllCustomerFlag = false;
-    public static int canNotSelectAllCustomerTimes = 0;
-    public AccessibilityGestureUtil accessibilityGestureUtil;
+    private static String taskStatus = "START_SOP";
+    private static String targetTag = "获取失败";
+    private static Boolean tagFindFlag = true;
+    private static Boolean selectAllCustomerFlag = false;
+    private static int canNotSelectAllCustomerTimes = 0;
+    private AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
 
     public SopAgentSendMomentJob(){
@@ -51,19 +51,13 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
             return;
         }
-
-
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
         this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
-        if (robotAccessibilityContext == null) {
-            return;
-        }else {
-            tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
-            selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-        }
+        tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+        selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;
