@@ -44,7 +44,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if (rootNodeInfo == null) {
             return;
         }
-        JobStateViewModel.isScreenShot.postValue(true);
 
 
         // 搜索按钮
@@ -69,6 +68,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if (appViewGroup != null) {
             AccessibilityNodeInfo parent = appViewGroup.getParent();
             parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            // 截图
+            if(JobStateViewModel.isScreenShot.getValue().equals(false)) {
+                JobStateViewModel.isScreenShot.postValue(true);
+            }
             this.stop();
         }
     }

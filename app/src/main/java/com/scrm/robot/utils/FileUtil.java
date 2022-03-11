@@ -9,25 +9,56 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileUtil {
-    //系统保存截图的路径
-    @SuppressLint("SdCardPath")
-    public static final String SCREENCAPTURE_PATH = "/sdcard/";
-    public static final String SCREENSHOT_NAME = "SS";
+
+    public static final String SCREENCAPTURE_PATH = "aaa"  + File.separator;
+
+    public static final String SCREENSHOT_NAME = "Screenshot";
+
+    public static String getAppPath(Context context) {
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 
 
-    public static String getScreenShotsName() {
-        File file = new File(SCREENCAPTURE_PATH);
+            return Environment.getExternalStorageDirectory().toString();
+
+        } else {
+
+            return context.getFilesDir().toString();
+        }
+
+    }
+
+
+    public static String getScreenShots(Context context) {
+
+        StringBuffer stringBuffer = new StringBuffer(getAppPath(context));
+        stringBuffer.append(File.separator);
+
+        stringBuffer.append(SCREENCAPTURE_PATH);
+
+        File file = new File(stringBuffer.toString());
+
         if (!file.exists()) {
             file.mkdirs();
         }
 
+        return stringBuffer.toString();
+
+    }
+
+    public static String getFileName(Context context) {
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+
         String date = simpleDateFormat.format(new Date());
-        StringBuffer stringBuffer = new StringBuffer(SCREENCAPTURE_PATH);
+
+        StringBuilder stringBuffer = new StringBuilder(getScreenShots(context));
         stringBuffer.append(SCREENSHOT_NAME);
         stringBuffer.append("_");
         stringBuffer.append(date);
         stringBuffer.append(".png");
+
         return stringBuffer.toString();
+
     }
 }

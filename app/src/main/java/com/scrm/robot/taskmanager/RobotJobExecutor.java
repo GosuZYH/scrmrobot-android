@@ -1,6 +1,6 @@
 package com.scrm.robot.taskmanager;
 
-import static com.scrm.robot.Constants.JOB_INFO_TYPE_KEY;
+import static com.scrm.robot.Constants.INTENT_JOB_INFO_TYPE_KEY;
 
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;
@@ -20,7 +20,7 @@ public class RobotJobExecutor {
         }
         JobInfo jobInfo= application.getRobotJobScheduler().getJob(jobParameters.getJobId());
         if(jobInfo!=null) {
-            int robotJobTypeValue = jobInfo.getExtras().getInt(JOB_INFO_TYPE_KEY);
+            int robotJobTypeValue = jobInfo.getExtras().getInt(INTENT_JOB_INFO_TYPE_KEY);
             RobotJobType robotJobType = RobotJobType.getByValue(robotJobTypeValue);
             BaseRobotJob robotJob = application.getRobotJobFactory().buildRobotJob(robotJobType);
             if (robotJob != null) {

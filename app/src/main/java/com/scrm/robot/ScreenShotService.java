@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
@@ -19,6 +20,7 @@ import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,14 +35,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ServiceLifecycleDispatcher;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.scrm.robot.floatwindow.FloatViewModel;
+import com.scrm.robot.taskmanager.JobSchedulerMessageReceiver;
 import com.scrm.robot.taskmanager.JobStateViewModel;
-import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
+import com.scrm.robot.utils.ApplicationUtil;
 import com.scrm.robot.utils.FileUtil;
-
-import android.os.AsyncTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,6 +66,11 @@ public class ScreenShotService extends Service implements LifecycleOwner{
     private int mScreenHeight;
     private int mScreenDensity;
 
+//
+//    private LocalBroadcastManager localBroadcastManager;
+//    private static JobSchedulerMessageReceiver receiver;
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -78,6 +84,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
 
         this.createNotification();
+        this.initBroadcast();
         this.initWindow();
         this.initObserve();
     }
@@ -88,11 +95,21 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
     public static Intent getResultData() {
         return mResultData;
     }
     public static void setResultData(Intent mResultData) {
         ScreenShotService.mResultData = mResultData;
+    }
+
+    private void  initBroadcast(){
+//        this.localBroadcastManager= LocalBroadcastManager.getInstance(this);
+//        if(receiver==null) {
+//            receiver = new JobSchedulerMessageReceiver();
+//            this.localBroadcastManager.registerReceiver(receiver, new IntentFilter(Constants.JOB_SCHEDULER_MSG_RECEIVER));
+//        }
     }
 
     private void initWindow(){
@@ -137,7 +154,6 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             public void run() {
                 //capture the screen
                 startCapture();
-
             }
         }, 30);
     }
@@ -165,14 +181,14 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         return (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
     }
 
-    boolean savingImage=false;
+    boolean isSavingImage =false;
     private void startCapture() {
-        if(savingImage==false) {
+        if(!isSavingImage) {
             Image image = mImageReader.acquireLatestImage();
             if (image == null) {
                 startScreenShot();
             } else {
-                savingImage=true;
+                isSavingImage =true;
                 SaveTask mSaveTask = new SaveTask();
                 mSaveTask.execute(image);
             }
@@ -181,8 +197,6 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         }
     }
 
-//    private final ServiceLifecycleDispatcher mDispatcher = new ServiceLifecycleDispatcher(this);
-
     private final LifecycleRegistry lifecycleRegistry=new LifecycleRegistry(this);
 
     @NonNull
@@ -190,7 +204,6 @@ public class ScreenShotService extends Service implements LifecycleOwner{
     public Lifecycle getLifecycle() {
         return this.lifecycleRegistry;
     }
-
 
     public class SaveTask extends AsyncTask<Image, Void, Bitmap> {
 
@@ -218,7 +231,9 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             File fileImage = null;
             if (bitmap != null) {
                 try {
-                    fileImage = new File(FileUtil.getScreenShotsName());
+                    String fname =FileUtil.getFileName(getApplicationContext());
+
+                    fileImage = new File(fname);
                     if (!fileImage.exists()) {
                         fileImage.createNewFile();
                     }
@@ -227,10 +242,12 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                         out.flush();
                         out.close();
-                        Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                        Uri contentUri = Uri.fromFile(fileImage);
-                        media.setData(contentUri);
-                        sendBroadcast(media);
+
+//                        Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                        Uri contentUri = Uri.fromFile(fileImage);
+//                        media.setData(contentUri);
+//                        sendBroadcast(media);
+                        sendBroadcast(fname);
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -239,8 +256,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                     e.printStackTrace();
                     fileImage = null;
                 }finally {
-                    savingImage=false;
-                    mImageReader.close();
+                    isSavingImage =false;
                 }
             }
 
@@ -253,13 +269,16 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            isSavingImage =false;
         }
     }
 
     private void virtualDisplay() {
-        mVirtualDisplay = mMediaProjection.createVirtualDisplay("screen-mirror",
-                mScreenWidth, mScreenHeight, mScreenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                mImageReader.getSurface(), null, null);
+        if(mVirtualDisplay==null) {
+            mVirtualDisplay = mMediaProjection.createVirtualDisplay("screen-mirror",
+                    mScreenWidth, mScreenHeight, mScreenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                    mImageReader.getSurface(), null, null);
+        }
     }
 
 
@@ -323,5 +342,19 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             //notificationManager.notify(NOTIFICATION_ID, notification);
         }
     }
+
+    /**
+     * 服务端给客户端广播消息
+     */
+    private void sendBroadcast(String fileName) {
+
+        Intent intent = new Intent(Constants.JOB_SCHEDULER_MSG_RECEIVER);
+        intent.putExtra(Constants.BROADCAST_MSG_TYPE_KEY, RobotBroadcastType.SCREENSHOT_FINISH_BROADCAST.value);
+        intent.putExtra(Constants.INTENT_SCREENSHOT_FILE_NAME_KEY, fileName);
+//        this.localBroadcastManager.sendBroadcast(intent);
+        LocalBroadcastManager localBroadcastManager = ((RobotApplication) ApplicationUtil.getApplication()).getLocalBroadcastManager();
+        localBroadcastManager.sendBroadcast(intent);
+    }
+
 
 }

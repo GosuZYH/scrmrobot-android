@@ -1,11 +1,9 @@
 package com.scrm.robot.taskmanager;
 
-import static com.scrm.robot.Constants.JOB_INFO_TYPE_KEY;
+import static com.scrm.robot.Constants.INTENT_JOB_INFO_TYPE_KEY;
 import static com.scrm.robot.Constants.JOB_INTERVAL_MILL_SECONDS;
 
 import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.os.Build;
 
 import com.scrm.robot.MainActivity;
@@ -44,7 +42,7 @@ public class RobotJobFactory {
                 builder.setRequiresStorageNotLow(false);
             }
             JobInfo jobInfo = builder.build();
-            jobInfo.getExtras().putInt(JOB_INFO_TYPE_KEY, robotJobType.value);
+            jobInfo.getExtras().putInt(INTENT_JOB_INFO_TYPE_KEY, robotJobType.value);
             return jobInfo;
         }
         return null;

@@ -126,10 +126,9 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
         windowManager.addView(floatRootView, layoutParams);
 //        startStopBtn.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
-        startStopBtn.setText("启动");
-        startStopBtn.setWidth(100);
-        startStopBtn.setHeight(200);
-
+//        startStopBtn.setText("启动");
+//        startStopBtn.setWidth(100);
+//        startStopBtn.setHeight(200);
 //        windowManager.addView(startStopBtn, layoutParams);
     }
 
