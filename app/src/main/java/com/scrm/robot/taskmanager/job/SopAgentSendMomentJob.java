@@ -21,6 +21,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public static String taskStatus = "START_SOP";
     public static String targetTag = "获取失败";
     public static Boolean tagFindFlag = true;
+    public static Boolean selectAllCustomerFlag = false;
+    public static int canNotSelectAllCustomerTimes = 0;
     public AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
 
@@ -59,9 +61,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if (robotAccessibilityContext == null) {
             return;
         }else {
-            if(robotAccessibilityContext.getCurrentEvent().getEventType()== AccessibilityEvent.TYPE_VIEW_SCROLLED){
-                tagFindFlag = true;
-            }
+            tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+            selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
         }
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
@@ -77,6 +78,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 break;
             case "READY_TO_SHARE":
                 shareTask(rootNodeInfo);
+                break;
+            case "CHOOSE_TAG":
+                chooseTag(rootNodeInfo);
                 break;
             case "CONFIRM_CUSTOMER":
                 publishTask(rootNodeInfo);
@@ -104,6 +108,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void sopTaskStart(AccessibilityNodeInfo rootNodeInfo) {
         //sop任务进入流程
+        canNotSelectAllCustomerTimes = 0;
         uiSearch(rootNodeInfo);       //搜索
         uiSearchLabel(rootNodeInfo);      //搜索框输入
         searchResult(rootNodeInfo);       //搜索结果
@@ -112,11 +117,42 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void shareTask(AccessibilityNodeInfo rootNodeInfo) {
         //分享之后的流程
-        clickToShare(rootNodeInfo);       //分享
+//        clickToShare(rootNodeInfo);       //分享
         chooseVisibleCustomer(rootNodeInfo);      //选择可见的客户
         choosePartialCustomer(rootNodeInfo);      //部分客户
         tagFilter(rootNodeInfo);      //根据标签筛选
-        chooseTag(rootNodeInfo);      //寻找标签
+    }
+
+    private void chooseTag(AccessibilityNodeInfo rootNodeInfo){
+        //寻找->选择对应标签
+        List<AccessibilityNodeInfo> tagName = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PERSONAL_TAG);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
+//        System.out.println("标签组ui数量："+tagGroup.size());
+        if (!tagFindFlag){
+            return;
+        }
+        try {
+            if(tagName.size()>0){
+                for(int i=0;i<tagName.size();i++){
+                    for(int k=0;k<tagName.get(i).getChildCount();k++){
+                        String tag = tagName.get(i).getChild(k).getText().toString();
+                        System.out.println("标签内容："+tag);
+                        if(tag.equals(targetTag)){
+                            performClick(tagName.get(i).getChild(k));
+                            taskStatus = "TAG_FOUND";
+                            System.out.println("标签已找到");
+                            return;
+                        }
+                    }
+                }
+                performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
+                System.out.println("翻一整页");
+            }
+        }catch (Exception e){
+            Log.d(TAG,"选标签时出了点小错误："+e);
+        }
+        //没找到
+        tagFindFlag = false;
     }
 
     private void publishTask(AccessibilityNodeInfo rootNodeInfo){
@@ -129,7 +165,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void tagFound(AccessibilityNodeInfo rootNodeInfo) {
         //找到了标签
-        System.out.println("标签已找到");
         confirmTag(rootNodeInfo);     //标签页->确定
         selectAllCustomer(rootNodeInfo);      //全选客户
     }
@@ -214,7 +249,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                     targetTag = list.get(list.size()-1);
                     System.out.println("点击进入一条SOP,标签为:"+targetTag);
                     performClick(targetUi);
-                    sysSleep(7000);
+                    sysSleep(5000);
                     this.accessibilityGestureUtil.click(360, 1550);
                     taskStatus = "READY_TO_SHARE";
                     return;
@@ -281,38 +316,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(targetUis.size()>0){
             System.out.println("点击部分可见");
             performClick(targetUis.get(0).getParent().getParent());
+            taskStatus = "CHOOSE_TAG";
         }
-    }
-
-    private void chooseTag(AccessibilityNodeInfo rootNodeInfo){
-        //寻找->选择对应标签
-        List<AccessibilityNodeInfo> tagName = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PERSONAL_TAG);
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
-//        System.out.println("标签组ui数量："+tagGroup.size());
-        if (!tagFindFlag){
-            return;
-        }
-        try {
-            if(tagName.size()>0){
-                for(int i=0;i<tagName.size();i++){
-                    for(int k=0;k<tagName.get(i).getChildCount();k++){
-                        String tag = tagName.get(i).getChild(k).getText().toString();
-                        System.out.println("标签内容："+tag);
-                        if(tag.equals(targetTag)){
-                            performClick(tagName.get(i).getChild(k));
-                            taskStatus = "TAG_FOUND";
-                            return;
-                        }
-                    }
-                }
-                System.out.println("翻一整页");
-                performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
-            }
-        }catch (Exception e){
-            Log.d(TAG,"选标签时出了点小错误："+e);
-        }
-        //没找到
-        tagFindFlag = false;
     }
 
     private void confirmTag(AccessibilityNodeInfo rootNodeInfo){
@@ -326,15 +331,24 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void selectAllCustomer(AccessibilityNodeInfo rootNodeInfo){
         //全选客户
+        if(!selectAllCustomerFlag){
+            return;
+        }
         List<AccessibilityNodeInfo> allCustomer = rootNodeInfo.findAccessibilityNodeInfosByText("全部客户");
         List<AccessibilityNodeInfo> confirm = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_1);
+//        int allCustomerUis = allCustomer.size();
+//        int confirmUis = confirm.size();
+//        System.out.println("'全部客户'数量："+allCustomerUis+"确定数量："+confirmUis);
         if(allCustomer.size()>0 && confirm.size()>0){
             System.out.println("点击'全部客户'");
             performClick(allCustomer.get(0).getParent().getParent().getParent().getParent().getParent().getParent());
             taskStatus = "CONFIRM_CUSTOMER";
         }else {
-            Log.d(TAG,"找不到标签对应的客户");
-            taskStatus = "REPLY_SOP";
+            canNotSelectAllCustomerTimes ++;
+            if (canNotSelectAllCustomerTimes >3){
+                Log.d(TAG,"找不到标签对应的客户");
+                taskStatus = "REPLY_SOP";
+            }
         }
     }
 
@@ -389,6 +403,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
             System.out.println("点击'回执'");
+            sysSleep(600);
             this.accessibilityGestureUtil.click(620, 1350);
             sysSleep(1000);
             taskStatus = "BACK_TO_SOP_LIST_AND_DELETE";
