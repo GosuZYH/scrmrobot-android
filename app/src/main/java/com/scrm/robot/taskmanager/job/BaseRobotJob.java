@@ -87,4 +87,6 @@ public abstract class BaseRobotJob implements IRobotJob{
     public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+
 }

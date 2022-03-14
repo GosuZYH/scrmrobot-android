@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -30,6 +31,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
@@ -140,7 +142,8 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         mImageReader = ImageReader.newInstance(mScreenWidth, mScreenHeight, PixelFormat.RGBA_8888, 1);
     }
 
-    private void startScreenShot() {
+    private void
+    startScreenShot() {
 
         Handler handler1 = new Handler();
         handler1.postDelayed(new Runnable() {
@@ -207,14 +210,17 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 
     public class SaveTask extends AsyncTask<Image, Void, Bitmap> {
 
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
         protected Bitmap doInBackground(Image... params) {
             if (params == null || params.length < 1 || params[0] == null) {
                 return null;
             }
 
+            JobStateViewModel.sopType.postValue("new");
             Image image = params[0];
 
+            String sopType = "loading";
             int width = image.getWidth();
             int height = image.getHeight();
             final Image.Plane[] planes = image.getPlanes();
@@ -228,42 +234,64 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             bitmap.copyPixelsFromBuffer(buffer);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
             image.close();
-            File fileImage = null;
-            if (bitmap != null) {
-                try {
-                    String fname =FileUtil.getFileName(getApplicationContext());
-
-                    fileImage = new File(fname);
-                    if (!fileImage.exists()) {
-                        fileImage.createNewFile();
-                    }
-                    FileOutputStream out = new FileOutputStream(fileImage);
-                    if (out != null) {
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                        out.flush();
-                        out.close();
-
-//                        Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                        Uri contentUri = Uri.fromFile(fileImage);
-//                        media.setData(contentUri);
-//                        sendBroadcast(media);
-                        sendBroadcast(fname);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    fileImage = null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    fileImage = null;
-                }finally {
-                    isSavingImage =false;
-                }
+            //get screen info
+            //for AVD
+            Log.d(TAG,"x:"+width+"height"+height);
+//            Color color = bitmap.getColor(933,1733);
+//            int pixel = bitmap.getPixel(933,1733);
+            //for xiaoMi
+            Color color = bitmap.getColor(623,1321);
+            int pixel = bitmap.getPixel(623,1321);
+            if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
+                //已回执
+                sopType = "noneed";
+            }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
+                    //未回执
+                    sopType = "need";
+            }else {
+                sopType = "loading";
             }
+            sopType = "need";
+            sendBroadcast(sopType);
 
-            if (fileImage != null) {
-                return bitmap;
-            }
-            return null;
+
+//            File fileImage = null;
+//            if (bitmap != null) {
+//                try {
+//                    String fname =FileUtil.getFileName(getApplicationContext());
+//
+//                    fileImage = new File(fname);
+//                    if (!fileImage.exists()) {
+//                        fileImage.createNewFile();
+//                    }
+//                    FileOutputStream out = new FileOutputStream(fileImage);
+//                    if (out != null) {
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+//                        out.flush();
+//                        out.close();
+//
+////                        Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+////                        Uri contentUri = Uri.fromFile(fileImage);
+////                        media.setData(contentUri);
+////                        sendBroadcast(media);
+//                        // 发送文件名
+//                        sendBroadcast(fname);
+//                    }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                    fileImage = null;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    fileImage = null;
+//                }finally {
+//                    isSavingImage =false;
+//                }
+//            }
+//
+//            if (fileImage != null) {
+//                return bitmap;
+//            }
+            return bitmap;
         }
 
         @Override
@@ -346,11 +374,12 @@ public class ScreenShotService extends Service implements LifecycleOwner{
     /**
      * 服务端给客户端广播消息
      */
-    private void sendBroadcast(String fileName) {
+    private void sendBroadcast(String msg) {
 
         Intent intent = new Intent(Constants.JOB_SCHEDULER_MSG_RECEIVER);
         intent.putExtra(Constants.BROADCAST_MSG_TYPE_KEY, RobotBroadcastType.SCREENSHOT_FINISH_BROADCAST.value);
-        intent.putExtra(Constants.INTENT_SCREENSHOT_FILE_NAME_KEY, fileName);
+//        intent.putExtra(Constants.INTENT_SCREENSHOT_FILE_NAME_KEY, msg);
+        intent.putExtra("sopType",msg);
 //        this.localBroadcastManager.sendBroadcast(intent);
         LocalBroadcastManager localBroadcastManager = ((RobotApplication) ApplicationUtil.getApplication()).getLocalBroadcastManager();
         localBroadcastManager.sendBroadcast(intent);

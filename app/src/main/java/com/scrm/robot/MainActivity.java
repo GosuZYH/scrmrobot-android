@@ -5,6 +5,9 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
@@ -25,6 +28,9 @@ import com.scrm.robot.utils.ApplicationUtil;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getName();
@@ -78,10 +84,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void btnOpenWeWorkClick(View view){
         Log.d(TAG, "打开企业微信");
         try {
-            openWework();
+            testForImgRgb();
+//            openWework();
             Toast.makeText(MainActivity.this, "打开企业微信", Toast.LENGTH_SHORT).show();
         }catch (Exception ignored){
             Toast.makeText(MainActivity.this, "启动企业微信失败", Toast.LENGTH_SHORT).show();
@@ -167,6 +175,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @SuppressLint("SdCardPath")
+    private void testForImgRgb(){
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream("/sdcard/test.png");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap  = BitmapFactory.decodeStream(fis);
+        Color color = bitmap.getColor(933,1733);
+        int pixel = bitmap.getPixel(933,1733);
+        System.out.println("red:"+color.red());
+        System.out.println("green:"+color.green());
+        System.out.println("blue:"+color.blue());
+        System.out.println("获取图片中该像素Color:"+color);
+        System.out.println("获取图片中该像素Pixel:"+pixel);
+    }
+
     private void suspensionWindowPermissionCheck() {
         if (!Settings.canDrawOverlays(this)) {
             //没有权限，需要申请悬浮球权限
@@ -174,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void btnScheduleJobClick(View view){
         Log.d(TAG, "定时任务开始");
         this.openFloatView();

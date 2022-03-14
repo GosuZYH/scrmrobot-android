@@ -1,9 +1,19 @@
 package com.scrm.robot.taskmanager.job;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.hardware.display.VirtualDisplay;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import androidx.annotation.RequiresApi;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
@@ -12,6 +22,8 @@ import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -19,7 +31,9 @@ import java.util.List;
 
 public class SopAgentSendMomentJob extends BaseRobotJob {
     private final static String TAG = SopAgentSendMomentJob.class.getName();
+
     private static String targetTag = "获取失败";
+    private static String tempTag = "";
     private static Boolean tagFindFlag = true;
     private static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
@@ -45,12 +59,20 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         super.stop();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void process() {
         if(this.getJobState()==RobotRunState.STOPPED){
             Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
             return;
         }
+
+
+        if(this.getJobState()==RobotRunState.WAITING){
+            Log.d(TAG, String.format("%s processing is [waiting]", this.getJobId()));
+            return;
+        }
+
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
@@ -65,6 +87,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         SopFriendCircle(rootNodeInfo);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void SopFriendCircle(AccessibilityNodeInfo rootNodeInfo) {
         switch (this.getTaskStatus()) {
             case "START_SOP":
@@ -112,18 +135,51 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         sopClickIn(rootNodeInfo);         //sop任务页
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @SuppressLint("SdCardPath")
     private void openCv(AccessibilityNodeInfo rootNodeInfo) {
         //点击之后的截图识别 ——> JobSchedulerMessageReceiver
+//        FileInputStream fis = null;
+//        try {
+//            fis = new FileInputStream("/sdcard/test.png");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        Bitmap bitmap  = BitmapFactory.decodeStream(fis);
+//        Color color = bitmap.getColor(540,2070);
+//        int pixel = bitmap.getPixel(540,2070);
+//        System.out.println("red:"+color.red());
+//        System.out.println("green:"+color.green());
+//        System.out.println("blue:"+color.blue());
+//        System.out.println("to ARGB:"+color.toArgb());
+//        System.out.println("获取图片中该像素Color:"+color);
+//        System.out.println("获取图片中该像素Pixel:"+pixel);
 
+        switch (JobStateViewModel.sopType.getValue()) {
+            case "noneed":
+                Log.d(TAG, "当前SOP已回执");
+                this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
+                JobStateViewModel.sopType.postValue("new");
+                break;
+            case "need":
+                Log.d(TAG, "当前SOP未回执");
+                //小米
+                this.accessibilityGestureUtil.click(100, 1550);
+//                this.accessibilityGestureUtil.click(360, 1550);
+//                this.accessibilityGestureUtil.click(360, 1550);
+                //AVD
+//                this.accessibilityGestureUtil.click(540, 2070);
+                JobStateViewModel.sopType.postValue("new");
+                this.setTaskStatus("READY_TO_SHARE");
+                break;
+            case "loading":
+                Log.d(TAG, "当前SOP还未加载成功");
+                JobStateViewModel.sopType.postValue("new");
+                backToSopList(rootNodeInfo);
+                break;
+        }
         //加载成功且未回执的流程
-        this.accessibilityGestureUtil.click(360, 1550);
-        this.setTaskStatus("READY_TO_SHARE");
-
-        //加载成功但已回执的流程
-//        this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
-
-        //加载失败的流程
-//        backToSopList(rootNodeInfo);
+//        System.out.println("准备点击一键分享");
     }
 
     private void shareTask(AccessibilityNodeInfo rootNodeInfo) {
@@ -155,13 +211,19 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         }
                     }
                 }
-                performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
-                System.out.println("翻一整页");
+                //和与缓存标签相同
+                if(tempTag.equals(tagName.get(0).getChild(0).getText().toString())){
+                    this.setTaskStatus("REPLY_SOP");
+                }else {
+                    tempTag = tagName.get(0).getChild(0).getText().toString();
+                    performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
+                    System.out.println("翻一整页");
+                }
             }
         }catch (Exception e){
             Log.d(TAG,"选标签时出了点小错误："+e);
         }
-        //没找到
+        //当前页没找到
         tagFindFlag = false;
     }
 
@@ -259,9 +321,12 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                     targetTag = list.get(list.size()-1);
                     System.out.println("点击进入一条SOP,标签为:"+targetTag);
                     performClick(targetUi);
-                    sysSleep(5000);
+                    sysSleep(7000);
                     // 截图
                     if(!JobStateViewModel.isScreenShot.getValue()){
+                        this.setJobState(RobotRunState.WAITING);
+
+                        System.out.println("截图功能开启");
                         JobStateViewModel.isScreenShot.postValue(true); }
                     this.setTaskStatus("SCREENSHOT_CV");
                     return;
@@ -486,5 +551,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             e.printStackTrace();
         }
     }
+
+    //for RGB test
+
 
 }
