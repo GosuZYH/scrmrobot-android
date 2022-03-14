@@ -157,23 +157,26 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
         switch (JobStateViewModel.sopType.getValue()) {
             case "noneed":
-                Log.d(TAG, "当前SOP已回执");
+                Log.d(TAG, "CV:当前SOP已回执");
                 this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
+                JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
                 break;
             case "need":
-                Log.d(TAG, "当前SOP未回执");
+                Log.d(TAG, "CV:当前SOP未回执");
                 //小米
-                this.accessibilityGestureUtil.click(100, 1550);
+//                this.accessibilityGestureUtil.click(100, 1550);
 //                this.accessibilityGestureUtil.click(360, 1550);
 //                this.accessibilityGestureUtil.click(360, 1550);
                 //AVD
-//                this.accessibilityGestureUtil.click(540, 2070);
+                this.accessibilityGestureUtil.click(540, 2070);
+                JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
             case "loading":
-                Log.d(TAG, "当前SOP还未加载成功");
+                Log.d(TAG, "CV:当前SOP还未加载成功");
+                JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
                 backToSopList(rootNodeInfo);
                 break;

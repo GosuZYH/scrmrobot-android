@@ -41,8 +41,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.scrm.robot.taskmanager.JobSchedulerMessageReceiver;
 import com.scrm.robot.taskmanager.JobStateViewModel;
+import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
+import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
+
 import com.scrm.robot.utils.FileUtil;
 
 import java.io.File;
@@ -89,6 +92,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         this.initBroadcast();
         this.initWindow();
         this.initObserve();
+
     }
 
     @Override
@@ -210,12 +214,17 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 
     public class SaveTask extends AsyncTask<Image, Void, Bitmap> {
 
+        private AccessibilityGestureUtil accessibilityGestureUtil;
+
         @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
         protected Bitmap doInBackground(Image... params) {
             if (params == null || params.length < 1 || params[0] == null) {
                 return null;
             }
+            RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+            RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+            this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
 
             JobStateViewModel.sopType.postValue("new");
             Image image = params[0];
@@ -247,11 +256,14 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                     //未回执
-                    sopType = "need";
+                this.accessibilityGestureUtil.click(540, 2070);
+                sopType = "need";
             }else {
                 sopType = "loading";
             }
+            //for test
             sopType = "need";
+            this.accessibilityGestureUtil.click(540, 2070);
             sendBroadcast(sopType);
 
 
