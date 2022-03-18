@@ -43,7 +43,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public SopAgentSendMomentJob(){
         super();
         this.setTaskStatus("START_SOP");
-        RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
     }
 
     @Override
