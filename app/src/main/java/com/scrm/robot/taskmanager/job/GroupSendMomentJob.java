@@ -1,5 +1,6 @@
 package com.scrm.robot.taskmanager.job;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -10,6 +11,9 @@ import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +22,9 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     public AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
     private static boolean afterClickGroupSend=false;
+    private static int pastGroupSendDay;
+    private static int groupSendHourLimit;
+    private static int groupSendMinLimit;
 
     public GroupSendMomentJob(){
         super();
@@ -71,6 +78,8 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             case "TODO_SEND":
                 sendMsg(rootNodeInfo);
                 break;
+            case "NO_MSG":
+                break;
         }
     }
 
@@ -113,10 +122,42 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         //处理待发送消息
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_PAGE);
         if(targetUis.size() > 0){
-            String time = targetUis.get(0).getChild(0).getChild(0).getChild(1).getText().toString();
-            //TODO time限制
-            //点击发送
-            performClick(targetUis.get(0).getChild(0).getChild(2));
+            try{
+                String time = targetUis.get(0).getChild(0).getChild(0).getChild(1).getText().toString();
+                //create flag time
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DAY_OF_MONTH, pastGroupSendDay);  //向前推的天数
+                calendar.set(Calendar.HOUR_OF_DAY, groupSendHourLimit);  //时
+                calendar.set(Calendar.MINUTE, groupSendMinLimit);   //分
+                Date flagTime = calendar.getTime();
+                //create task time
+                Calendar taskTime = Calendar.getInstance();
+                taskTime.setTime(new Date());
+                if (time.contains(":")){
+                    List<String> list = Arrays.asList(time.split(":"));
+                    taskTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(list.get(0)));  //时
+                    taskTime.set(Calendar.MINUTE, Integer.parseInt(list.get(1)));   //分
+                }else if (time.contains("月")){
+                    List<String> list1 = Arrays.asList(time.split("月"));
+                    taskTime.set(Calendar.MONTH, Integer.parseInt(list1.get(0))-1);  //月
+                    taskTime.set(Calendar.DAY_OF_MONTH, Integer.parseInt(list1.get(1).substring(0,list1.get(1).indexOf("日"))));  //天
+                }else if (time.contains("昨天")){
+                    taskTime.add(Calendar.DAY_OF_MONTH,-1);  //天-1d
+                }else if (time.contains("上午") || time.contains("下午") || time.contains("刚刚") || time.contains("分钟前")){
+                    taskTime.add(Calendar.HOUR_OF_DAY, -3);  //时-3h
+                }
+                Date executeTime = taskTime.getTime();
+                Log.d(TAG,"截至发送时间线："+flagTime+",当前最新任务时间："+executeTime);
+                if(executeTime.after(flagTime)){
+                    performClick(targetUis.get(0).getChild(0).getChild(2));
+                }else{
+                    Log.d(TAG,"当前已无满足时间的群发任务");
+                    this.setTaskStatus("NO_MSG");
+                }
+            }catch (Exception e){
+                Log.d(TAG,"出现小错误："+e);
+            }
         }
     }
 
