@@ -24,7 +24,10 @@ import com.scrm.robot.utils.ApplicationUtil;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     private static Boolean tagFindFlag = true;
     private static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
+    private static int pastSopDay = 0;
+    private static int sopHourLimit = 0;
+    private static int sopMinLimit = 0;
     private AccessibilityGestureUtil accessibilityGestureUtil;
     private final static String packageName="com.tencent.wework";
 
@@ -65,7 +71,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
             return;
         }
-
 
         if(this.getJobState()==RobotRunState.WAITING){
             Log.d(TAG, String.format("%s processing is [waiting]", this.getJobId()));
@@ -121,6 +126,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 break;
             case "BACK_TO_MAIN":
                 backToMain(rootNodeInfo);
+                break;
+            case "TASK_END":
                 break;
         }
     }
@@ -318,19 +325,51 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             Collections.reverse(targetUis);
             for(AccessibilityNodeInfo targetUi:targetUis){
                 if(targetUi.getChildCount()>3){
-                    String tagText = targetUi.getChild(1).getText().toString();
-                    List<String> list = Arrays.asList(tagText.split("："));
-                    targetTag = list.get(list.size()-1);
-                    System.out.println("点击进入一条SOP,标签为:"+targetTag);
-                    performClick(targetUi);
-                    sysSleep(7000);
-                    // 截图
-                    if(!JobStateViewModel.isScreenShot.getValue()){
-                        this.setJobState(RobotRunState.WAITING);
+                    try {
+                        String tagText = targetUi.getChild(1).getText().toString();
 
-                        System.out.println("截图功能开启");
-                        JobStateViewModel.isScreenShot.postValue(true); }
-                    this.setTaskStatus("SCREENSHOT_CV");
+                        //get current sop task tag
+                        List<String> list = Arrays.asList(tagText.split("："));
+                        targetTag = list.get(list.size()-1);
+
+                        //get current sop task execute time
+                        List<String> list1 = Arrays.asList(tagText.split("\n"));
+                        String tagDate = list1.get(0);
+                        String tagTime = tagText.substring(tagText.indexOf("当日")+2,tagText.indexOf("执行"));
+                        String _tagTime = tagDate+tagTime;
+
+                        //print test
+                        System.out.println("点击进入一条SOP,标签为:"+targetTag+",该执行时间为:"+ _tagTime);
+
+                        //get task stop time
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date());
+                        calendar.add(Calendar.DAY_OF_MONTH, pastSopDay);  //向前推的天数
+                        calendar.set(Calendar.HOUR_OF_DAY, sopHourLimit);  //时
+                        calendar.set(Calendar.MINUTE, sopMinLimit);   //分
+                        calendar.set(Calendar.SECOND, 0);   //秒
+                        Date flagTime = calendar.getTime();
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日HH:mm");
+                        Date date = sdf.parse(_tagTime);
+                        assert date != null;
+                        System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
+                        if(date.after(flagTime)){
+                            performClick(targetUi);
+                            sysSleep(7000);
+                            // 截图
+                            if(!JobStateViewModel.isScreenShot.getValue()){
+                                this.setJobState(RobotRunState.WAITING);
+                                System.out.println("截图功能开启");
+                                JobStateViewModel.isScreenShot.postValue(true); }
+                            this.setTaskStatus("SCREENSHOT_CV");
+                        }else{
+                            Log.d(TAG,"SOP已执行到截至时间点");
+                            this.setTaskStatus("BACK_TO_MAIN");
+                        }
+                    } catch (ParseException e) {
+                        Log.d(TAG,"SOP任务在信息处理中出现错误"+e);
+                        this.setTaskStatus("BACK_TO_MAIN");
+                    }
                     return;
                 }
             }
@@ -499,7 +538,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (userUis.size()>0 && chatUis.size()>0){
-            // TODO 任务完成
+            this.setTaskStatus("TASK_END");
         }else {
             if(backUis.size()>0){
                 performClick(backUis.get(0));
