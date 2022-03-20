@@ -115,10 +115,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "执行客户朋友圈任务");
         try {
             Toast.makeText(MainActivity.this, "执行客户朋友圈任务", Toast.LENGTH_SHORT).show();
+            if (this.jobScheduler == null) {
+                return;
+            }
+            this.jobScheduler.start();
+            this.jobScheduler.addJob(RobotJobType.CUSTOMER_AGENT_SEND_MOMENT);
+            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
-        openWework();
     }
 
     public void sopFriendCircleTask(View view){

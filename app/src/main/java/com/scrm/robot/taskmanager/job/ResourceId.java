@@ -4,7 +4,7 @@ public class ResourceId {
     //server
     public static final String testServer = "SMR-代开发-test";
     public static final String prodServer = "SMR-代开发";
-    //v3.1.23
+    //v4.0.0
     public static final String USER = "com.tencent.wework:id/kcw";
     public static final String USER_NAME = "com.tencent.wework:id/jpy";
     public static final String SETTING = "com.tencent.wework:id/j5e";
@@ -18,7 +18,6 @@ public class ResourceId {
     public static final String WORKSTATION = "com.tencent.wework:id/fz4";
     public static final String SKIP = "com.tencent.wework:id/anv";
     public static final String TEXT = "android.widget.TextView";
-    //
     public static final String SEARCH_RESULT = "com.tencent.wework:id/bu5";
     public static final String SMR_TITLE = "com.tencent.wework:id/kbp";
     public static final String SOP = "com.tencent.wework:id/gb8";
@@ -39,10 +38,11 @@ public class ResourceId {
     public static final String PYQ = "com.tencent.wework:id/i5r";
     //企业朋友圈
     public static final String CUSTOMER_PYQ = "com.tencent.wework:id/grd";
-    public static final String PYQ_MSG = "com.tencent.wework:id/kc2";
-    public static final String COMPANY_NOTIFICATION = "com.tencent.wework:id/fyl";
+    public static final String PYQ_MSG = "com.tencent.wework:id/kc8";
+    public static final String PYQ_MSG1 = "com.tencent.wework:id/kca";
+    public static final String COMPANY_NOTIFICATION = "com.tencent.wework:id/fz4";
     public static final String PUBLISH_1 = "com.tencent.wework:id/idv";
-    public static final String NO_CUSTOMER_PYQ = "com.tencent.wework:id/d9g";
+    public static final String NO_CUSTOMER_PYQ = "com.tencent.wework:id/d9i";
     public static final String COMPANY_TASK = "com.tencent.wework:id/i50";
     public static final String COMPANY_TASK_TIME = "com.tencent.wework:id/j_9";
     public static final String GROUP_SEND_HELP = "com.tencent.wework:id/i50";

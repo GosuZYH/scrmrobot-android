@@ -20,15 +20,14 @@ import java.util.List;
 public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
     public AccessibilityGestureUtil accessibilityGestureUtil;
-    private final static String packageName="com.tencent.wework";
     private static boolean afterClickGroupSend=false;
-    private static int pastGroupSendDay;
-    private static int groupSendHourLimit;
-    private static int groupSendMinLimit;
+    private static int pastGroupSendDay = 0;
+    private static int groupSendHourLimit = 0;
+    private static int groupSendMinLimit = 0;
 
     public GroupSendMomentJob(){
         super();
-        this.setTaskStatus("TASK_START");
+        this.setTaskStatus("START_GROUP_TASK");
     }
 
     @Override
@@ -66,7 +65,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
 
     public void groupSendTask(AccessibilityNodeInfo rootNodeInfo){
         switch (this.getTaskStatus()) {
-            case "TASK_START":
+            case "START_GROUP_TASK":
                 findGroupSendHelper(rootNodeInfo);
                 break;
             case "GROUP_HELPER":
@@ -79,6 +78,8 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 sendMsg(rootNodeInfo);
                 break;
             case "NO_MSG":
+                backToMain(rootNodeInfo);
+            case "TASK1_END":
                 break;
         }
     }
@@ -157,6 +158,24 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 }
             }catch (Exception e){
                 Log.d(TAG,"出现小错误："+e);
+            }
+        }
+    }
+
+    public void backToMain(AccessibilityNodeInfo rootNodeInfo) {
+        //返回主界面
+        List<AccessibilityNodeInfo> userUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.USER);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (userUis.size()>0 && chatUis.size()>0){
+            this.setTaskStatus("TASK1_END");
+        }else {
+            if(backUis.size()>0){
+                performClick(backUis.get(0));
+            }
+            if(confirmUis.size()>0){
+                performClick(confirmUis.get(0));
             }
         }
     }

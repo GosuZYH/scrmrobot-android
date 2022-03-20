@@ -44,11 +44,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     private static int sopHourLimit = 0;
     private static int sopMinLimit = 0;
     private AccessibilityGestureUtil accessibilityGestureUtil;
-    private final static String packageName="com.tencent.wework";
 
     public SopAgentSendMomentJob(){
         super();
-        this.setTaskStatus("START_SOP");
+        this.setTaskStatus("START_SOP_TASK");
     }
 
     @Override
@@ -94,7 +93,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void SopFriendCircle(AccessibilityNodeInfo rootNodeInfo) {
         switch (this.getTaskStatus()) {
-            case "START_SOP":
+            case "START_SOP_TASK":
                 sopTaskStart(rootNodeInfo);
                 break;
             case "SCREENSHOT_CV":
@@ -127,7 +126,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             case "BACK_TO_MAIN":
                 backToMain(rootNodeInfo);
                 break;
-            case "TASK_END":
+            case "TASK3_END":
                 break;
         }
     }
@@ -400,7 +399,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_3);
         if(confirmUis.size()>0){
             performClick(confirmUis.get(0));
-            this.setTaskStatus("START_SOP");
+            this.setTaskStatus("START_SOP_TASK");
         }
     }
 
@@ -538,7 +537,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (userUis.size()>0 && chatUis.size()>0){
-            this.setTaskStatus("TASK_END");
+            this.setTaskStatus("TASK3_END");
         }else {
             if(backUis.size()>0){
                 performClick(backUis.get(0));
@@ -555,7 +554,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
-            setTaskStatus("START_SOP");
+            setTaskStatus("START_SOP_TASK");
         }else {
             if(backUis.size()>0){
                 performClick(backUis.get(0));
