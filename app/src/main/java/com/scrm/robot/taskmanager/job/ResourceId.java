@@ -54,7 +54,8 @@ public class ResourceId {
     public static final String NEW_USER = "com.tencent.wework:id/jg5";
     public static final String CLEAR_TEXT = "com.tencent.wework:id/iq1";
     public static final String SEND_PAGE = "com.tencent.wework:id/i5r";
+    public static final String SEND_TIME = "com.tencent.wework:id/ja6";
     public static final String START_TIME = "com.tencent.wework:id/k44";
     public static final String MSG_HEIGHT ="com.tencent.wework:id/c5i";
-    public static final String SEND_BUTTON = "com.tencent.wework:id/g16";
+    public static final String SEND_BUTTON = "com.tencent.wework:id/ien";
 }

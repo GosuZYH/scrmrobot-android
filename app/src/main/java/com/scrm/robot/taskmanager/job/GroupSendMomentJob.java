@@ -169,14 +169,12 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (userUis.size()>0 && chatUis.size()>0){
+            Log.d(TAG,"已返回到主界面，task1 end..");
             this.setTaskStatus("TASK1_END");
-        }else {
-            if(backUis.size()>0){
-                performClick(backUis.get(0));
-            }
-            if(confirmUis.size()>0){
-                performClick(confirmUis.get(0));
-            }
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
         }
     }
 

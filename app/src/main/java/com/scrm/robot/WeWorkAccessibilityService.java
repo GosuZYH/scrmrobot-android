@@ -62,6 +62,10 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         if (packageName.equals(event.getPackageName())) {
             Log.d(TAG, event.toString());
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
+//            AccessibilityNodeInfo eventNode = event.getSource();
+//            if (eventNode == null) {
+//                performGlobalAction(GLOBAL_ACTION_RECENTS); // 打开最近页面
+//            }
             robotAccessibilityContext.setCurrentEvent(event);
             robotAccessibilityContext.setRootNodeInfo(rootInfo);
             this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
