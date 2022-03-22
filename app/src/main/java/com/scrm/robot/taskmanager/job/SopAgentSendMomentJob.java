@@ -1,12 +1,6 @@
 package com.scrm.robot.taskmanager.job;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.hardware.display.VirtualDisplay;
-import android.media.projection.MediaProjection;
-import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +16,6 @@ import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -37,8 +29,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private static String targetTag = "获取失败";
     private static String tempTag = "";
-    private static Boolean tagFindFlag = true;
-    private static Boolean selectAllCustomerFlag = false;
+    public static Boolean tagFindFlag = true;
+    public static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
     private static int pastSopDay = 0;
     private static int sopHourLimit = 0;
@@ -47,7 +39,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public SopAgentSendMomentJob(){
         super();
-        this.setTaskStatus("START_SOP_TASK");
+        this.setTaskId(1);
+        this.setTaskStatus("INIT_SOP_TASK");
     }
 
     @Override
@@ -91,8 +84,11 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void SopFriendCircle(AccessibilityNodeInfo rootNodeInfo) {
+    public String SopFriendCircle(AccessibilityNodeInfo rootNodeInfo) {
         switch (this.getTaskStatus()) {
+            case "INIT_SOP_TASK":
+                initToMain(rootNodeInfo);
+                break;
             case "START_SOP_TASK":
                 sopTaskStart(rootNodeInfo);
                 break;
@@ -124,11 +120,13 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 confirmDelete(rootNodeInfo);
                 break;
             case "BACK_TO_MAIN":
-                backToMain(rootNodeInfo);
+                backToMainEnd(rootNodeInfo);
                 break;
             case "TASK3_END":
-                break;
+                //for loop all task.
+                return "START_GROUP_TASK";
         }
+        return null;
     }
 
     private void sopTaskStart(AccessibilityNodeInfo rootNodeInfo) {
@@ -186,8 +184,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 backToSopList(rootNodeInfo);
                 break;
         }
-        //加载成功且未回执的流程
-//        System.out.println("准备点击一键分享");
     }
 
     private void shareTask(AccessibilityNodeInfo rootNodeInfo) {
@@ -530,13 +526,31 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         }
     }
 
-    public void backToMain(AccessibilityNodeInfo rootNodeInfo) {
-        //返回主界面
-        List<AccessibilityNodeInfo> userUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.USER);
+    public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
+        //寻找->点击消息
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (userUis.size()>0 && chatUis.size()>0){
+        if (chatUis.size()>0){
+            if(targetUis.size() > 0){
+                Log.d(TAG,"点击消息");
+                performClick(targetUis.get(0).getChild(0));
+                this.setTaskStatus("START_SOP_TASK");
+            }
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
+        }
+    }
+
+    public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
+        //返回主界面
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (chatUis.size()>0){
             Log.d(TAG,"已返回到主界面，task3 end..");
             this.setTaskStatus("TASK3_END");
         }else if(backUis.size()>0){

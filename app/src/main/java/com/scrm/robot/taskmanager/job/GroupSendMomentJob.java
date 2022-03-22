@@ -20,13 +20,14 @@ import java.util.List;
 public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
     public AccessibilityGestureUtil accessibilityGestureUtil;
-    private static boolean afterClickGroupSend=false;
+    public static boolean afterClickGroupSend=false;
     private static int pastGroupSendDay = 0;
     private static int groupSendHourLimit = 0;
     private static int groupSendMinLimit = 0;
 
     public GroupSendMomentJob(){
         super();
+        this.setTaskId(2);
         this.setTaskStatus("START_GROUP_TASK");
     }
 
@@ -63,7 +64,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         groupSendTask(rootNodeInfo);
     }
 
-    public void groupSendTask(AccessibilityNodeInfo rootNodeInfo){
+    public String groupSendTask(AccessibilityNodeInfo rootNodeInfo){
         switch (this.getTaskStatus()) {
             case "START_GROUP_TASK":
                 findGroupSendHelper(rootNodeInfo);
@@ -78,19 +79,31 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 sendMsg(rootNodeInfo);
                 break;
             case "NO_MSG":
-                backToMain(rootNodeInfo);
-            case "TASK1_END":
+                backToMainEnd(rootNodeInfo);
                 break;
+            case "TASK1_END":
+                //for loop all task.
+                return "START_CUSTOMER_TASK";
         }
+        return null;
     }
 
     private void findGroupSendHelper(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击工作台
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
-        if(targetUis.size() > 0){
-            System.out.println("点击工作台");
-            performClick(targetUis.get(0).getChild(3));
-            this.setTaskStatus("GROUP_HELPER");
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (chatUis.size()>0){
+            if(targetUis.size() > 0){
+                Log.d(TAG,"点击工作台");
+                performClick(targetUis.get(0).getChild(3));
+                this.setTaskStatus("GROUP_HELPER");
+            }
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
         }
     }
 
@@ -106,16 +119,17 @@ public class GroupSendMomentJob  extends BaseRobotJob {
 
     private void checkGroupSendMsg(AccessibilityNodeInfo rootNodeInfo){
         //检测有无待发消息
-        if(afterClickGroupSend){
-            List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG);
-            if(targetUis.size() > 0){
-                System.out.println("点击待发送入口");
-                performClick(targetUis.get(0));
-                this.setTaskStatus("TODO_SEND");
-            }else {
-                System.out.println("当前没有待发送消息");
-                this.setTaskStatus("NO_MSG");
-            }
+        if(!afterClickGroupSend){
+            return;
+        }
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG);
+        if(targetUis.size() > 0){
+            System.out.println("点击待发送入口");
+            performClick(targetUis.get(0));
+            this.setTaskStatus("TODO_SEND");
+        }else {
+            System.out.println("当前没有待发送消息");
+            this.setTaskStatus("NO_MSG");
         }
     }
 
@@ -162,13 +176,25 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         }
     }
 
-    public void backToMain(AccessibilityNodeInfo rootNodeInfo) {
+    public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> userUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.USER);
         List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (userUis.size()>0 && chatUis.size()>0){
+        if (chatUis.size()>0){
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
+        }
+    }
+
+    public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
+        //返回主界面
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (chatUis.size()>0){
             Log.d(TAG,"已返回到主界面，task1 end..");
             this.setTaskStatus("TASK1_END");
         }else if(backUis.size()>0){

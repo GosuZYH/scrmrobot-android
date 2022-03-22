@@ -142,12 +142,16 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "执行所有任务");
         try {
             Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
+            if (this.jobScheduler == null) {
+                return;
+            }
+            this.jobScheduler.start();
+            this.jobScheduler.addJob(RobotJobType.ALL_TASK_MOMENT);
             openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public void btnAccessSettingClick(View view){
         Log.d(TAG, "跳转到辅助功能");

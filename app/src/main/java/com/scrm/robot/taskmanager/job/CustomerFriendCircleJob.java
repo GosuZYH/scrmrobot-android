@@ -4,9 +4,11 @@ import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
@@ -22,16 +24,16 @@ import java.util.List;
 
 public class CustomerFriendCircleJob extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
-    public final static String packageName = "com.tencent.wework";
     public AccessibilityGestureUtil accessibilityGestureUtil;
-    private static Boolean turnPageFlag = true;
-    private static Boolean notificationFlag = true;
+    public static Boolean turnPageFlag = true;
+    public static Boolean notificationFlag = true;
     private static int pastDay = 0;
     private static int hourLimit = 0;
     private static int minLimit = 0;
 
     public CustomerFriendCircleJob(){
         super();
+        this.setTaskId(3);
         this.setTaskStatus("START_CUSTOMER_TASK");
     }
 
@@ -57,7 +59,6 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
-        AccessibilityEvent currentEvent = robotAccessibilityContext.getCurrentEvent();
 
         turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         notificationFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
@@ -70,7 +71,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         customerFriendCircleTask(rootNodeInfo);
     }
 
-    public void customerFriendCircleTask(AccessibilityNodeInfo rootNodeInfo){
+    public String customerFriendCircleTask(AccessibilityNodeInfo rootNodeInfo){
         switch (this.getTaskStatus()) {
             case "START_CUSTOMER_TASK":
                 findCustomerFriendCircle(rootNodeInfo);
@@ -88,20 +89,31 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                 checkNewFriendCircle(rootNodeInfo);
                 break;
             case "CUSTOMER_TASK_END":
-                backToMain(rootNodeInfo);
+                backToMainEnd(rootNodeInfo);
                 break;
             case "TASK2_END":
-                break;
+                //for loop all task.
+                return "INIT_SOP_TASK";
         }
+        return null;
     }
 
     private void findCustomerFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击工作台
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
-        if(targetUis.size() > 0){
-            Log.d(TAG,"点击工作台");
-            performClick(targetUis.get(0).getChild(3));
-            this.setTaskStatus("CUSTOMER_FRIEND_CIRCLE");
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (chatUis.size()>0){
+            if(targetUis.size() > 0){
+                Log.d(TAG,"点击工作台");
+                performClick(targetUis.get(0).getChild(3));
+                this.setTaskStatus("CUSTOMER_FRIEND_CIRCLE");
+            }
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
         }
     }
 
@@ -111,6 +123,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         if(targetUis.size() > 0){
             Log.d(TAG,"点击客户朋友圈");
             performClick(targetUis.get(0).getParent().getParent());
+            sysSleep(1000);
             this.setTaskStatus("CHECK_NEW");
         }
     }
@@ -194,21 +207,31 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         turnPageFlag = false;
     }
 
-    public void backToMain(AccessibilityNodeInfo rootNodeInfo) {
+    public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> userUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.USER);
         List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (userUis.size()>0 && chatUis.size()>0){
-            Log.d(TAG,"已返回到主界面，task2 end..");
+        if (chatUis.size()>0){
         }else if(backUis.size()>0){
             performClick(backUis.get(0));
         }else if(confirmUis.size()>0){
             performClick(confirmUis.get(0));
-        }else{
-            Log.d(TAG,"企微出现故障，重启..");
+        }
+    }
+
+    public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
+        //返回主界面、任务结束
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        if (chatUis.size()>0){
+            Log.d(TAG,"已返回到主界面，task2 end..");
             this.setTaskStatus("TASK2_END");
+        }else if(backUis.size()>0){
+            performClick(backUis.get(0));
+        }else if(confirmUis.size()>0){
+            performClick(confirmUis.get(0));
         }
     }
 
@@ -227,6 +250,16 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
             targetInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD);
         }catch (Exception e){
             System.out.println("滑动失败");
+        }
+    }
+
+    private void sysSleep(int msecond) {
+        //睡眠 param:seconds
+        try {
+            System.out.println("睡眠一秒");
+            Thread.sleep(msecond);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
