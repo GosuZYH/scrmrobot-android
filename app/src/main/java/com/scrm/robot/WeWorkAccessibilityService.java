@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,6 +28,7 @@ import androidx.lifecycle.Observer;
 import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -37,6 +39,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     private WindowManager windowManager;
     private View floatRootView;
     private Button startStopBtn;
+//    public static TextView logView;
 
     private RobotAccessibilityContext robotAccessibilityContext;
     private final LifecycleRegistry lifecycleRegistry=new LifecycleRegistry(this);
@@ -86,6 +89,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
     private void initObserve(){
         FloatViewModel.isFloatWindowShow.observe(this, new Observer<Boolean>() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
@@ -97,6 +101,22 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                 }
             }
         });
+        FloatViewModel.jobStartStop.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                try {
+                    if(!aBoolean){
+                        startStopBtn.setText("启动");
+                        MainActivity.jobScheduler.stop();
+                    }else {
+                        startStopBtn.setText("停止");
+                        MainActivity.jobScheduler.start();
+                        MainActivity.jobScheduler.addJob(FloatViewModel.currentOnClickJob.getValue());
+                    }
+                }catch (Exception e){
+                }
+            }
+        });
     }
 
     @NonNull
@@ -105,6 +125,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         return this.lifecycleRegistry;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("ClickableViewAccessibility")
     private void showWindow() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -130,11 +151,18 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         floatRootView.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
 
         windowManager.addView(floatRootView, layoutParams);
-//        startStopBtn.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
-//        startStopBtn.setText("启动");
-//        startStopBtn.setWidth(100);
-//        startStopBtn.setHeight(200);
-//        windowManager.addView(startStopBtn, layoutParams);
+        startStopBtn.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
+        startStopBtn.setText("启动");
+        startStopBtn.setWidth(70);
+        startStopBtn.setHeight(70);
+        windowManager.addView(startStopBtn, layoutParams);
+
+        //log window
+//        logView = new TextView(getApplicationContext());
+//        logView.setText("");
+//        logView.setWidth(500);
+//        logView.setHeight(200);
+//        windowManager.addView(logView, layoutParams);
     }
 
 

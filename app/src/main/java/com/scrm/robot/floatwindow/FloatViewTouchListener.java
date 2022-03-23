@@ -1,5 +1,6 @@
 package com.scrm.robot.floatwindow;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,13 +16,19 @@ public class FloatViewTouchListener implements View.OnTouchListener {
         this.windowManager=windowManager;
     }
 
-
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x = (int) event.getRawX();
                 y = (int) event.getRawY();
+                break;
+            case MotionEvent.ACTION_UP:
+                if(!FloatViewModel.jobStartStop.getValue()){
+                    FloatViewModel.jobStartStop.postValue(true);
+                }else {
+                    FloatViewModel.jobStartStop.postValue(false);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int nowX = (int) event.getRawX();

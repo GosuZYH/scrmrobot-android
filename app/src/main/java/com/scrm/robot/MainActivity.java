@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 //    private JobSchedulerMessageHandler mJobSchedulerMessageHandler;
     private ComponentName jobScheduleServiceComponent;
-    private RobotJobScheduler jobScheduler;
+    public static RobotJobScheduler jobScheduler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
 
 //        this.mJobSchedulerMessageHandler = new JobSchedulerMessageHandler(this);
         this.jobScheduleServiceComponent = new ComponentName(this, JobSchedulerService.class);
-        this.jobScheduler = new RobotJobScheduler();
+        jobScheduler = new RobotJobScheduler();
 
         RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
         robotApplication.setJobActivity(this);
-        robotApplication.setRobotJobScheduler(this.jobScheduler);
+        robotApplication.setRobotJobScheduler(jobScheduler);
         JobScheduler sysJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        this.jobScheduler.setJobScheduler(sysJobScheduler);
+        jobScheduler.setJobScheduler(sysJobScheduler);
 
         robotApplication.setRobotJobFactory(new RobotJobFactory());
 
@@ -83,25 +83,27 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void btnOpenWeWorkClick(View view){
-        Log.d(TAG, "打开企业微信");
+        Log.d(TAG, "打开悬浮窗");
         try {
-            testForImgRgb();
-//            openWework();
-            Toast.makeText(MainActivity.this, "打开企业微信", Toast.LENGTH_SHORT).show();
+            this.openCloseFloatView();
+            //设置任务类型为1
+            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
+            Toast.makeText(MainActivity.this, "打开悬浮窗", Toast.LENGTH_SHORT).show();
         }catch (Exception ignored){
-            Toast.makeText(MainActivity.this, "启动企业微信失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "打开悬浮窗失败", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void groupSendTask(View view){
         Log.d(TAG, "执行1V1私聊群发");
         try {
-            Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
-            if (this.jobScheduler == null) {
+            if (jobScheduler == null) {
                 return;
             }
-            this.jobScheduler.start();
-            this.jobScheduler.addJob(RobotJobType.GROUP_SEND_MOMENT);
+            Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
+            this.openCloseFloatView();
+            FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MOMENT);
+//            WeWorkAccessibilityService.logView.setText("正在执行群发助手任务");
             openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
@@ -111,27 +113,30 @@ public class MainActivity extends AppCompatActivity {
     public void customerFriendCircleTask(View view){
         Log.d(TAG, "执行客户朋友圈任务");
         try {
-            Toast.makeText(MainActivity.this, "执行客户朋友圈任务", Toast.LENGTH_SHORT).show();
-            if (this.jobScheduler == null) {
+            if (jobScheduler == null) {
                 return;
             }
-            this.jobScheduler.start();
-            this.jobScheduler.addJob(RobotJobType.CUSTOMER_AGENT_SEND_MOMENT);
+            Toast.makeText(MainActivity.this, "执行客户朋友圈任务", Toast.LENGTH_SHORT).show();
+            this.openCloseFloatView();
+            FloatViewModel.currentOnClickJob.postValue(RobotJobType.CUSTOMER_AGENT_SEND_MOMENT);
+//            WeWorkAccessibilityService.logView.setText("正在执行客户朋友圈任务");
             openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void sopFriendCircleTask(View view){
         Log.d(TAG, "执行sop朋友圈任务");
         try {
-            Toast.makeText(MainActivity.this, "执行sop朋友圈任务", Toast.LENGTH_SHORT).show();
-            if (this.jobScheduler == null) {
+            if (jobScheduler == null) {
                 return;
             }
-            this.jobScheduler.start();
-            this.jobScheduler.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
+            Toast.makeText(MainActivity.this, "执行sop朋友圈任务", Toast.LENGTH_SHORT).show();
+            this.openCloseFloatView();
+            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
+//            WeWorkAccessibilityService.logView.setText("正在执行sop朋友圈任务");
             openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
@@ -141,12 +146,13 @@ public class MainActivity extends AppCompatActivity {
     public void allTask(View view){
         Log.d(TAG, "执行所有任务");
         try {
-            Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
-            if (this.jobScheduler == null) {
+            if (jobScheduler == null) {
                 return;
             }
-            this.jobScheduler.start();
-            this.jobScheduler.addJob(RobotJobType.ALL_TASK_MOMENT);
+            Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
+            this.openCloseFloatView();
+            FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);
+//            WeWorkAccessibilityService.logView.setText("正在循环执行所有任务");
             openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
@@ -210,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void btnScheduleJobClick(View view){
         Log.d(TAG, "定时任务开始");
-        this.openFloatView();
+        this.openCloseFloatView();
         this.btnOpenWeWorkClick(view);
         this.scheduleJob();
     }
@@ -228,24 +234,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void scheduleJob() {
         Log.d(TAG, "start schedule job");
-        if (this.jobScheduler == null) {
+        if (jobScheduler == null) {
             return;
         }
-        this.jobScheduler.start();
-        this.jobScheduler.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
+        jobScheduler.start();
+        jobScheduler.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
     }
 
     private void cancelScheduleJob(){
         Log.d(TAG,"cancel schedule job");
         this.closeFloatView();
-        this.jobScheduler.stop();
+        jobScheduler.stop();
     }
 
     /**
      * 打开悬浮窗
      */
-    private void openFloatView(){
-        FloatViewModel.isFloatWindowShow.postValue(true);
+    private void openCloseFloatView(){
+        if(!FloatViewModel.isFloatWindowShow.getValue()){
+            FloatViewModel.isFloatWindowShow.postValue(true);
+        }
     }
     private void closeFloatView(){
         FloatViewModel.isFloatWindowShow.postValue(false);

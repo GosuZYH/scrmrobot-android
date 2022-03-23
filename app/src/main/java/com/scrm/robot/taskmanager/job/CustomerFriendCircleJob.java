@@ -121,10 +121,13 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         //寻找->点击客户朋友圈
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText("客户朋友圈");
         if(targetUis.size() > 0){
-            Log.d(TAG,"点击客户朋友圈");
-            performClick(targetUis.get(0).getParent().getParent());
-            sysSleep(1000);
-            this.setTaskStatus("CHECK_NEW");
+            try {
+                Log.d(TAG,"点击客户朋友圈");
+                sysSleep(500);
+                performClick(targetUis.get(0).getParent().getParent());
+                this.setTaskStatus("CHECK_NEW");
+            }catch (Exception e){
+            }
         }
     }
 
@@ -134,10 +137,12 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> threePointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ_MSG);
         if(redPointUis.size() > 0){
             Log.d(TAG,"点击新消息红点");
+            sysSleep(700);
             performClick(redPointUis.get(0));
             this.setTaskStatus("FIND_NEED_PUBLISH_PYQ");
         } else if (threePointUis.size() > 0){
             Log.d(TAG,"点击右上角选项");
+            sysSleep(700);
             performClick(threePointUis.get(0));
             this.setTaskStatus("CLICK_COMPANY_NOTICE");
         }

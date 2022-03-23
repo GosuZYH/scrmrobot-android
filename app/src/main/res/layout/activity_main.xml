@@ -56,7 +56,8 @@
         app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.162" />
+        app:layout_constraintVertical_bias="0.162"
+        tools:ignore="OnClick" />
 
     <Button
         android:id="@+id/customerCircle"
