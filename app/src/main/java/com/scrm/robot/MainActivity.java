@@ -31,6 +31,8 @@ import com.scrm.robot.taskmanager.RobotJobFactory;
 import com.scrm.robot.taskmanager.RobotJobScheduler;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.utils.ApplicationUtil;
+import com.scrm.robot.utils.LogUtil;
+import static com.scrm.robot.utils.LogUtil.appendToFile_One;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,12 +50,16 @@ public class MainActivity extends AppCompatActivity {
     private ComponentName jobScheduleServiceComponent;
     public static RobotJobScheduler jobScheduler;
 
+    @SuppressLint("SdCardPath")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
 //        this.mJobSchedulerMessageHandler = new JobSchedulerMessageHandler(this);
+        //log文件输出
+        LogUtil.d("日志文件已输出");
+
         this.jobScheduleServiceComponent = new ComponentName(this, JobSchedulerService.class);
         jobScheduler = new RobotJobScheduler();
 
