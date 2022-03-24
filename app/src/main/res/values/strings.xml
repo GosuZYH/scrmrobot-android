@@ -22,5 +22,6 @@
     <string name="accessibility">点击设置</string>
     <string name="ball">点击设置</string>
     <string name="floatHandlerBtnTxt">启动</string>
+    <string name="accessNotice">去开启</string>
 
 </resources>

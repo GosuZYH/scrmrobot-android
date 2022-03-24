@@ -1,6 +1,8 @@
 package com.scrm.robot;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,7 +17,11 @@ import android.os.Bundle;
 import android.os.Messenger;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.scrm.robot.floatwindow.FloatViewModel;
@@ -34,6 +40,9 @@ import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getName();
+
+    public Dialog noticeDialog;
+    public Dialog floatNoticeDialog;
 
 //    private JobSchedulerMessageHandler mJobSchedulerMessageHandler;
     private ComponentName jobScheduleServiceComponent;
@@ -246,6 +255,47 @@ public class MainActivity extends AppCompatActivity {
         this.closeFloatView();
         jobScheduler.stop();
     }
+
+    /**
+     * 辅助功能提示框
+     */
+    public void showNoticeDialog(View view) {
+        noticeDialog = new noticeDialog(this);
+        noticeDialog.show();
+    }
+
+    public void openAccessibility(View view){
+        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+    }
+
+    public void closeNoticeDialog(View view){
+        noticeDialog.dismiss();
+    }
+
+    /**
+     * 悬浮窗功能提示框
+     */
+    public void showFloatWindowNotice(View view) {
+        floatNoticeDialog = new floatWindowNotice(this);
+        floatNoticeDialog.show();
+    }
+
+    public void openFloatWindow(View view){
+        if (!Settings.canDrawOverlays(this)) {
+            //没有权限，需要申请悬浮球权限
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 100);
+        } else {
+            //已经有权限，可以直接显示悬浮窗
+            Toast.makeText(MainActivity.this, "suspension-Window have accessed！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void closeFloatWindowNotice(View view){
+        floatNoticeDialog.dismiss();
+    }
+
 
     /**
      * 打开悬浮窗

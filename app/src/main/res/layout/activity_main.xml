@@ -9,34 +9,34 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="137dp"
+        android:layout_height="22dp"
         android:text="@string/AwakeWechat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.116"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.187" />
+        app:layout_constraintVertical_bias="0.178" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="157dp"
+        android:layout_height="24dp"
         android:text="@string/taskGroupSend"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintVertical_bias="0.078" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="150dp"
-        android:layout_height="30dp"
+        android:layout_width="179dp"
+        android:layout_height="23dp"
         android:text="@string/checkService"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,11 +49,11 @@
         android:id="@+id/wework"
         android:layout_width="125dp"
         android:layout_height="55dp"
-        android:text="@string/wework"
         android:onClick="btnOpenWeWorkClick"
+        android:text="@string/wework"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.607"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.162"
@@ -64,32 +64,32 @@
         android:layout_width="125dp"
         android:layout_height="55dp"
         android:layout_marginTop="24dp"
-        android:text="@string/Do"
         android:onClick="customerFriendCircleTask"
+        android:text="@string/Do"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/groupSend"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintVertical_bias="0.009" />
 
     <Button
         android:id="@+id/accessibilityService"
         android:layout_width="125dp"
         android:layout_height="55dp"
+        android:onClick="showNoticeDialog"
         android:text="@string/accessibility"
-        android:onClick="btnAccessSettingClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintHorizontal_bias="0.435"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/taskall"
-        app:layout_constraintVertical_bias="0.099" />
+        app:layout_constraintVertical_bias="0.107" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="143dp"
+        android:layout_height="21dp"
         android:text="@string/checkPermission"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,19 +102,19 @@
         android:id="@+id/suspendedBall"
         android:layout_width="125dp"
         android:layout_height="55dp"
+        android:onClick="showFloatWindowNotice"
         android:text="@string/ball"
-        android:onClick="suspendedBallSetting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/accessibilityService"
-        app:layout_constraintVertical_bias="0.151" />
+        app:layout_constraintVertical_bias="0.141" />
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="177dp"
-        android:layout_height="35dp"
+        android:layout_width="194dp"
+        android:layout_height="37dp"
         android:layout_marginStart="132dp"
         android:layout_marginEnd="132dp"
         android:layout_marginBottom="63dp"
@@ -134,8 +134,8 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="172dp"
+        android:layout_height="24dp"
         android:text="@string/taskCustomerCircle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,21 +146,21 @@
 
     <Button
         android:id="@+id/groupSend"
-        android:layout_width="125dp"
-        android:layout_height="55dp"
-        android:text="@string/Do"
+        android:layout_width="120dp"
+        android:layout_height="56dp"
         android:onClick="groupSendTask"
+        android:text="@string/Do"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/wework"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintVertical_bias="0.052" />
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="174dp"
+        android:layout_height="22dp"
         android:text="@string/taskSop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -174,32 +174,32 @@
         android:layout_width="125dp"
         android:layout_height="55dp"
         android:layout_marginTop="24dp"
-        android:text="@string/Do"
         android:onClick="sopFriendCircleTask"
+        android:text="@string/Do"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.445"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/customerCircle"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.006" />
 
     <Button
         android:id="@+id/taskall"
         android:layout_width="125dp"
         android:layout_height="55dp"
-        android:text="@string/Do"
         android:onClick="allTask"
+        android:text="@string/Do"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintHorizontal_bias="0.605"
         app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/sopFriendCircle"
-        app:layout_constraintVertical_bias="0.065" />
+        app:layout_constraintVertical_bias="0.06" />
 
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="144dp"
+        android:layout_height="22dp"
         android:text="@string/alltask"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -210,27 +210,27 @@
 
     <Button
         android:id="@+id/button_startScheduler"
-        android:layout_width="125dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="52dp"
+        android:layout_width="151dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="40dp"
         android:onClick="btnScheduleJobClick"
         android:text="@string/startSchedulerBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.167"
+        app:layout_constraintHorizontal_bias="0.126"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/button_cancelScheduler"
-        android:layout_width="125dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="52dp"
+        android:layout_width="143dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="44dp"
         android:onClick="btnCancelScheduleJobClick"
         android:text="@string/cancelSchedulerBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.783"
+        app:layout_constraintHorizontal_bias="0.906"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 

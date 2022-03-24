@@ -75,6 +75,10 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
             application.setRobotAccessibilityContext(robotAccessibilityContext);
+
+            //special situation solve
+            AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
+
             BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
             if (job != null) {
                 job.process();
@@ -164,7 +168,6 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 //        logView.setHeight(200);
 //        windowManager.addView(logView, layoutParams);
     }
-
 
     @Override
     public boolean onUnbind( Intent intent) {
