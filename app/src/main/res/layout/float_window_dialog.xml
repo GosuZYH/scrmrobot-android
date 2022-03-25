@@ -19,7 +19,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/qq20220324155635"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="314dp" />
+        tools:layout_editor_absoluteY="336dp"
+        android:contentDescription="TODO" />
 
     <Button
         android:id="@+id/openFloatWindow"

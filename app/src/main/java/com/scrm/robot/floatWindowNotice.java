@@ -38,6 +38,8 @@ public class floatWindowNotice extends Dialog {
         WindowManager.LayoutParams p = dialogWindow.getAttributes();
         p.height = (int) (d.getHeight() * 0.35);
         p.width = (int) (d.getWidth() * 0.9);
+        floatWindowNoticeIMG.setImageResource(R.drawable.qq20220324155635);
+        closeFloatWindowNotice.setImageResource(R.drawable.qq20220325192137);
         dialogWindow.setAttributes(p);
     }
 }

@@ -15,6 +15,9 @@
     <string name="alltask">执行所有任务:</string>
     <string name="checkService">检查辅助功能开启状态:</string>
     <string name="checkPermission">检查悬浮窗功能权限:</string>
+    <string name="mainPage">主页</string>
+    <string name="minePage">我的</string>
+
     <!-- Button view -->
     <string name="wework">点击测试</string>
     <string name="Do">点击执行</string>

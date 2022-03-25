@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.scrm.robot.floatwindow.FloatViewModel;
@@ -36,29 +37,39 @@ import static com.scrm.robot.utils.LogUtil.appendToFile_One;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity{
     private final static String TAG = MainActivity.class.getName();
+    //index page layout
+    public LinearLayout mTab1;
+    public LinearLayout mTab2;
 
+    //tab button
+    public ImageButton mImg1;
+    public ImageButton mImg2;
+
+    //tab Fragment
+    public Fragment mFrag1;
+    public Fragment mFrag2;
+
+    //float notice
     public Dialog noticeDialog;
     public Dialog floatNoticeDialog;
-
-//    private JobSchedulerMessageHandler mJobSchedulerMessageHandler;
     private ComponentName jobScheduleServiceComponent;
     public static RobotJobScheduler jobScheduler;
 
     @SuppressLint("SdCardPath")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
-
-//        this.mJobSchedulerMessageHandler = new JobSchedulerMessageHandler(this);
-        //log文件输出
-        LogUtil.d("日志文件已输出");
+        setContentView(R.layout.activity_main);
 
         this.jobScheduleServiceComponent = new ComponentName(this, JobSchedulerService.class);
         jobScheduler = new RobotJobScheduler();
@@ -68,10 +79,78 @@ public class MainActivity extends AppCompatActivity {
         robotApplication.setRobotJobScheduler(jobScheduler);
         JobScheduler sysJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.setJobScheduler(sysJobScheduler);
-
         robotApplication.setRobotJobFactory(new RobotJobFactory());
 
         this.requestCapturePermission();
+
+        //log文件输出
+//        LogUtil.d("主页已加载");
+//        LogUtil.appendToFile_Third("/storage/emulated/0/scrm.log","主页已加载");
+        selectTab(0);
+    }
+
+    public void onClickMainPage(View view){
+        resetImgs();
+        selectTab(0);
+    }
+
+    public void onClickMinePage(View view){
+        resetImgs();
+        selectTab(1);
+    }
+
+    //将四个的Fragment隐藏
+    private void hideFragments(FragmentTransaction transaction) {
+        if (mFrag1 != null) {
+            transaction.hide(mFrag1);
+        }
+        if (mFrag2 != null) {
+            transaction.hide(mFrag2);
+        }
+    }
+
+    //将四个ImageButton置为灰色
+    private void resetImgs() {
+        mImg1 = findViewById(R.id.id_tab_img1);
+        mImg2 = findViewById(R.id.id_tab_img2);
+        //TODO 更改点击后的图片状态
+//        mImg1.setImageResource(R.mipmap.ic_launcher);
+//        mImg2.setImageResource(R.mipmap.ic_launcher);
+    }
+
+    //进行选中Tab的处理
+    private void selectTab(int i) {
+        //获取FragmentManager对象
+        FragmentManager manager = getSupportFragmentManager();
+        //获取FragmentTransaction对象
+        FragmentTransaction transaction = manager.beginTransaction();
+        //先隐藏所有的Fragment
+        hideFragments(transaction);
+        switch (i) {
+            //当选中点击的是第一页的Tab时
+            case 0:
+                //TODO 更改点击后的图片状态
+//                mImg1.setImageResource(R.mipmap.ic_launcher);
+                if (mFrag1 == null) {
+                    mFrag1 = new MainFragment();
+                    transaction.add(R.id.id_content, mFrag1);
+                } else {
+                    //如果第一页对应的Fragment已经实例化，则直接显示出来
+                    transaction.show(mFrag1);
+                }
+                break;
+            case 1:
+                //TODO 更改点击后的图片状态
+//                mImg2.setImageResource(R.mipmap.ic_launcher);
+                if (mFrag2 == null) {
+                    mFrag2 = new MineFragment();
+                    transaction.add(R.id.id_content, mFrag2);
+                } else {
+                    transaction.show(mFrag2);
+                }
+                break;
+        }
+        transaction.commit();
     }
 
     @Override
@@ -102,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             this.openCloseFloatView();
             //设置任务类型为1
-            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
+//            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
             Toast.makeText(MainActivity.this, "打开悬浮窗", Toast.LENGTH_SHORT).show();
         }catch (Exception ignored){
             Toast.makeText(MainActivity.this, "打开悬浮窗失败", Toast.LENGTH_SHORT).show();

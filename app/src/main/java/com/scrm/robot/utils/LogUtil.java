@@ -22,8 +22,9 @@ public class LogUtil {
     private static String ERROR = "error";
     private static final boolean isDebug = true ;
     static {
+//        LOG_PATH = Environment.getExternalStorageState()+"/LogUtils";
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            LOG_PATH = Environment.getExternalStorageDirectory() + "/LogUtils" + "/.log" ;
+            LOG_PATH = Environment.getExternalStorageState() + "/LogUtils" + "/.log" ;
         }else{
             LOG_PATH = "/LogUtils" + "/.log" ;
         }
@@ -62,7 +63,7 @@ public class LogUtil {
     @SuppressLint("SimpleDateFormat")
     public static void saveLog(String type, String content) {
         if(isDebug){//当当前是debug时,才进入保存日志操作
-            appendToFile_Third(LOG_PATH + LOG_NAME, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date(
+            appendToFile_Third(LOG_PATH + "/SCRM.log", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date(
                     System.currentTimeMillis())) + "(" + type + "):" + content + "\r\n");
         }
     }
