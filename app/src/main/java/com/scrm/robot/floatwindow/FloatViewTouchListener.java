@@ -1,15 +1,21 @@
 package com.scrm.robot.floatwindow;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.scrm.robot.Constants;
+import com.scrm.robot.MainActivity;
 
 public class FloatViewTouchListener implements View.OnTouchListener {
     private int x;
     private int y;
     private final WindowManager.LayoutParams layoutParams;
     private final WindowManager windowManager;
+    public static boolean clickDownFlag = false;
+    public static boolean clickUpFlag = false;
 
     public FloatViewTouchListener(WindowManager.LayoutParams layoutParams, WindowManager windowManager){
         this.layoutParams=layoutParams;
@@ -20,17 +26,18 @@ public class FloatViewTouchListener implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                clickDownFlag = true;
                 x = (int) event.getRawX();
                 y = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_UP:
-                if(!FloatViewModel.jobStartStop.getValue()){
-                    FloatViewModel.jobStartStop.postValue(true);
-                }else {
-                    FloatViewModel.jobStartStop.postValue(false);
+                if(clickDownFlag){
+                    clickUpFlag = true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                clickDownFlag = false;
+                clickUpFlag = false;
                 int nowX = (int) event.getRawX();
                 int nowY = (int) event.getRawY();
                 int movedX = nowX - x;
@@ -43,6 +50,16 @@ public class FloatViewTouchListener implements View.OnTouchListener {
                 break;
             default:
                 break;
+        }
+        if(clickDownFlag&&clickUpFlag){
+            clickDownFlag = false;
+            clickUpFlag = false;
+            if(!FloatViewModel.jobStartStop.getValue()){
+                FloatViewModel.jobStartStop.postValue(true);
+            }else {
+                FloatViewModel.jobStartStop.postValue(false);
+            }
+
         }
         return false;
     }

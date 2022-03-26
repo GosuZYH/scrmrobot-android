@@ -74,8 +74,14 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
         this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
-        tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
-        selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+        try {
+            tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+            selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+        }catch (Exception e){
+            tagFindFlag = true;
+            selectAllCustomerFlag = false;
+        }
+
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;
@@ -348,9 +354,20 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         Date date = sdf.parse(_tagTime);
                         assert date != null;
                         System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
+
+                        //for no time limit test
+//                        performClick(targetUi);
+//                        sysSleep(6000);
+//                        // 截图
+//                        if(!JobStateViewModel.isScreenShot.getValue()){
+//                            this.setJobState(RobotRunState.WAITING);
+//                            System.out.println("截图功能开启");
+//                            JobStateViewModel.isScreenShot.postValue(true); }
+//                        this.setTaskStatus("SCREENSHOT_CV");
+
                         if(date.after(flagTime)){
                             performClick(targetUi);
-                            sysSleep(7000);
+                            sysSleep(6000);
                             // 截图
                             if(!JobStateViewModel.isScreenShot.getValue()){
                                 this.setJobState(RobotRunState.WAITING);

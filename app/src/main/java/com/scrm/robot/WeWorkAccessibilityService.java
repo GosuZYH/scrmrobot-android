@@ -116,6 +116,9 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                         startStopBtn.setText("停止");
                         MainActivity.jobScheduler.start();
                         MainActivity.jobScheduler.addJob(FloatViewModel.currentOnClickJob.getValue());
+                        //打开企微
+                        Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
+                        startActivity(intent);
                     }
                 }catch (Exception e){
                 }
