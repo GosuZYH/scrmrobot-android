@@ -55,7 +55,6 @@ public class LoginActivity extends Activity{
     }
 
     public void loginIn(View view) {
-
         if (TextUtils.isEmpty(accountNum.getText().toString())) {
             Toast.makeText(this, "姓名不能为空", Toast.LENGTH_SHORT).show();
             return;
@@ -70,6 +69,13 @@ public class LoginActivity extends Activity{
             Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
+            finish();
         }
+    }
+
+    public void weworkLoginIn(View view) {
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -92,7 +92,6 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         this.initBroadcast();
         this.initWindow();
         this.initObserve();
-
     }
 
     @Override
@@ -252,6 +251,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            int pixel = bitmap.getPixel(623,1321);
             if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
                 //已回执
+                this.accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                 //未回执
@@ -260,6 +260,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                 sopType = "need";
             }else {
                 //加载未完成
+                this.accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
                 sopType = "loading";
             }
             //for test

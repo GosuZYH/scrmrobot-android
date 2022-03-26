@@ -68,4 +68,36 @@ public class AccessibilityGestureUtil {
         GestureDescription gesture = builder.build();
         boolean isDispatched = this.accessibilityService.dispatchGesture(gesture, callback, null);
     }
+
+    /**
+     * 手势滑动
+     *
+     * @param x
+     * @param y
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void swip(int x, int y, int _x, int _y) {
+        Point position = new Point(x, y);
+        Point _position = new Point(_x, _y);
+
+        GestureDescription.Builder builder = new GestureDescription.Builder();
+        Path p = new Path();
+        p.moveTo(position.x, position.y);
+        p.lineTo(_position.x, _position.y);
+        builder.addStroke(new GestureDescription.StrokeDescription(p, 0, 200L));
+        GestureDescription gesture = builder.build();
+        boolean isDispatched = this.accessibilityService.dispatchGesture(gesture, new AccessibilityService.GestureResultCallback() {
+            @Override
+            public void onCompleted(GestureDescription gestureDescription) {
+                super.onCompleted(gestureDescription);
+                Log.d(TAG, "onCompleted: 完成..........");
+            }
+
+            @Override
+            public void onCancelled(GestureDescription gestureDescription) {
+                super.onCancelled(gestureDescription);
+                Log.d(TAG, "onCompleted: 取消..........");
+            }
+        }, null);
+    }
 }

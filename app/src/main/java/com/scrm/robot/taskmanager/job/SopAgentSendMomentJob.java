@@ -1,6 +1,7 @@
 package com.scrm.robot.taskmanager.job;
 
 import android.annotation.SuppressLint;
+import android.app.job.JobScheduler;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -147,23 +148,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("SdCardPath")
     private void openCv(AccessibilityNodeInfo rootNodeInfo) {
-        //点击之后的截图识别 ——> JobSchedulerMessageReceiver
-//        FileInputStream fis = null;
-//        try {
-//            fis = new FileInputStream("/sdcard/test.png");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Bitmap bitmap  = BitmapFactory.decodeStream(fis);
-//        Color color = bitmap.getColor(540,2070);
-//        int pixel = bitmap.getPixel(540,2070);
-//        System.out.println("red:"+color.red());
-//        System.out.println("green:"+color.green());
-//        System.out.println("blue:"+color.blue());
-//        System.out.println("to ARGB:"+color.toArgb());
-//        System.out.println("获取图片中该像素Color:"+color);
-//        System.out.println("获取图片中该像素Pixel:"+pixel);
-
         switch (JobStateViewModel.sopType.getValue()) {
             case "noneed":
                 Log.d(TAG, "CV:当前SOP已回执");
@@ -367,10 +351,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
                         if(date.after(flagTime)){
                             performClick(targetUi);
-                            sysSleep(6000);
+                            sysSleep(3000);
                             // 截图
                             if(!JobStateViewModel.isScreenShot.getValue()){
-                                this.setJobState(RobotRunState.WAITING);
+                                this.stop();
                                 System.out.println("截图功能开启");
                                 JobStateViewModel.isScreenShot.postValue(true); }
                             this.setTaskStatus("SCREENSHOT_CV");
@@ -530,7 +514,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             System.out.println("点击'回执'");
             sysSleep(600);
             this.accessibilityGestureUtil.click(620, 1350);
-            sysSleep(1000);
+            sysSleep(600);
             this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
         }else{
             System.out.println("点击'返回'");

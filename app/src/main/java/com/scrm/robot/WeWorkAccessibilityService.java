@@ -29,6 +29,7 @@ import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
+import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -65,10 +66,6 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         if (packageName.equals(event.getPackageName())) {
             Log.d(TAG, event.toString());
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
-//            AccessibilityNodeInfo eventNode = event.getSource();
-//            if (eventNode == null) {
-//                performGlobalAction(GLOBAL_ACTION_RECENTS); // 打开最近页面
-//            }
             robotAccessibilityContext.setCurrentEvent(event);
             robotAccessibilityContext.setRootNodeInfo(rootInfo);
             this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
@@ -80,7 +77,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
             AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
 
             BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
-            if (job != null) {
+            if (job != null && job.getJobState() == RobotRunState.STARTED) {
                 job.process();
             }
         }
@@ -182,6 +179,16 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
      public void onDestroy() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
         super.onDestroy();
+    }
+
+    private void sysSleep(int msecond) {
+        //睡眠 param:seconds
+        try {
+            System.out.println("睡眠一秒");
+            Thread.sleep(msecond);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
