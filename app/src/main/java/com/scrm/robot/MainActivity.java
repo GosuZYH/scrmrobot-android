@@ -14,8 +14,10 @@ import android.net.Uri;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Messenger;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +89,10 @@ public class MainActivity extends FragmentActivity{
 //        LogUtil.d("主页已加载");
 //        LogUtil.appendToFile_Third("/storage/emulated/0/scrm.log","主页已加载");
         selectTab(0);
+    }
+
+    public void initLoginView(){
+
     }
 
     public void onClickMainPage(View view){
@@ -166,7 +172,6 @@ public class MainActivity extends FragmentActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        suspensionWindowPermissionCheck();
     }
 
     @Override
@@ -177,14 +182,16 @@ public class MainActivity extends FragmentActivity{
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void btnOpenWeWorkClick(View view){
-        Log.d(TAG, "打开悬浮窗");
+        Log.d(TAG, "单点测试");
         try {
-            this.openCloseFloatView();
+            //test
+            testForImgRgb();
+//            this.openCloseFloatView();
             //设置任务类型为1
 //            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
-            Toast.makeText(MainActivity.this, "打开悬浮窗", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "单点测试", Toast.LENGTH_SHORT).show();
         }catch (Exception ignored){
-            Toast.makeText(MainActivity.this, "打开悬浮窗失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "单点测试失败", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -194,11 +201,12 @@ public class MainActivity extends FragmentActivity{
             if (jobScheduler == null) {
                 return;
             }
-            Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
-            this.openCloseFloatView();
-            FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MOMENT);
+            if(isCheckPermissionsOk(view)){
+                Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
+                this.openCloseFloatView();
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MOMENT);
+            }
 //            WeWorkAccessibilityService.logView.setText("正在执行群发助手任务");
-            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
@@ -210,11 +218,12 @@ public class MainActivity extends FragmentActivity{
             if (jobScheduler == null) {
                 return;
             }
-            Toast.makeText(MainActivity.this, "执行客户朋友圈任务", Toast.LENGTH_SHORT).show();
-            this.openCloseFloatView();
-            FloatViewModel.currentOnClickJob.postValue(RobotJobType.CUSTOMER_AGENT_SEND_MOMENT);
+            if(isCheckPermissionsOk(view)){
+                Toast.makeText(MainActivity.this, "执行客户朋友圈任务", Toast.LENGTH_SHORT).show();
+                this.openCloseFloatView();
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.CUSTOMER_AGENT_SEND_MOMENT);
+            }
 //            WeWorkAccessibilityService.logView.setText("正在执行客户朋友圈任务");
-            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
@@ -227,11 +236,12 @@ public class MainActivity extends FragmentActivity{
             if (jobScheduler == null) {
                 return;
             }
-            Toast.makeText(MainActivity.this, "执行sop朋友圈任务", Toast.LENGTH_SHORT).show();
-            this.openCloseFloatView();
-            FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
+            if(isCheckPermissionsOk(view)){
+                Toast.makeText(MainActivity.this, "执行sop朋友圈任务", Toast.LENGTH_SHORT).show();
+                this.openCloseFloatView();
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.SOP_AGENT_SEND_MOMENT);
+            }
 //            WeWorkAccessibilityService.logView.setText("正在执行sop朋友圈任务");
-            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
@@ -243,20 +253,57 @@ public class MainActivity extends FragmentActivity{
             if (jobScheduler == null) {
                 return;
             }
-            Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
-            this.openCloseFloatView();
-            FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);
+            if(isCheckPermissionsOk(view)){
+                Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
+                this.openCloseFloatView();
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);
+            }
 //            WeWorkAccessibilityService.logView.setText("正在循环执行所有任务");
-            openWework();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private boolean isAccessibilitySettingsOn(Context mContext) {
+        //检测辅助功能是否开启
+        int accessibilityEnabled = 0;
+        final String service = getPackageName() + "/" + WeWorkAccessibilityService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "Error finding setting, default accessibility to not found: " + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v(TAG, "***ACCESSIBILITY IS ENABLED***");
+            String settingValue = Settings.Secure.getString(mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+                    Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+        }
+        return false;
+    }
+
     public void btnAccessSettingClick(View view){
         Log.d(TAG, "跳转到辅助功能");
         try {
-            startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            if(!isAccessibilitySettingsOn(getApplicationContext())){
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            }
             Toast.makeText(MainActivity.this, "Accessibility service", Toast.LENGTH_SHORT).show();
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "can not open Accessibility service", Toast.LENGTH_SHORT).show();
@@ -286,13 +333,14 @@ public class MainActivity extends FragmentActivity{
     private void testForImgRgb(){
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream("/sdcard/test.png");
+            System.out.println("手机路径:"+Environment.getExternalStorageDirectory());
+            fis = new FileInputStream(Environment.getExternalStorageDirectory()+"/test.jpg");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         Bitmap bitmap  = BitmapFactory.decodeStream(fis);
-        Color color = bitmap.getColor(933,1733);
-        int pixel = bitmap.getPixel(933,1733);
+        Color color = bitmap.getColor(623,1321);
+        int pixel = bitmap.getPixel(623,1321);
         System.out.println("red:"+color.red());
         System.out.println("green:"+color.green());
         System.out.println("blue:"+color.blue());
@@ -341,6 +389,19 @@ public class MainActivity extends FragmentActivity{
         jobScheduler.stop();
     }
 
+    public Boolean isCheckPermissionsOk(View view){
+        boolean permissions = true;
+        if(!isAccessibilitySettingsOn(getApplicationContext())){
+            showNoticeDialog(view);
+            permissions = false;
+        }
+        if (!Settings.canDrawOverlays(this)) {
+            showFloatWindowNotice(view);
+            permissions = false;
+        }
+        return permissions;
+    }
+
     /**
      * 辅助功能提示框
      */
@@ -361,6 +422,7 @@ public class MainActivity extends FragmentActivity{
      * 悬浮窗功能提示框
      */
     public void showFloatWindowNotice(View view) {
+            //没有权限，弹出提示框
         floatNoticeDialog = new floatWindowNotice(this);
         floatNoticeDialog.show();
     }

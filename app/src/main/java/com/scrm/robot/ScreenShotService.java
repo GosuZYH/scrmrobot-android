@@ -136,7 +136,6 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                 if(aBoolean){
                     startScreenShot();
                 }else {
-
                 }
             }
         });
@@ -243,66 +242,30 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             bitmap.copyPixelsFromBuffer(buffer);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
             image.close();
-            //get screen info
-            //for AVD
             Log.d(TAG,"x:"+width+"height"+height);
 //            Color color = bitmap.getColor(933,1733);
 //            int pixel = bitmap.getPixel(933,1733);
             //for xiaoMi
-            Color color = bitmap.getColor(623,1321);
-            int pixel = bitmap.getPixel(623,1321);
+            Color color = bitmap.getColor(622,1242);
+//            Color color = bitmap.getColor(623,1321);
+            Log.d(TAG,"color："+color);
+//            int pixel = bitmap.getPixel(623,1321);
             if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
                 //已回执
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
-                    //未回执
-                this.accessibilityGestureUtil.click(540, 2070);
+                //未回执
+                this.accessibilityGestureUtil.click(360, 1550);
+//                this.accessibilityGestureUtil.click(540, 2070);
                 sopType = "need";
             }else {
+                //加载未完成
                 sopType = "loading";
             }
             //for test
-            sopType = "need";
-            this.accessibilityGestureUtil.click(540, 2070);
+//            this.accessibilityGestureUtil.click(540, 2070);
+//            sopType = "need";
             sendBroadcast(sopType);
-
-
-//            File fileImage = null;
-//            if (bitmap != null) {
-//                try {
-//                    String fname =FileUtil.getFileName(getApplicationContext());
-//
-//                    fileImage = new File(fname);
-//                    if (!fileImage.exists()) {
-//                        fileImage.createNewFile();
-//                    }
-//                    FileOutputStream out = new FileOutputStream(fileImage);
-//                    if (out != null) {
-//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-//                        out.flush();
-//                        out.close();
-//
-////                        Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-////                        Uri contentUri = Uri.fromFile(fileImage);
-////                        media.setData(contentUri);
-////                        sendBroadcast(media);
-//                        // 发送文件名
-//                        sendBroadcast(fname);
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                    fileImage = null;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    fileImage = null;
-//                }finally {
-//                    isSavingImage =false;
-//                }
-//            }
-//
-//            if (fileImage != null) {
-//                return bitmap;
-//            }
             return bitmap;
         }
 
@@ -396,6 +359,4 @@ public class ScreenShotService extends Service implements LifecycleOwner{
         LocalBroadcastManager localBroadcastManager = ((RobotApplication) ApplicationUtil.getApplication()).getLocalBroadcastManager();
         localBroadcastManager.sendBroadcast(intent);
     }
-
-
 }
