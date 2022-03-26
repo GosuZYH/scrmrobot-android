@@ -17,6 +17,11 @@
     <string name="checkPermission">检查悬浮窗功能权限:</string>
     <string name="mainPage">主页</string>
     <string name="minePage">我的</string>
+    <string name="account">账号:</string>
+    <string name="password">密码:</string>
+    <string name="accountNotice">请输入账号</string>
+    <string name="passWordNotice">请输入密码</string>
+
 
     <!-- Button view -->
     <string name="wework">点击测试</string>
@@ -26,5 +31,7 @@
     <string name="ball">点击设置</string>
     <string name="floatHandlerBtnTxt">启动</string>
     <string name="accessNotice">去开启</string>
+    <string name="login">登录</string>
+    <string name="weworkLogin">企微登录</string>
 
 </resources>

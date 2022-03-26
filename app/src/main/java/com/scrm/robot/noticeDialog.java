@@ -35,11 +35,11 @@ public class noticeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         // 指定布局
 
-        this.setContentView(R.layout.notice_dialog);
-        accessNoticeIMG = this.findViewById(R.id.accessNoticeIMG);
-        openAccess = this.findViewById(R.id.openAccess);
-        closeNotice = this.findViewById(R.id.closeNotice);
-        dialogWindow = this.getWindow();
+        setContentView(R.layout.notice_dialog);
+        accessNoticeIMG = findViewById(R.id.accessNoticeIMG);
+        openAccess = findViewById(R.id.openAccess);
+        closeNotice = findViewById(R.id.closeNotice);
+        dialogWindow = getWindow();
 
         WindowManager m = context.getWindowManager();
 //        FragmentManager F = context.getFragmentManager();

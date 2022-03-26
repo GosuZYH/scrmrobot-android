@@ -178,7 +178,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 //                this.accessibilityGestureUtil.click(360, 1550);
 //                this.accessibilityGestureUtil.click(360, 1550);
                 //AVD
-                this.accessibilityGestureUtil.click(540, 2070);
+//                this.accessibilityGestureUtil.click(540, 2070);
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
                 this.setTaskStatus("READY_TO_SHARE");
