@@ -491,6 +491,13 @@ public class MainActivity extends FragmentActivity{
         }
     }
 
+    public void loginOut(View view){
+        Toast.makeText(this, "注销成功！", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public ComponentName getJobScheduleServiceComponent() {
         return jobScheduleServiceComponent;
     }

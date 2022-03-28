@@ -33,5 +33,6 @@
     <string name="accessNotice">去开启</string>
     <string name="login">登录</string>
     <string name="weworkLogin">企微登录</string>
+    <string name="loginOut">退出登录</string>
 
 </resources>

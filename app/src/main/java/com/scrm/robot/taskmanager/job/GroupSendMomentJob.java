@@ -123,9 +123,14 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             return;
         }
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG);
+        List<AccessibilityNodeInfo> _targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG1);
         if(targetUis.size() > 0){
             System.out.println("点击待发送入口");
             performClick(targetUis.get(0));
+            this.setTaskStatus("TODO_SEND");
+        }else if(_targetUis.size() > 0){
+            System.out.println("点击待发送入口1");
+            performClick(_targetUis.get(0));
             this.setTaskStatus("TODO_SEND");
         }else {
             System.out.println("当前没有待发送消息");

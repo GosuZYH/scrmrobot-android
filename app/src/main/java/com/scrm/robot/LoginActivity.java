@@ -12,6 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scrm.robot.utils.HttpConnThread;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 public class LoginActivity extends Activity{
     public EditText accountNum;
     public EditText passWord;
@@ -21,8 +31,8 @@ public class LoginActivity extends Activity{
     public ImageView loginImg;
     public View loginView;
     public View mainView;
-    private String Account;
-    private String PWd;
+    public static String Account;
+    public static String PWd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +66,30 @@ public class LoginActivity extends Activity{
 
     public void loginIn(View view) {
         if (TextUtils.isEmpty(accountNum.getText().toString())) {
-            Toast.makeText(this, "姓名不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "账号不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(passWord.getText().toString())) {
-            Toast.makeText(this, "手机号不能为空",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入密码",Toast.LENGTH_SHORT).show();
             return;
         }
         Account = accountNum.getText().toString();
         PWd = passWord.getText().toString();
-        if(Account.equals("daqinjia") && PWd.equals("123")){
+        HttpConnThread postThread = new HttpConnThread();
+        postThread.start();
+        try {
+            postThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(HttpConnThread.userName != null){
             Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
             finish();
+        }else {
+            Toast.makeText(this, "账号/密码输入不正确，请检查后重试。", Toast.LENGTH_SHORT).show();
         }
     }
 
