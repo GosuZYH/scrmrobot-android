@@ -53,13 +53,14 @@ public class AllTaskJob extends BaseRobotJob {
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
+        accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+
         SopAgentSendMomentJob.tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         SopAgentSendMomentJob.selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
         GroupSendMomentJob.afterClickGroupSend = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
         CustomerFriendCircleJob.turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         CustomerFriendCircleJob.notificationFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
 
-        this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;
@@ -74,6 +75,7 @@ public class AllTaskJob extends BaseRobotJob {
                 String res1 = task1.SopFriendCircle(rootNodeInfo);
                 if("START_GROUP_TASK".equals(res1)){
                     this.setTaskId(2);
+                    task2.accessibilityGestureUtil = accessibilityGestureUtil;
                     task2.setTaskStatus("START_GROUP_TASK");
                     this.setTaskStatus("START_GROUP_TASK");
                 }
@@ -82,6 +84,7 @@ public class AllTaskJob extends BaseRobotJob {
                 String res2 = task2.groupSendTask(rootNodeInfo);
                 if("START_CUSTOMER_TASK".equals(res2)){
                     this.setTaskId(3);
+                    task3.accessibilityGestureUtil = accessibilityGestureUtil;
                     task3.setTaskStatus("START_CUSTOMER_TASK");
                     this.setTaskStatus("START_CUSTOMER_TASK");
                 }
@@ -90,6 +93,7 @@ public class AllTaskJob extends BaseRobotJob {
                 String res3 = task3.customerFriendCircleTask(rootNodeInfo);
                 if("INIT_SOP_TASK".equals(res3)){
                     this.setTaskId(1);
+                    task1.accessibilityGestureUtil = accessibilityGestureUtil;
                     task1.setTaskStatus("INIT_SOP_TASK");
                     this.setTaskStatus("INIT_SOP_TASK");
                 }

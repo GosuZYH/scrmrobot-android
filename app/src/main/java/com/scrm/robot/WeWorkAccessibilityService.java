@@ -5,6 +5,7 @@ import static com.scrm.robot.Constants.WEWORK_PACKAGE_NAME;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
+import android.app.job.JobScheduler;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -27,6 +28,7 @@ import androidx.lifecycle.Observer;
 
 import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -108,6 +110,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                 try {
                     if(!aBoolean){
                         startStopBtn.setText("启动");
+                        MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
                         MainActivity.jobScheduler.stop();
                     }else {
                         startStopBtn.setText("停止");
@@ -136,6 +139,8 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         DisplayMetrics displayMetrics = new DisplayMetrics();
 
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        JobStateViewModel.width.postValue(displayMetrics.widthPixels);
+        JobStateViewModel.height.postValue(displayMetrics.heightPixels);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

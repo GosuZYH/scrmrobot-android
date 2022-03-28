@@ -36,7 +36,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     private static int pastSopDay = 0;
     private static int sopHourLimit = 0;
     private static int sopMinLimit = 0;
-    private AccessibilityGestureUtil accessibilityGestureUtil;
+    public AccessibilityGestureUtil accessibilityGestureUtil;
 
     public SopAgentSendMomentJob(){
         super();
@@ -117,6 +117,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             case "REPLY_SOP":
                 sopReplied(rootNodeInfo);
                 break;
+            case "BACK_TO_SOP_LIST":
+                backToSopList(rootNodeInfo);
+                break;
             case "BACK_TO_SOP_LIST_AND_DELETE":
                 backToSopListAndDelete(rootNodeInfo);
                 break;
@@ -171,7 +174,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 Log.d(TAG, "CV:当前SOP还未加载成功");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
-                backToSopList(rootNodeInfo);
+                this.setTaskStatus("BACK_TO_SOP_LIST");
                 break;
         }
     }
@@ -513,7 +516,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
             System.out.println("点击'回执'");
             sysSleep(600);
-            this.accessibilityGestureUtil.click(620, 1350);
+            this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.width.getValue()));
             sysSleep(600);
             this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
         }else{

@@ -57,7 +57,8 @@ import java.nio.ByteBuffer;
 
 public class ScreenShotService extends Service implements LifecycleOwner{
     private final static String TAG = ScreenShotService.class.getName();
-    
+
+    public AccessibilityGestureUtil accessibilityGestureUtil;
     private MediaProjection mMediaProjection;
     private VirtualDisplay mVirtualDisplay;
 
@@ -212,7 +213,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 
     public class SaveTask extends AsyncTask<Image, Void, Bitmap> {
 
-        private AccessibilityGestureUtil accessibilityGestureUtil;
+
 
         @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
@@ -222,7 +223,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             }
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
             RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
-            this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+            accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
 
             JobStateViewModel.sopType.postValue("new");
             Image image = params[0];
@@ -245,22 +246,23 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            Color color = bitmap.getColor(933,1733);
 //            int pixel = bitmap.getPixel(933,1733);
             //for xiaoMi
-            Color color = bitmap.getColor(622,1242);
+            Color color = bitmap.getColor((int)(0.8639*width),(int)(0.857*height));
 //            Color color = bitmap.getColor(623,1321);
             Log.d(TAG,"color："+color);
 //            int pixel = bitmap.getPixel(623,1321);
             if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
                 //已回执
-                this.accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
+                accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                 //未回执
-                this.accessibilityGestureUtil.click(360, 1550);
+                accessibilityGestureUtil.click((int)(0.5*width), (int)(0.968*height));
+                accessibilityGestureUtil.click((int)(0.5*width), (int)(1.007*height));
 //                this.accessibilityGestureUtil.click(540, 2070);
                 sopType = "need";
             }else {
                 //加载未完成
-                this.accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
+                accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
                 sopType = "loading";
             }
             //for test
