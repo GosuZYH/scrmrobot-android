@@ -35,4 +35,18 @@
     <string name="weworkLogin">企微登录</string>
     <string name="loginOut">退出登录</string>
 
+    <!-- task config -->
+    <integer name="sopDay">-3</integer>
+    <integer name="sopHour">0</integer>
+    <integer name="sopMin">0</integer>
+
+    <integer name="customerDay">0</integer>
+    <integer name="customerHour">0</integer>
+    <integer name="customerMin">0</integer>
+
+    <integer name="groupSendDay">0</integer>
+    <integer name="groupSendHour">0</integer>
+    <integer name="groupSendMin">0</integer>
+    <string name="groupWeekDay">星期一星期二星期三星期四星期五星期六星期天</string>
+
 </resources>

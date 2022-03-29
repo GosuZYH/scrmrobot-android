@@ -10,6 +10,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
@@ -33,9 +34,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public static Boolean tagFindFlag = true;
     public static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
-    private static int pastSopDay = 0;
-    private static int sopHourLimit = 0;
-    private static int sopMinLimit = 0;
+    private static int pastSopDay;
+    private static int sopHourLimit;
+    private static int sopMinLimit;
     public AccessibilityGestureUtil accessibilityGestureUtil;
 
     public SopAgentSendMomentJob(){
@@ -57,6 +58,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         super.stop();
     }
 
+    @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void process() {
@@ -73,6 +75,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        pastSopDay = Integer.parseInt(application.getString(R.integer.sopDay));
+        sopHourLimit = Integer.parseInt(application.getString(R.integer.sopHour));
+        sopMinLimit = Integer.parseInt(application.getString(R.integer.sopMin));
 
         this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         try {

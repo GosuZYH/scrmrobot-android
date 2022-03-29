@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -21,9 +22,10 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static boolean afterClickGroupSend=false;
-    private static int pastGroupSendDay = 0;
-    private static int groupSendHourLimit = 0;
-    private static int groupSendMinLimit = 0;
+    private static int pastGroupSendDay;
+    private static int groupSendHourLimit;
+    private static int groupSendMinLimit;
+    private static String groupSendWeekDay;
 
     public GroupSendMomentJob(){
         super();
@@ -44,6 +46,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         super.stop();
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void process() {
         if(this.getJobState()==RobotRunState.STOPPED){
@@ -52,6 +55,11 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         }
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+        pastGroupSendDay = Integer.parseInt(application.getString(R.integer.groupSendDay));
+        groupSendHourLimit = Integer.parseInt(application.getString(R.integer.groupSendHour));
+        groupSendMinLimit = Integer.parseInt(application.getString(R.integer.groupSendMin));
+        groupSendWeekDay = application.getString(R.string.groupWeekDay);
+
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
         AccessibilityEvent currentEvent = robotAccessibilityContext.getCurrentEvent();
         afterClickGroupSend = currentEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
@@ -128,10 +136,6 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             System.out.println("点击待发送入口");
             performClick(targetUis.get(0));
             this.setTaskStatus("TODO_SEND");
-        }else if(_targetUis.size() > 0){
-            System.out.println("点击待发送入口1");
-            performClick(_targetUis.get(0));
-            this.setTaskStatus("TODO_SEND");
         }else {
             System.out.println("当前没有待发送消息");
             this.setTaskStatus("NO_MSG");
@@ -166,6 +170,10 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                     taskTime.add(Calendar.DAY_OF_MONTH,-1);  //天-1d
                 }else if (time.contains("上午") || time.contains("下午") || time.contains("刚刚") || time.contains("分钟前")){
                     taskTime.add(Calendar.HOUR_OF_DAY, -3);  //时-3h
+                }else if (time.contains("星期")){
+                    if(!groupSendWeekDay.contains(time)){
+                        taskTime.add(Calendar.DAY_OF_MONTH,-7);  //天-1d
+                    }
                 }
                 Date executeTime = taskTime.getTime();
                 Log.d(TAG,"截至发送时间线："+flagTime+",当前最新任务时间："+executeTime);

@@ -10,6 +10,9 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
+
+import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -27,9 +30,9 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static Boolean turnPageFlag = true;
     public static Boolean notificationFlag = true;
-    private static int pastDay = 0;
-    private static int hourLimit = 0;
-    private static int minLimit = 0;
+    private static int pastDay;
+    private static int hourLimit;
+    private static int minLimit;
 
     public CustomerFriendCircleJob(){
         super();
@@ -50,6 +53,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         super.stop();
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void process() {
         if(this.getJobState()==RobotRunState.STOPPED){
@@ -58,6 +62,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         }
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+        pastDay = Integer.parseInt(application.getString(R.integer.customerDay));
+        hourLimit = Integer.parseInt(application.getString(R.integer.customerHour));
+        minLimit = Integer.parseInt(application.getString(R.integer.customerMin));
+
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
         turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
