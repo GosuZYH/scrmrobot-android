@@ -36,14 +36,16 @@ public class FloatViewTouchListener implements View.OnTouchListener {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                clickDownFlag = false;
-                clickUpFlag = false;
                 int nowX = (int) event.getRawX();
                 int nowY = (int) event.getRawY();
                 int movedX = nowX - x;
                 int movedY = nowY - y;
                 x = nowX;
                 y = nowY;
+                if(movedX>2 || movedX<-2 || movedY>2 || movedY<-2){
+                    clickDownFlag = false;
+                    clickUpFlag = false;
+                }
                 layoutParams.x = layoutParams.x + movedX;
                 layoutParams.y = layoutParams.y + movedY;
                 windowManager.updateViewLayout(view, layoutParams);
