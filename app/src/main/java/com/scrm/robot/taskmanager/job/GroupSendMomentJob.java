@@ -127,7 +127,11 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             System.out.println("点击待发送入口");
             performClick(targetUis.get(0));
             this.setTaskStatus("TODO_SEND");
-        }else {
+        } else if(_targetUis.size() > 0){
+            System.out.println("点击待发送入口1");
+            performClick(_targetUis.get(0));
+            this.setTaskStatus("TODO_SEND");}
+        else {
             System.out.println("当前没有待发送消息");
             this.setTaskStatus("NO_MSG");
         }
@@ -137,7 +141,15 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     private void sendMsg(AccessibilityNodeInfo rootNodeInfo){
         //处理待发送消息
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_PAGE);
+        List<AccessibilityNodeInfo> noMSGUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.NO_MSG_PAGE);
         if(targetUis.size() > 0){
+            if(noMSGUis.size() > 0){
+                if(noMSGUis.get(0).getText()!=null){
+                    "无数据".equals(noMSGUis.get(0).getText().toString());
+                    this.setTaskStatus("NO_MSG");
+                    return;
+                }
+            }
             try{
                 String time = targetUis.get(0).getChild(0).getChild(0).getChild(1).getText().toString();
                 //create flag time

@@ -14,6 +14,7 @@ import androidx.annotation.StringRes;
 
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
@@ -30,6 +31,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static Boolean turnPageFlag = true;
     public static Boolean notificationFlag = true;
+    public static int publishedNum = 0;
 
     public CustomerFriendCircleJob(){
         super();
@@ -160,6 +162,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         if(targetUis.size() > 0){
             Log.d(TAG,"点击企业通知");
             performClick(targetUis.get(1).getParent());
+            sysSleep(500);
+            accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.48));
             this.setTaskStatus("FIND_NEED_PUBLISH_PYQ");
         }
     }
@@ -200,10 +204,18 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                     Log.d(TAG,"当前页面第"+(i+1)+"条客户朋友圈时间为"+executeTime+",状态为:"+sendUis.get(i).getText());
                     if(executeTime.after(flagTime)){
                         if(sendUis.get(i).getText().equals("发表")){
+                            publishedNum = 0;
                             performClick(sendUis.get(i));
+                        }else if(sendUis.get(i).getText().equals("已发表")){
+                            publishedNum ++;
                         }
                     }else {
                         Log.d(TAG,"当前已截止到任务发送时间:"+flagTime);
+                        this.setTaskStatus("CUSTOMER_TASK_END");
+                        return;
+                    }
+                    if(publishedNum>20){
+                        Log.d(TAG,"当前已有连续两页已发送的任务");
                         this.setTaskStatus("CUSTOMER_TASK_END");
                         return;
                     }
@@ -235,7 +247,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (chatUis.size()>0){
+        if (chatUis.size()>0 && chatUis.get(0).getChildCount()==5){
             Log.d(TAG,"已返回到主界面，task2 end..");
             this.setTaskStatus("TASK2_END");
         }else if(backUis.size()>0){
