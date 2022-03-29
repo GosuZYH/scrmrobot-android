@@ -49,7 +49,7 @@ public class ResourceId {
     public static final String GROUP_SEND = "com.tencent.wework:id/g16";
     public static final String GROUP_SEND_TIME = "com.tencent.wework:id/k44";
     public static final String SEND_FLAG = "com.tencent.wework:id/k1m";
-    public static final String SEND_FLAG1 = "com.tencent.wework:id/c60";
+    public static final String SEND_FLAG1 = "com.tencent.wework:id/ijd";
     public static final String MSG_NUM_TITLE = "com.tencent.wework:id/kap";
     public static final String NEW_USER = "com.tencent.wework:id/jg5";
     public static final String CLEAR_TEXT = "com.tencent.wework:id/iq1";

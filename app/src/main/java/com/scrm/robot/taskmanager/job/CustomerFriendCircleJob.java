@@ -14,6 +14,7 @@ import androidx.annotation.StringRes;
 
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
@@ -160,6 +161,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         if(targetUis.size() > 0){
             Log.d(TAG,"点击企业通知");
             performClick(targetUis.get(1).getParent());
+            sysSleep(1000);
+            accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.48));
             this.setTaskStatus("FIND_NEED_PUBLISH_PYQ");
         }
     }

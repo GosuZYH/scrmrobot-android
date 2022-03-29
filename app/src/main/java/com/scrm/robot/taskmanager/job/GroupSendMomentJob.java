@@ -127,6 +127,10 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             System.out.println("点击待发送入口");
             performClick(targetUis.get(0));
             this.setTaskStatus("TODO_SEND");
+        }else if(_targetUis.size() > 0){
+            System.out.println("点击待发送入口");
+            performClick(_targetUis.get(0));
+            this.setTaskStatus("TODO_SEND");
         }else {
             System.out.println("当前没有待发送消息");
             this.setTaskStatus("NO_MSG");
