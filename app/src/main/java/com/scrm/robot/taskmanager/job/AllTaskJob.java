@@ -72,28 +72,28 @@ public class AllTaskJob extends BaseRobotJob {
     private void executeAllTask(AccessibilityNodeInfo rootNodeInfo){
         switch (this.getTaskId()) {
             case 1:
+                task1.accessibilityGestureUtil = accessibilityGestureUtil;
                 String res1 = task1.SopFriendCircle(rootNodeInfo);
                 if("START_GROUP_TASK".equals(res1)){
                     this.setTaskId(2);
-                    task2.accessibilityGestureUtil = accessibilityGestureUtil;
                     task2.setTaskStatus("START_GROUP_TASK");
                     this.setTaskStatus("START_GROUP_TASK");
                 }
                 break;
             case 2:
+                task2.accessibilityGestureUtil = accessibilityGestureUtil;
                 String res2 = task2.groupSendTask(rootNodeInfo);
                 if("START_CUSTOMER_TASK".equals(res2)){
                     this.setTaskId(3);
-                    task3.accessibilityGestureUtil = accessibilityGestureUtil;
                     task3.setTaskStatus("START_CUSTOMER_TASK");
                     this.setTaskStatus("START_CUSTOMER_TASK");
                 }
                 break;
             case 3:
+                task3.accessibilityGestureUtil = accessibilityGestureUtil;
                 String res3 = task3.customerFriendCircleTask(rootNodeInfo);
                 if("INIT_SOP_TASK".equals(res3)){
                     this.setTaskId(1);
-                    task1.accessibilityGestureUtil = accessibilityGestureUtil;
                     task1.setTaskStatus("INIT_SOP_TASK");
                     this.setTaskStatus("INIT_SOP_TASK");
                 }

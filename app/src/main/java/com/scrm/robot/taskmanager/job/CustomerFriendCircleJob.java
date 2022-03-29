@@ -30,9 +30,6 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static Boolean turnPageFlag = true;
     public static Boolean notificationFlag = true;
-    private static int pastDay;
-    private static int hourLimit;
-    private static int minLimit;
 
     public CustomerFriendCircleJob(){
         super();
@@ -62,10 +59,6 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         }
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        pastDay = Integer.parseInt(application.getString(R.integer.customerDay));
-        hourLimit = Integer.parseInt(application.getString(R.integer.customerHour));
-        minLimit = Integer.parseInt(application.getString(R.integer.customerMin));
-
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
         turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
@@ -128,12 +121,14 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     private void _findCustomerFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击客户朋友圈
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText("客户朋友圈");
+        List<AccessibilityNodeInfo> PYQUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ);
         if(targetUis.size() > 0){
             try {
                 Log.d(TAG,"点击客户朋友圈");
-                sysSleep(500);
                 performClick(targetUis.get(0).getParent().getParent());
-                this.setTaskStatus("CHECK_NEW");
+                if(PYQUis.size() > 0){
+                    this.setTaskStatus("CHECK_NEW");
+                }
             }catch (Exception e){
             }
         }
@@ -169,6 +164,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void checkNewFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找需要发送的朋友圈
         if(!turnPageFlag){
@@ -186,9 +182,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
             Log.d(TAG,"当前页面有企业通知");
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            calendar.add(Calendar.DAY_OF_MONTH, pastDay);  //向前推的天数
-            calendar.set(Calendar.HOUR_OF_DAY, hourLimit);  //时
-            calendar.set(Calendar.MINUTE, minLimit);   //分
+            RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+            calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(application.getString(R.integer.customerDay)));  //向前推的天数
+            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(application.getString(R.integer.customerHour)));  //时
+            calendar.set(Calendar.MINUTE, Integer.parseInt(application.getString(R.integer.customerMin)));   //分
             calendar.set(Calendar.SECOND, 0);   //秒
             Date flagTime = calendar.getTime();
             for(int i=0;i<notificationUis.get(0).getChildCount();i++){

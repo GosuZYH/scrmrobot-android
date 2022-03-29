@@ -22,10 +22,6 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static boolean afterClickGroupSend=false;
-    private static int pastGroupSendDay;
-    private static int groupSendHourLimit;
-    private static int groupSendMinLimit;
-    private static String groupSendWeekDay;
 
     public GroupSendMomentJob(){
         super();
@@ -55,11 +51,6 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         }
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        pastGroupSendDay = Integer.parseInt(application.getString(R.integer.groupSendDay));
-        groupSendHourLimit = Integer.parseInt(application.getString(R.integer.groupSendHour));
-        groupSendMinLimit = Integer.parseInt(application.getString(R.integer.groupSendMin));
-        groupSendWeekDay = application.getString(R.string.groupWeekDay);
-
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
         AccessibilityEvent currentEvent = robotAccessibilityContext.getCurrentEvent();
         afterClickGroupSend = currentEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
@@ -142,6 +133,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void sendMsg(AccessibilityNodeInfo rootNodeInfo){
         //处理待发送消息
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_PAGE);
@@ -151,9 +143,10 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 //create flag time
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
-                calendar.add(Calendar.DAY_OF_MONTH, pastGroupSendDay);  //向前推的天数
-                calendar.set(Calendar.HOUR_OF_DAY, groupSendHourLimit);  //时
-                calendar.set(Calendar.MINUTE, groupSendMinLimit);   //分
+                RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+                calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(application.getString(R.integer.groupSendDay)));  //向前推的天数
+                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(application.getString(R.integer.groupSendHour)));  //时
+                calendar.set(Calendar.MINUTE, Integer.parseInt(application.getString(R.integer.groupSendMin)));   //分
                 Date flagTime = calendar.getTime();
                 //create task time
                 Calendar taskTime = Calendar.getInstance();
@@ -171,7 +164,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 }else if (time.contains("上午") || time.contains("下午") || time.contains("刚刚") || time.contains("分钟前")){
                     taskTime.add(Calendar.HOUR_OF_DAY, -3);  //时-3h
                 }else if (time.contains("星期")){
-                    if(!groupSendWeekDay.contains(time)){
+                    if(!application.getString(R.string.groupWeekDay).contains(time)){
                         taskTime.add(Calendar.DAY_OF_MONTH,-7);  //天-1d
                     }
                 }

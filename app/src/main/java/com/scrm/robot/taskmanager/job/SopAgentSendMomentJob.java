@@ -34,9 +34,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public static Boolean tagFindFlag = true;
     public static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
-    private static int pastSopDay;
-    private static int sopHourLimit;
-    private static int sopMinLimit;
     public AccessibilityGestureUtil accessibilityGestureUtil;
 
     public SopAgentSendMomentJob(){
@@ -75,9 +72,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         Log.d(TAG, String.format("%s processing", this.getJobId()));
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
-        pastSopDay = Integer.parseInt(application.getString(R.integer.sopDay));
-        sopHourLimit = Integer.parseInt(application.getString(R.integer.sopHour));
-        sopMinLimit = Integer.parseInt(application.getString(R.integer.sopMin));
 
         this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         try {
@@ -311,6 +305,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void sopClickIn(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->sop朋友圈消息->尝试点击进入
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
@@ -337,9 +332,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         //get task stop time
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date());
-                        calendar.add(Calendar.DAY_OF_MONTH, pastSopDay);  //向前推的天数
-                        calendar.set(Calendar.HOUR_OF_DAY, sopHourLimit);  //时
-                        calendar.set(Calendar.MINUTE, sopMinLimit);   //分
+                        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+                        calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(application.getString(R.integer.sopDay)));  //向前推的天数
+                        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(application.getString(R.integer.sopHour)));  //时
+                        calendar.set(Calendar.MINUTE, Integer.parseInt(application.getString(R.integer.sopMin)));   //分
                         calendar.set(Calendar.SECOND, 0);   //秒
                         Date flagTime = calendar.getTime();
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日HH:mm");
