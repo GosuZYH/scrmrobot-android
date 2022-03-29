@@ -119,9 +119,8 @@ public class MainActivity extends FragmentActivity{
     private void resetImgs() {
         mImg1 = findViewById(R.id.id_tab_img1);
         mImg2 = findViewById(R.id.id_tab_img2);
-        //TODO 更改点击后的图片状态
-//        mImg1.setImageResource(R.mipmap.ic_launcher);
-//        mImg2.setImageResource(R.mipmap.ic_launcher);
+        mImg1.setImageResource(R.drawable.mine_tab_icon_home_default);
+        mImg2.setImageResource(R.drawable.hme_tab_icon_mine_default);
     }
 
     //进行选中Tab的处理
@@ -135,8 +134,8 @@ public class MainActivity extends FragmentActivity{
         switch (i) {
             //当选中点击的是第一页的Tab时
             case 0:
-                //TODO 更改点击后的图片状态
-//                mImg1.setImageResource(R.mipmap.ic_launcher);
+                mImg1 = findViewById(R.id.id_tab_img1);
+                mImg1.setImageResource(R.drawable.hme_tab_icon_home_select);
                 if (mFrag1 == null) {
                     mFrag1 = new MainFragment();
                     transaction.add(R.id.id_content, mFrag1);
@@ -146,8 +145,8 @@ public class MainActivity extends FragmentActivity{
                 }
                 break;
             case 1:
-                //TODO 更改点击后的图片状态
-//                mImg2.setImageResource(R.mipmap.ic_launcher);
+                mImg2 = findViewById(R.id.id_tab_img2);
+                mImg2.setImageResource(R.drawable.mine_tab_icon_mine_select);
                 if (mFrag2 == null) {
                     mFrag2 = new MineFragment();
                     transaction.add(R.id.id_content, mFrag2);

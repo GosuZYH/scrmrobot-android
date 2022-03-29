@@ -26,7 +26,7 @@ public class MineFragment extends Fragment {
         userPhoto = view.findViewById(R.id.userPhoto);
         userName = view.findViewById(R.id.userName);
         userId = view.findViewById(R.id.userId);
-        userPhoto.setImageResource(R.drawable.userphoto);
+        userPhoto.setImageResource(R.drawable.logo);
         userName.setText(HttpConnThread.userName);
         userId.setText("ID:"+HttpConnThread.userId);
         return view;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SCRMRobot</string>
+    <string name="app_name">SCRM手机执行器</string>
     <string name="callWeWorkBtnTxt">启动企微</string>
     <string name="accessSettingBtnTxt">辅助设置</string>
 
