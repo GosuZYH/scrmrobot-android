@@ -191,7 +191,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
 //        System.out.println("标签组ui数量："+tagGroup.size());
         if (!tagFindFlag){
-            sysSleep(100);
+            sysSleep(200);
             return;
         }
         try {
@@ -209,15 +209,22 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                         }
                     }
                 }
+                if(!tagName.get(0).getParent().getParent().getParent().getParent().getParent().isScrollable()){
+                    System.out.println("当前没有多余标签页可翻");
+                    this.setTaskStatus("REPLY_SOP");
+                    tempTag = "";
+                    return;
+                }
                 //和与缓存标签相同
                 if(tempTag.equals(tagName.get(0).getChild(0).getText().toString())){
-                    tempTag = "";
+                    System.out.println("当前页首标签与缓存标签相同");
                     this.setTaskStatus("REPLY_SOP");
+                    tempTag = "";
                     performScrollUp(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
                 }else {
+                    System.out.println("翻一整页");
                     tempTag = tagName.get(0).getChild(0).getText().toString();
                     performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
-                    System.out.println("翻一整页");
                 }
             }
         }catch (Exception e){
