@@ -191,6 +191,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
 //        System.out.println("标签组ui数量："+tagGroup.size());
         if (!tagFindFlag){
+            sysSleep(100);
             return;
         }
         try {
@@ -210,8 +211,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 }
                 //和与缓存标签相同
                 if(tempTag.equals(tagName.get(0).getChild(0).getText().toString())){
-                    this.setTaskStatus("REPLY_SOP");
                     tempTag = "";
+                    this.setTaskStatus("REPLY_SOP");
+                    performScrollUp(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
                 }else {
                     tempTag = tagName.get(0).getChild(0).getText().toString();
                     performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
@@ -266,6 +268,15 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         }
     }
 
+    public void performScrollUp(AccessibilityNodeInfo targetInfo) {
+        //ui动作:向上滑动
+        try {
+            targetInfo.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+        }catch (Exception e){
+            System.out.println("滑动失败");
+        }
+    }
+
     public void inputText(AccessibilityNodeInfo targetInfo){
         //输入text
         try {
@@ -310,42 +321,45 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @SuppressLint("ResourceType")
     private void sopClickIn(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->sop朋友圈消息->尝试点击进入
+        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
-        if(targetUis.size()>0){
-            Collections.reverse(targetUis);
-            for(AccessibilityNodeInfo targetUi:targetUis){
-                if(targetUi.getChildCount()>3){
-                    try {
-                        String tagText = targetUi.getChild(1).getText().toString();
+        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+            System.out.println("当前已在SOP页");
+            if(targetUis.size()>0){
+                Collections.reverse(targetUis);
+                for(AccessibilityNodeInfo targetUi:targetUis){
+                    if(targetUi.getChildCount()>3){
+                        try {
+                            String tagText = targetUi.getChild(1).getText().toString();
 
-                        //get current sop task tag
-                        List<String> list = Arrays.asList(tagText.split("："));
-                        targetTag = list.get(list.size()-1);
+                            //get current sop task tag
+                            List<String> list = Arrays.asList(tagText.split("："));
+                            targetTag = list.get(list.size()-1);
 
-                        //get current sop task execute time
-                        List<String> list1 = Arrays.asList(tagText.split("\n"));
-                        String tagDate = list1.get(0);
-                        String tagTime = tagText.substring(tagText.indexOf("当日")+2,tagText.indexOf("执行"));
-                        String _tagTime = tagDate+tagTime;
+                            //get current sop task execute time
+                            List<String> list1 = Arrays.asList(tagText.split("\n"));
+                            String tagDate = list1.get(0);
+                            String tagTime = tagText.substring(tagText.indexOf("当日")+2,tagText.indexOf("执行"));
+                            String _tagTime = tagDate+tagTime;
 
-                        //print test
-                        System.out.println("点击进入一条SOP,标签为:"+targetTag+",该执行时间为:"+ _tagTime);
+                            //print test
+                            System.out.println("点击进入一条SOP,标签为:"+targetTag+",该执行时间为:"+ _tagTime);
 
-                        //get task stop time
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(new Date());
-                        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-                        calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(application.getString(R.integer.sopDay)));  //向前推的天数
-                        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(application.getString(R.integer.sopHour)));  //时
-                        calendar.set(Calendar.MINUTE, Integer.parseInt(application.getString(R.integer.sopMin)));   //分
-                        calendar.set(Calendar.SECOND, 0);   //秒
-                        Date flagTime = calendar.getTime();
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日HH:mm");
-                        Date date = sdf.parse(_tagTime);
-                        assert date != null;
-                        System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
+                            //get task stop time
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(new Date());
+                            RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+                            calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(application.getString(R.integer.sopDay)));  //向前推的天数
+                            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(application.getString(R.integer.sopHour)));  //时
+                            calendar.set(Calendar.MINUTE, Integer.parseInt(application.getString(R.integer.sopMin)));   //分
+                            calendar.set(Calendar.SECOND, 0);   //秒
+                            Date flagTime = calendar.getTime();
+                            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日HH:mm");
+                            Date date = sdf.parse(_tagTime);
+                            assert date != null;
+                            System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
 
-                        //for no time limit test
+                            //for no time limit test
 //                        performClick(targetUi);
 //                        sysSleep(6000);
 //                        // 截图
@@ -355,25 +369,29 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 //                            JobStateViewModel.isScreenShot.postValue(true); }
 //                        this.setTaskStatus("SCREENSHOT_CV");
 
-                        if(date.after(flagTime)){
-                            performClick(targetUi);
-                            sysSleep(3000);
-                            // 截图
-                            if(!JobStateViewModel.isScreenShot.getValue()){
-                                this.stop();
-                                System.out.println("截图功能开启");
-                                JobStateViewModel.isScreenShot.postValue(true); }
-                            this.setTaskStatus("SCREENSHOT_CV");
-                        }else{
-                            Log.d(TAG,"SOP已执行到截至时间点");
+                            if(date.after(flagTime)){
+                                performClick(targetUi);
+                                sysSleep(3000);
+                                // 截图
+                                if(!JobStateViewModel.isScreenShot.getValue()){
+                                    this.stop();
+                                    System.out.println("截图功能开启");
+                                    JobStateViewModel.isScreenShot.postValue(true); }
+                                this.setTaskStatus("SCREENSHOT_CV");
+                            }else{
+                                Log.d(TAG,"SOP已执行到截至时间点");
+                                this.setTaskStatus("BACK_TO_MAIN");
+                            }
+                        } catch (ParseException e) {
+                            Log.d(TAG,"SOP任务在信息处理中出现错误"+e);
                             this.setTaskStatus("BACK_TO_MAIN");
                         }
-                    } catch (ParseException e) {
-                        Log.d(TAG,"SOP任务在信息处理中出现错误"+e);
-                        this.setTaskStatus("BACK_TO_MAIN");
+                        return;
                     }
-                    return;
                 }
+            }else{
+                System.out.println("当前没有任何SOP朋友圈消息");
+                this.setTaskStatus("BACK_TO_MAIN");
             }
         }
     }
