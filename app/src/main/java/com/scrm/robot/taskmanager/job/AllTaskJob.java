@@ -18,9 +18,9 @@ import java.util.Date;
 public class AllTaskJob extends BaseRobotJob {
 
     private final static String TAG = GroupSendMomentJob.class.getName();
-    private final SopAgentSendMomentJob task1 = new SopAgentSendMomentJob();
-    private final GroupSendMomentJob task2 = new GroupSendMomentJob();
-    private final CustomerFriendCircleJob task3 = new CustomerFriendCircleJob();
+    private static final SopAgentSendMomentJob task1 = new SopAgentSendMomentJob();
+    private static final GroupSendMomentJob task2 = new GroupSendMomentJob();
+    private static final CustomerFriendCircleJob task3 = new CustomerFriendCircleJob();
     public AccessibilityGestureUtil accessibilityGestureUtil;
 
     public AllTaskJob(){
@@ -54,17 +54,21 @@ public class AllTaskJob extends BaseRobotJob {
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
 
         accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
-
-        SopAgentSendMomentJob.tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
-        SopAgentSendMomentJob.selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-        GroupSendMomentJob.afterClickGroupSend = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-        CustomerFriendCircleJob.turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
-        CustomerFriendCircleJob.notificationFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
-
+        
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;
         }
+        SopAgentSendMomentJob.tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+        SopAgentSendMomentJob.selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+        if(GroupSendMomentJob.findMsg){
+            if(robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
+                GroupSendMomentJob.afterClickGroupSend ++;
+            }
+        }
+        CustomerFriendCircleJob.turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+        CustomerFriendCircleJob.notificationFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
+
         executeAllTask(rootNodeInfo);
     }
 

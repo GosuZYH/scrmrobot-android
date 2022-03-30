@@ -20,8 +20,9 @@ import java.util.List;
 
 public class GroupSendMomentJob  extends BaseRobotJob {
     private final static String TAG = GroupSendMomentJob.class.getName();
+    public static boolean findMsg = false;
     public AccessibilityGestureUtil accessibilityGestureUtil;
-    public static boolean afterClickGroupSend=false;
+    public static int afterClickGroupSend = 0;
 
     public GroupSendMomentJob(){
         super();
@@ -53,7 +54,11 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
         AccessibilityEvent currentEvent = robotAccessibilityContext.getCurrentEvent();
-        afterClickGroupSend = currentEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+        if(findMsg){
+            if(currentEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
+                afterClickGroupSend ++;
+            }
+        }
 
         this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
@@ -113,14 +118,18 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             System.out.println("点击群发助手");
             performClick(groupSendUis.get(0).getParent().getParent());
             this.setTaskStatus("FIND_MSG");
+            findMsg = true;
         }
     }
 
     private void checkGroupSendMsg(AccessibilityNodeInfo rootNodeInfo){
         //检测有无待发消息
-        if(!afterClickGroupSend){
+        if(afterClickGroupSend<4){
+            sysSleep(100);
             return;
         }
+        findMsg = false;
+        afterClickGroupSend = 0;
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG);
         List<AccessibilityNodeInfo> _targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG1);
         if(targetUis.size() > 0){
@@ -228,6 +237,16 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             targetInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }catch (Exception e){
             System.out.println("点击失败");
+        }
+    }
+
+    private void sysSleep(int msecond) {
+        //睡眠 param:seconds
+        try {
+            System.out.println("睡眠一秒");
+            Thread.sleep(msecond);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

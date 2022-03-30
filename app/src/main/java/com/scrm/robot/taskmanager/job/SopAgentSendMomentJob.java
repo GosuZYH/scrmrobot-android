@@ -203,6 +203,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                             performClick(tagName.get(i).getChild(k));
                             this.setTaskStatus("TAG_FOUND");
                             System.out.println("标签已找到");
+                            tempTag = "";
                             return;
                         }
                     }
@@ -210,6 +211,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 //和与缓存标签相同
                 if(tempTag.equals(tagName.get(0).getChild(0).getText().toString())){
                     this.setTaskStatus("REPLY_SOP");
+                    tempTag = "";
                 }else {
                     tempTag = tagName.get(0).getChild(0).getText().toString();
                     performScroll(tagName.get(0).getParent().getParent().getParent().getParent().getParent());
