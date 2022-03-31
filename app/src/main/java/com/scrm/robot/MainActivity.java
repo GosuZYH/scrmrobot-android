@@ -446,12 +446,12 @@ public class MainActivity extends FragmentActivity{
     /**
      * 打开悬浮窗
      */
-    private void openCloseFloatView(){
+    public static void openCloseFloatView(){
         if(!FloatViewModel.isFloatWindowShow.getValue()){
             FloatViewModel.isFloatWindowShow.postValue(true);
         }
     }
-    private void closeFloatView(){
+    public static void closeFloatView(){
         FloatViewModel.isFloatWindowShow.postValue(false);
     }
 

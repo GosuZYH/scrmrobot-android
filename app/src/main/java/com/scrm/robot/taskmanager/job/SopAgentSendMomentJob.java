@@ -156,26 +156,25 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             case "noneed":
                 Log.d(TAG, "CV:当前SOP已回执");
                 deleteTag = targetTag;
-                this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
+                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
+                this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
                 break;
             case "need":
                 Log.d(TAG, "CV:当前SOP未回执");
-                //小米
-//                this.accessibilityGestureUtil.click(100, 1550);
-//                this.accessibilityGestureUtil.click(360, 1550);
-//                this.accessibilityGestureUtil.click(360, 1550);
-                //AVD
-//                this.accessibilityGestureUtil.click(540, 2070);
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
+//                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.968*JobStateViewModel.height.getValue()));
+                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
             case "loading":
                 Log.d(TAG, "CV:当前SOP还未加载成功");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
+//                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
+                this.accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.4));
                 this.setTaskStatus("BACK_TO_SOP_LIST");
                 break;
         }

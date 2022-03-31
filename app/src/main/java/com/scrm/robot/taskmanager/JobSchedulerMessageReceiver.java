@@ -34,17 +34,6 @@ public class JobSchedulerMessageReceiver extends BroadcastReceiver {
             }
         }else if(broadcastType==RobotBroadcastType.SCREENSHOT_FINISH_BROADCAST){
             String sopType = intent.getStringExtra("sopType");
-            switch (sopType) {
-                case "noneed":
-                    Log.d(TAG, "当前SOP已回执");
-                    break;
-                case "need":
-                    Log.d(TAG, "当前SOP未回执");
-                    break;
-                case "loading":
-                    Log.d(TAG, "当前SOP还未加载成功");
-                    break;
-            }
             JobStateViewModel.sopType.postValue(sopType);
             robotApplication.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().setJobState(RobotRunState.STARTED);
             robotApplication.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().process();
