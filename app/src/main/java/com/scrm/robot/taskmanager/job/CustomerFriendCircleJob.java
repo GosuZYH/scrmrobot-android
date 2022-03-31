@@ -201,14 +201,17 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                     taskTime.setTime(date);
                     taskTime.set(Calendar.YEAR,calendar.get(Calendar.YEAR));
                     Date executeTime = taskTime.getTime();
+                    performClick(notificationUis.get(0).getChild(i).getChild(0).getChild(0).getChild(0).getChild(1).getChild(1));
                     Log.d(TAG,"当前页面第"+(i+1)+"条客户朋友圈时间为"+executeTime+",状态为:"+sendUis.get(i).getText());
                     if(executeTime.after(flagTime)){
                         if(sendUis.get(i).getText().equals("发表")){
                             publishedNum = 0;
-                            performClick(sendUis.get(i));
+//                            performClick(sendUis.get(i));
+                            performClick(notificationUis.get(0).getChild(i).getChild(0).getChild(0).getChild(0).getChild(1).getChild(1));
                         }else if(sendUis.get(i).getText().equals("已发表")){
                             publishedNum ++;
                         }
+                        sysSleep(300);
                     }else {
                         Log.d(TAG,"当前已截止到任务发送时间:"+flagTime);
                         this.setTaskStatus("CUSTOMER_TASK_END");
@@ -223,8 +226,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                     Log.d(TAG,"没有时间："+e);
                 }
             }
+            sysSleep(500);
             System.out.println("翻一整页");
             performScroll(notificationUis.get(0));
+            sysSleep(500);
         }
         turnPageFlag = false;
     }
