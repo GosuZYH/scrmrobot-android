@@ -32,6 +32,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public static Boolean turnPageFlag = true;
     public static Boolean notificationFlag = true;
     public static int publishedNum = 0;
+    public static int wrongTimes = 0;
+
 
     public CustomerFriendCircleJob(){
         super();
@@ -142,13 +144,15 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> threePointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ_MSG);
         if(redPointUis.size() > 0){
             Log.d(TAG,"点击新消息红点");
-            sysSleep(700);
+            sysSleep(500);
             performClick(redPointUis.get(0));
+            sysSleep(500);
             this.setTaskStatus("FIND_NEED_PUBLISH_PYQ");
         } else if (threePointUis.size() > 0){
             Log.d(TAG,"点击右上角选项");
-            sysSleep(700);
+            sysSleep(500);
             performClick(threePointUis.get(0));
+            sysSleep(500);
             this.setTaskStatus("CLICK_COMPANY_NOTICE");
         }
     }
@@ -161,6 +165,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.COMPANY_NOTIFICATION);
         if(targetUis.size() > 0){
             Log.d(TAG,"点击企业通知");
+            sysSleep(500);
             performClick(targetUis.get(1).getParent());
             sysSleep(500);
             accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.48));
@@ -201,8 +206,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                     taskTime.setTime(date);
                     taskTime.set(Calendar.YEAR,calendar.get(Calendar.YEAR));
                     Date executeTime = taskTime.getTime();
-                    performClick(notificationUis.get(0).getChild(i).getChild(0).getChild(0).getChild(0).getChild(1).getChild(1));
                     Log.d(TAG,"当前页面第"+(i+1)+"条客户朋友圈时间为"+executeTime+",状态为:"+sendUis.get(i).getText());
+                    wrongTimes = 0;
                     if(executeTime.after(flagTime)){
                         if(sendUis.get(i).getText().equals("发表")){
                             publishedNum = 0;
@@ -223,7 +228,12 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                         return;
                     }
                 }catch (Exception e){
+                    wrongTimes ++;
                     Log.d(TAG,"没有时间："+e);
+                    if(wrongTimes>5){
+                        this.setTaskStatus("CHECK_NEW");
+                        return;
+                    }
                 }
             }
             sysSleep(500);
