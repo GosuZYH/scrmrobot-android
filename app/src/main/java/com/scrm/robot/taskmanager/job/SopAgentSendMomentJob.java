@@ -31,7 +31,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private static String targetTag = "获取失败";
     private static String tempTag = "";
+    public static String deleteTag = "";
     public static Boolean tagFindFlag = true;
+    public static Boolean deleteFlag = false;
     public static Boolean selectAllCustomerFlag = false;
     private static int canNotSelectAllCustomerTimes = 0;
     public AccessibilityGestureUtil accessibilityGestureUtil;
@@ -153,6 +155,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         switch (JobStateViewModel.sopType.getValue()) {
             case "noneed":
                 Log.d(TAG, "CV:当前SOP已回执");
+                deleteTag = targetTag;
                 this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
@@ -411,11 +414,22 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             Collections.reverse(targetUis);
             for (AccessibilityNodeInfo targetUi : targetUis) {
                 if (targetUi.getChildCount() > 3) {
-                    System.out.println("删除一条SOP");
-                    performLongClick(targetUis.get(0));
-                    if(deleteUis.size()>0){
-                        performClick(deleteUis.get(0).getParent());
-                        this.setTaskStatus("DELETE_CONFIRM");
+                    String tagText = targetUi.getChild(1).getText().toString();
+                    List<String> list = Arrays.asList(tagText.split("："));
+                    String sopTag = list.get(list.size()-1);
+                    System.out.println("准备删除一条SOP,当前Tag为："+sopTag+",目标Tag为："+deleteTag);
+                    if(deleteFlag || sopTag.equals(deleteTag)){
+                        deleteFlag = true;
+                        performLongClick(targetUis.get(0));
+                        if(deleteUis.size()>0){
+                            performClick(deleteUis.get(0).getParent());
+                            this.setTaskStatus("DELETE_CONFIRM");
+                            return;
+                        }
+                    }else{
+                        System.out.println("当前最新的SOP不是要删除的SOP");
+                        this.setTaskStatus("START_SOP_TASK");
+                        return;
                     }
                 }
             }
@@ -546,6 +560,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             sysSleep(600);
             this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
             sysSleep(600);
+            deleteTag = targetTag;
             this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
         }else{
             System.out.println("点击'返回'");
@@ -615,6 +630,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+            deleteFlag = true;
             this.setTaskStatus("SOP_DELETE");
         }else {
             if(backUis.size()>0){
