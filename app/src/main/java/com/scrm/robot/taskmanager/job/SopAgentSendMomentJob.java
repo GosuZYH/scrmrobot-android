@@ -158,7 +158,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 deleteTag = targetTag;
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
-                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
+                this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
                 this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
                 break;
             case "need":
@@ -166,7 +166,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
 //                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.968*JobStateViewModel.height.getValue()));
-                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+                this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
             case "loading":

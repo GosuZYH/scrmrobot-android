@@ -252,12 +252,12 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            int pixel = bitmap.getPixel(623,1321);
             if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
                 //已回执
-                accessibilityGestureUtil.click((int)(0.5*width), (int)(0.35*height));
+                accessibilityGestureUtil.click((int)(0.3*width), (int)(0.35*height));
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                 //未回执
 //                accessibilityGestureUtil.click((int)(0.5*width), (int)(0.968*height));
-                accessibilityGestureUtil.click((int)(0.5*width), (int)(1.007*height));
+                accessibilityGestureUtil.click((int)(0.3*width), (int)(1.007*height));
 //                this.accessibilityGestureUtil.click(540, 2070);
                 sopType = "need";
             }else {

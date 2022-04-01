@@ -53,6 +53,8 @@ public class FloatViewTouchListener implements View.OnTouchListener {
             default:
                 break;
         }
+        layoutParams.x = 1080;
+        windowManager.updateViewLayout(view, layoutParams);
         if(clickDownFlag&&clickUpFlag){
             clickDownFlag = false;
             clickUpFlag = false;
@@ -61,7 +63,6 @@ public class FloatViewTouchListener implements View.OnTouchListener {
             }else {
                 FloatViewModel.jobStartStop.postValue(false);
             }
-
         }
         return false;
     }
