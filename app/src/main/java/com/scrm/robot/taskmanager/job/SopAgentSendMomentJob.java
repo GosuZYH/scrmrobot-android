@@ -446,11 +446,16 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void chooseVisibleCustomer(AccessibilityNodeInfo rootNodeInfo){
         //寻找->可见的客户并点击
+        List<AccessibilityNodeInfo> pageUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_PAGE);
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_0);
         List<AccessibilityNodeInfo> targetUis1 = rootNodeInfo.findAccessibilityNodeInfosByText("公开");
         if(targetUis.size()>0 && targetUis1.size()>0){
             System.out.println("点击可见的客户");
             performClick(targetUis.get(0));
+        }
+        if(pageUis.size()>0 && pageUis.get(0).isScrollable()){
+            System.out.println("可见的客户页向下翻页");
+            performScroll(pageUis.get(0));
         }
     }
 

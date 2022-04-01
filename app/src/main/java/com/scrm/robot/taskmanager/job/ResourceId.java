@@ -23,6 +23,7 @@ public class ResourceId {
     public static final String SOP = "com.tencent.wework:id/gb8";
     public static final String SOP_TYPE = "com.tencent.wework:id/ggh";
     public static final String PUBLISH = "com.tencent.wework:id/kc5";
+    public static final String VISIBLE_PAGE = "com.tencent.wework:id/iop";
     public static final String VISIBLE_0 = "com.tencent.wework:id/ci8";
     public static final String VISIBLE_1 = "com.tencent.wework:id/hb6";
     public static final String SELECT_TAG = "com.tencent.wework:id/jul";
