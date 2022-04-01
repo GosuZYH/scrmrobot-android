@@ -4,7 +4,7 @@
     <string name="accessSettingBtnTxt">辅助设置</string>
 
     <string name="startSchedulerBtnText">启动定时任务</string>
-    <string name="cancelSchedulerBtnText">停止定时任务</string>
+    <string name="cancelSchedulerBtnText">停止/关闭任务执行窗</string>
 
     <!-- Text view -->
     <string name="appTitle">SMR任务执行器</string>
