@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SCRM手机执行器</string>
+    <string name="app_name">洛书执行器</string>
     <string name="callWeWorkBtnTxt">启动企微</string>
     <string name="accessSettingBtnTxt">辅助设置</string>
 
@@ -9,10 +9,10 @@
     <!-- Text view -->
     <string name="appTitle">SMR任务执行器</string>
     <string name="AwakeWechat">进行单点测试:</string>
-    <string name="taskSop">执行SOP朋友圈任务:</string>
-    <string name="taskGroupSend">执行1V1群发任务:</string>
-    <string name="taskCustomerCircle">执行客户朋友圈任务:</string>
-    <string name="alltask">执行所有任务:</string>
+    <string name="taskSop">执行SOP朋友圈任务</string>
+    <string name="taskGroupSend">执行1V1群发任务</string>
+    <string name="taskCustomerCircle">执行客户朋友圈任务</string>
+    <string name="alltask">执行所有任务</string>
     <string name="checkService">检查辅助功能开启状态:</string>
     <string name="checkPermission">检查悬浮窗功能权限:</string>
     <string name="mainPage">主页</string>
@@ -21,6 +21,7 @@
     <string name="password">密码:</string>
     <string name="accountNotice">请输入账号</string>
     <string name="passWordNotice">请输入密码</string>
+    <string name="tips">如果点击执行任务无反应，请再次检查辅助功能，可尝试关闭再次开启</string>
 
 
     <!-- Button view -->

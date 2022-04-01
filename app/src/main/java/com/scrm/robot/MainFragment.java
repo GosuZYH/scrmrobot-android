@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,11 +33,17 @@ public class MainFragment extends Fragment {
     Activity context;
     public Dialog noticeDialog;
     public Dialog floatNoticeDialog;
+    public ImageView titleLogo;
+    public ImageView tips;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.main_fragment, container, false);
+        titleLogo = view.findViewById(R.id.titleLogo);
+        tips = view.findViewById(R.id.tips);
+        titleLogo.setImageResource(R.drawable.logo);
+        tips.setImageResource(R.drawable.fengexian);
         return view;
     }
 
