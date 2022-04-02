@@ -1,13 +1,10 @@
 package com.scrm.robot.floatwindow;
 
-import android.content.Intent;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.scrm.robot.Constants;
-import com.scrm.robot.MainActivity;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 
 public class FloatViewTouchListener implements View.OnTouchListener {
     private int x;
@@ -53,7 +50,7 @@ public class FloatViewTouchListener implements View.OnTouchListener {
             default:
                 break;
         }
-        layoutParams.x = 1080;
+        layoutParams.x = (int)(JobStateViewModel.width.getValue());
         windowManager.updateViewLayout(view, layoutParams);
         if(clickDownFlag&&clickUpFlag){
             clickDownFlag = false;

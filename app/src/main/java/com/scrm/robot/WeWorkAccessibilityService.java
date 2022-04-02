@@ -151,6 +151,9 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         } else {
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
+        //启停任务悬浮窗初始属性
+        layoutParams.x = displayMetrics.widthPixels;
+        layoutParams.y = (int)(-displayMetrics.heightPixels*0.3);
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
