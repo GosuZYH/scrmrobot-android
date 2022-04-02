@@ -16,7 +16,8 @@ import com.scrm.robot.utils.HttpConnThread;
 public class MineFragment extends Fragment {
     public ImageView userPhoto;
     public TextView userName;
-    public TextView userId;
+    public TextView id;
+    public TextView outTime;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -25,10 +26,12 @@ public class MineFragment extends Fragment {
         View view = inflater.inflate(R.layout.mine_fragment, container, false);
         userPhoto = view.findViewById(R.id.userPhoto);
         userName = view.findViewById(R.id.userName);
-        userId = view.findViewById(R.id.userId);
+        outTime = view.findViewById(R.id.outTime);
+        id = view.findViewById(R.id.id);
         userPhoto.setImageResource(R.drawable.logo);
         userName.setText(HttpConnThread.userName);
-        userId.setText("ID:"+HttpConnThread.userId);
+        id.setText("ID:"+HttpConnThread.id);
+        outTime.setText("过期时间:"+HttpConnThread.outTime);
         return view;
     }
 }
