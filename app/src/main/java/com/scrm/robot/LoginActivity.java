@@ -30,6 +30,7 @@ public class LoginActivity extends Activity{
     public LayoutInflater mInflater;
     public ImageView loginImg;
     public View loginView;
+    public TextView version;
     public View mainView;
     public static String Account;
     public static String PWd;
@@ -61,6 +62,9 @@ public class LoginActivity extends Activity{
         accountNum = findViewById(R.id.editAccount);
         passWord = findViewById(R.id.editPassword);
         bt_ok = findViewById(R.id.loginButton);
+        version = findViewById(R.id.version);
+        //set page data
+        version.setText(R.string.version);
         loginImg.setImageResource(R.drawable.login);
     }
 

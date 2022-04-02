@@ -46,14 +46,14 @@
         android:id="@+id/button"
         android:layout_width="334dp"
         android:layout_height="51dp"
-        android:text="@string/loginOut"
         android:onClick="loginOut"
+        android:text="@string/loginOut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954" />
+        app:layout_constraintVertical_bias="0.929" />
 
     <TextView
         android:id="@+id/outTime"
@@ -66,4 +66,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.163" />
+
+    <TextView
+        android:id="@+id/mineVersion"
+        android:layout_width="112dp"
+        android:layout_height="26dp"
+        android:text="当前版本:v1.0.0"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
 </androidx.constraintlayout.widget.ConstraintLayout>

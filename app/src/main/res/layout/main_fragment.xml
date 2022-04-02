@@ -51,15 +51,15 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="150dp"
-        android:layout_height="24dp"
+        android:layout_width="177dp"
+        android:layout_height="23dp"
         android:text="@string/checkPermission"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.439" />
+        app:layout_constraintVertical_bias="0.442" />
 
     <Button
         android:id="@+id/suspendedBall"
@@ -70,10 +70,10 @@
         android:text="@string/ball"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/accessibilityService"
-        app:layout_constraintVertical_bias="0.268" />
+        app:layout_constraintVertical_bias="0.266" />
 
     <Button
         android:id="@+id/groupSend"

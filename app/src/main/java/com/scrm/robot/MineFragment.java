@@ -18,6 +18,7 @@ public class MineFragment extends Fragment {
     public TextView userName;
     public TextView id;
     public TextView outTime;
+    public TextView version;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -28,10 +29,13 @@ public class MineFragment extends Fragment {
         userName = view.findViewById(R.id.userName);
         outTime = view.findViewById(R.id.outTime);
         id = view.findViewById(R.id.id);
+        version = view.findViewById(R.id.mineVersion);
+        //set data
         userPhoto.setImageResource(R.drawable.logo);
         userName.setText(HttpConnThread.userName);
         id.setText("ID:"+HttpConnThread.id);
         outTime.setText("过期时间:"+HttpConnThread.outTime);
+        version.setText(R.string.version);
         return view;
     }
 }
