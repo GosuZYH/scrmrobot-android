@@ -110,8 +110,8 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                 try {
                     if(!aBoolean){
                         startStopBtn.setText("启动");
-                        MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
                         MainActivity.jobScheduler.stop();
+                        MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
                     }else {
                         startStopBtn.setText("停止");
                         MainActivity.jobScheduler.start();
@@ -121,6 +121,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                         startActivity(intent);
                     }
                 }catch (Exception e){
+                    System.out.println(e.getMessage());
                 }
             }
         });
