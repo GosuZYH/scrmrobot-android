@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -53,7 +52,7 @@ public class HttpConnThread extends Thread{
         doGetCompanyInfo();
     }
 
-    public String doPost(String account,String password){
+    public void doPost(String account, String password){
         OutputStreamWriter out = null;
         BufferedReader in = null;
         StringBuilder result = new StringBuilder();
@@ -105,10 +104,9 @@ public class HttpConnThread extends Thread{
                 ioe.printStackTrace();
             }
         }
-        return result.toString();
     }
 
-    public String doGetUserInfo(){
+    public void doGetUserInfo(){
         HttpURLConnection conn = null;
         InputStream is = null;
         BufferedReader br = null;
@@ -160,10 +158,9 @@ public class HttpConnThread extends Thread{
             assert conn != null;
             conn.disconnect();
         }
-        return result.toString();
     }
 
-    public String doGetCompanyInfo(){
+    public void doGetCompanyInfo(){
         HttpURLConnection conn = null;
         InputStream is = null;
         BufferedReader br = null;
@@ -213,7 +210,6 @@ public class HttpConnThread extends Thread{
             assert conn != null;
             conn.disconnect();
         }
-        return result.toString();
     }
 
 }
