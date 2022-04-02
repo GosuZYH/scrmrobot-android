@@ -65,6 +65,11 @@ public class LoginActivity extends Activity{
     }
 
     public void loginIn(View view) {
+        // region HARDCODE
+        accountNum.setText("17601334323");
+        passWord.setText("daqinjia123");
+        // endregion
+
         if (TextUtils.isEmpty(accountNum.getText().toString())) {
             Toast.makeText(this, "账号不能为空", Toast.LENGTH_SHORT).show();
             return;

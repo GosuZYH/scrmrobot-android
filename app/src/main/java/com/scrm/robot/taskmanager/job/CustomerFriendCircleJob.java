@@ -43,9 +43,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
 
     @Override
     public void run() {
-        Log.d(TAG, String.format("%s start run", this.getJobId()));
-        this.setJobState(RobotRunState.STARTED);
-        this.setStartTime(new Date());
+//        Log.d(TAG, String.format("%s start run", this.getJobId()));
+//        this.setJobState(RobotRunState.STARTED);
+//        this.setStartTime(new Date());
+        super.run();
     }
 
     @Override

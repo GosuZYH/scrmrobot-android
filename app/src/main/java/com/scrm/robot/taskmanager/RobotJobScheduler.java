@@ -3,7 +3,10 @@ package com.scrm.robot.taskmanager;
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;
 import android.app.job.JobScheduler;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
@@ -36,6 +39,11 @@ public class RobotJobScheduler {
         }
     }
 
+    public void startAndRunJob(RobotJobType jobType){
+        this.addJob(jobType);
+        this.start();
+    }
+
     public JobScheduler getJobScheduler() {
         return jobScheduler;
     }
@@ -53,6 +61,7 @@ public class RobotJobScheduler {
     }
 
     public void genNextJob(){
+        // TODO NOW 获取当前任务，已生成下一个任务
         if(this.runState==RobotRunState.STARTED) {
             this.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
         }
@@ -77,6 +86,7 @@ public class RobotJobScheduler {
         return this.jobScheduler.getPendingJob(jobId);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void runJob(JobParameters jobParameters){
         this.robotJobExecutor.run(jobParameters);
     }

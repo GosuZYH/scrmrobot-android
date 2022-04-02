@@ -3,7 +3,10 @@ package com.scrm.robot.taskmanager.job;
 import android.accessibilityservice.AccessibilityService;
 import android.app.job.JobParameters;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
@@ -14,6 +17,9 @@ import com.scrm.robot.utils.IdUtil;
 import java.util.Date;
 
 public abstract class BaseRobotJob implements IRobotJob{
+    private final static String TAG = BaseRobotJob.class.getName();
+
+
     public BaseRobotJob() {
         this.jobId =  IdUtil.generateTimeId("Job-" );
     }
@@ -29,15 +35,28 @@ public abstract class BaseRobotJob implements IRobotJob{
     private Date stopTime=null;
 
     @Override
-    public abstract void run() ;
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public void run() {
+        Log.d(TAG, String.format("%s start run", this.getJobId()));
+        this.setJobState(RobotRunState.STARTED);
+        this.setStartTime(new Date());
+        // TODO DEBUGING 停止启动后再运行，因为没有事件，无法触发
+        this.process();
+    }
 
     @Override
     public abstract void process() ;
 
+    @Override
+    public void pause() {
+        this.setJobState(RobotRunState.WAITING);
+    }
+
 
     @Override
     public  void stop() {
-        if (this.jobState == RobotRunState.STARTED) {
+        boolean canStop = this.canStop();
+        if (canStop) {
             this.setJobState(RobotRunState.STOPPED);
             this.setStopTime(new Date());
             RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
@@ -114,6 +133,10 @@ public abstract class BaseRobotJob implements IRobotJob{
         else{
             System.out.println("启动企业微信失败");
         }
+    }
+
+    private boolean canStop(){
+        return this.jobState==RobotRunState.STARTED || this.jobState==RobotRunState.WAITING;
     }
 
 }

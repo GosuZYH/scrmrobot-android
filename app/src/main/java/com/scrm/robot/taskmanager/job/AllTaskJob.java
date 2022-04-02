@@ -29,11 +29,14 @@ public class AllTaskJob extends BaseRobotJob {
         this.setTaskStatus("START_SOP_TASK");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-        Log.d(TAG, String.format("%s start run", this.getJobId()));
-        this.setJobState(RobotRunState.STARTED);
-        this.setStartTime(new Date());
+//        Log.d(TAG, String.format("%s start run", this.getJobId()));
+//        this.setJobState(RobotRunState.STARTED);
+//        this.setStartTime(new Date());
+//        this.process();
+        super.run();
     }
 
     @Override

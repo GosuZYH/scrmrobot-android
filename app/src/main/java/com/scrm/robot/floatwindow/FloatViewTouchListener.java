@@ -8,6 +8,8 @@ import android.view.WindowManager;
 
 import com.scrm.robot.Constants;
 import com.scrm.robot.MainActivity;
+import com.scrm.robot.RobotApplication;
+import com.scrm.robot.utils.ApplicationUtil;
 
 public class FloatViewTouchListener implements View.OnTouchListener {
     private int x;
@@ -61,6 +63,11 @@ public class FloatViewTouchListener implements View.OnTouchListener {
             if(!FloatViewModel.jobStartStop.getValue()){
                 FloatViewModel.jobStartStop.postValue(true);
             }else {
+                RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+                application.getRobotJobScheduler().stop();
+                if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {
+                    application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().stop();
+                }
                 FloatViewModel.jobStartStop.postValue(false);
             }
         }

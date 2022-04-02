@@ -44,11 +44,13 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         this.setTaskStatus("INIT_SOP_TASK");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-        Log.d(TAG, String.format("%s start run", this.getJobId()));
-        this.setJobState(RobotRunState.STARTED);
-        this.setStartTime(new Date());
+//        Log.d(TAG, String.format("%s start run", this.getJobId()));
+//        this.setJobState(RobotRunState.STARTED);
+//        this.setStartTime(new Date());
+        super.run();
     }
 
     @Override
@@ -383,9 +385,11 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                                 sysSleep(3000);
                                 // 截图
                                 if(!JobStateViewModel.isScreenShot.getValue()){
-                                    this.stop();
-                                    System.out.println("截图功能开启");
-                                    JobStateViewModel.isScreenShot.postValue(true); }
+                                    // TODO 暂停任务，不是停止？
+                                    this.pause();
+                                    Log.d(TAG,"截图功能开启");
+                                    JobStateViewModel.isScreenShot.postValue(true);
+                                }
                                 this.setTaskStatus("SCREENSHOT_CV");
                             }else{
                                 Log.d(TAG,"SOP已执行到截至时间点");

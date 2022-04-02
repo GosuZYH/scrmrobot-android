@@ -5,7 +5,6 @@ import static com.scrm.robot.Constants.WEWORK_PACKAGE_NAME;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
-import android.app.job.JobScheduler;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -17,7 +16,6 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -30,7 +28,6 @@ import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
-import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
@@ -79,7 +76,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
             AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
 
             BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
-            if (job != null && job.getJobState() == RobotRunState.STARTED) {
+            if (job != null) {
                 job.process();
             }
         }
@@ -96,11 +93,9 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    showWindow();
+                    showFloatWindow();
                 }else {
-                    if(startStopBtn!=null && startStopBtn.getWindowToken()!=null && windowManager!=null){
-                        windowManager.removeView(startStopBtn);
-                    }
+                    closeFloatWindow();
                 }
             }
         });
@@ -108,17 +103,26 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
             @Override
             public void onChanged(Boolean aBoolean) {
                 try {
-                    if(!aBoolean){
-                        startStopBtn.setText("启动");
-                        MainActivity.jobScheduler.stop();
-                        MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
-                    }else {
-                        startStopBtn.setText("停止");
-                        MainActivity.jobScheduler.start();
-                        MainActivity.jobScheduler.addJob(FloatViewModel.currentOnClickJob.getValue());
-                        //打开企微
-                        Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
-                        startActivity(intent);
+                    if(startStopBtn!=null) {
+                        RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+                        if (!aBoolean) {
+                            startStopBtn.setText("启动");
+//                            MainActivity.jobScheduler.stop();
+//                            MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
+
+//                            application.getRobotJobScheduler().stop();
+//                            if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {
+//                                application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().stop();
+//                            }
+                        } else {
+                            startStopBtn.setText("停止");
+//                            MainActivity.jobScheduler.start();
+//                            MainActivity.jobScheduler.addJob(FloatViewModel.currentOnClickJob.getValue());
+                            application.getRobotJobScheduler().startAndRunJob(FloatViewModel.currentOnClickJob.getValue());
+                            //打开企微
+                            Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
+                            startActivity(intent);
+                        }
                     }
                 }catch (Exception e){
                     System.out.println(e.getMessage());
@@ -135,7 +139,9 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("ClickableViewAccessibility")
-    private void showWindow() {
+    private void showFloatWindow() {
+        Log.d(TAG, "[开启悬浮窗]启动中...");
+
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
 
@@ -166,6 +172,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         startStopBtn.setWidth(70);
         startStopBtn.setHeight(70);
         windowManager.addView(startStopBtn, layoutParams);
+        Log.d(TAG, "[开启悬浮窗]启动成功");
 
         //log window
 //        logView = new TextView(getApplicationContext());
@@ -173,6 +180,16 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 //        logView.setWidth(500);
 //        logView.setHeight(200);
 //        windowManager.addView(logView, layoutParams);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @SuppressLint("ClickableViewAccessibility")
+    private void closeFloatWindow(){
+        if(startStopBtn!=null && startStopBtn.getWindowToken()!=null && windowManager!=null){
+            Log.d(TAG, "[关闭悬浮窗]关闭中...");
+            windowManager.removeView(startStopBtn);
+            Log.d(TAG, "[关闭悬浮窗]关闭中成功");
+        }
     }
 
     @Override

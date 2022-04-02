@@ -1,9 +1,12 @@
 package com.scrm.robot.taskmanager.job;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import androidx.annotation.RequiresApi;
 
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
@@ -30,11 +33,13 @@ public class GroupSendMomentJob  extends BaseRobotJob {
         this.setTaskStatus("START_GROUP_TASK");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-        Log.d(TAG, String.format("%s start run", this.getJobId()));
-        this.setJobState(RobotRunState.STARTED);
-        this.setStartTime(new Date());
+//        Log.d(TAG, String.format("%s start run", this.getJobId()));
+//        this.setJobState(RobotRunState.STARTED);
+//        this.setStartTime(new Date());
+        super.run();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity{
     public Dialog noticeDialog;
     public Dialog floatNoticeDialog;
     private ComponentName jobScheduleServiceComponent;
-    public static RobotJobScheduler jobScheduler;
+    private static RobotJobScheduler jobScheduler;
 
     @SuppressLint("SdCardPath")
     @Override

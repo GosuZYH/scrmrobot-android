@@ -6,8 +6,10 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.scrm.robot.Constants;
@@ -48,6 +50,7 @@ public class JobSchedulerService extends JobService {
         return START_NOT_STICKY;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "job start: " + new Date() + jobParameters.getJobId());

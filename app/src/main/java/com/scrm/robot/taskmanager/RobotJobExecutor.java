@@ -4,6 +4,9 @@ import static com.scrm.robot.Constants.INTENT_JOB_INFO_TYPE_KEY;
 
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -13,6 +16,7 @@ import com.scrm.robot.utils.ApplicationUtil;
 
 public class RobotJobExecutor {
     private BaseRobotJob currentJob;
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void run(JobParameters jobParameters){
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         if(currentJob!=null && this.currentJob.getJobState()== RobotRunState.STARTED){
