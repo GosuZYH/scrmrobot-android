@@ -33,6 +33,8 @@ public abstract class BaseRobotJob implements IRobotJob{
     private RobotRunState jobState=RobotRunState.STOPPED;
     private Date startTime=null;
     private Date stopTime=null;
+    private Date processTime=null;
+    private RobotAccessibilityContext robotAccessibilityContext;
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -45,7 +47,9 @@ public abstract class BaseRobotJob implements IRobotJob{
     }
 
     @Override
-    public abstract void process() ;
+    public  void process() {
+        this.processTime=new Date();
+    }
 
     @Override
     public void pause() {
@@ -104,6 +108,15 @@ public abstract class BaseRobotJob implements IRobotJob{
         this.stopTime = stopTime;
 
     }
+
+    public Date getProcessTime() {
+        return processTime;
+    }
+
+    public void setProcessTime(Date processTime) {
+        this.processTime = processTime;
+    }
+
     public String getTaskStatus() {
         return taskStatus;
     }
@@ -121,8 +134,10 @@ public abstract class BaseRobotJob implements IRobotJob{
     }
 
     public void keyBack(){
-        RobotAccessibilityContext robotAccessibilityContext = robotApplication.getRobotAccessibilityContext();
-        robotAccessibilityContext.getWeWorkAccessibilityService().performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
+        RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+        application.getWeWorkAccessibilityService().performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
     }
 
     public void rebootWework(){
@@ -139,4 +154,15 @@ public abstract class BaseRobotJob implements IRobotJob{
         return this.jobState==RobotRunState.STARTED || this.jobState==RobotRunState.WAITING;
     }
 
+    public RobotAccessibilityContext getRobotAccessibilityContext() {
+        return robotAccessibilityContext;
+    }
+
+    public void setRobotAccessibilityContext(RobotAccessibilityContext robotAccessibilityContext) {
+        this.robotAccessibilityContext = robotAccessibilityContext;
+    }
+
+    public boolean canProcess(){
+        return this.jobState==RobotRunState.STARTED&&this.robotAccessibilityContext!=null;
+    }
 }

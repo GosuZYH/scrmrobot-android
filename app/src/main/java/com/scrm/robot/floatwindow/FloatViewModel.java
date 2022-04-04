@@ -9,6 +9,6 @@ public class FloatViewModel extends ViewModel {
     public static MutableLiveData<Boolean> isFloatWindowShow=new MutableLiveData<>(false);
     public static MutableLiveData<Boolean> isAccessNoticeShow=new MutableLiveData<>(false);
     public static MutableLiveData<Boolean> isFloatNoticeShow=new MutableLiveData<>(false);
-    public static MutableLiveData<RobotJobType> currentOnClickJob=new MutableLiveData<>(RobotJobType.GROUP_SEND_MOMENT);
+    public static MutableLiveData<RobotJobType> currentOnClickJob=new MutableLiveData<>(RobotJobType.GROUP_SEND_MESSAGE);
     public static MutableLiveData<Boolean> jobStartStop=new MutableLiveData<>(false);
 }

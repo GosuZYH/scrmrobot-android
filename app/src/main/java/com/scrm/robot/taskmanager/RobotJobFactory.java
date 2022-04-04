@@ -12,7 +12,7 @@ import com.scrm.robot.taskmanager.job.AllTaskJob;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.job.CustomerFriendCircleJob;
-import com.scrm.robot.taskmanager.job.GroupSendMomentJob;
+import com.scrm.robot.taskmanager.job.GroupSendMessageJob;
 import com.scrm.robot.taskmanager.job.SopAgentSendMomentJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -47,7 +47,7 @@ public class RobotJobFactory {
             jobInfo.getExtras().putInt(INTENT_JOB_INFO_TYPE_KEY, robotJobType.value);
             return jobInfo;
         }
-        if (robotJobType == RobotJobType.GROUP_SEND_MOMENT) {
+        if (robotJobType == RobotJobType.GROUP_SEND_MESSAGE) {
             JobInfo.Builder builder = new JobInfo.Builder(robotApplication.generateJobId(),
                     ((MainActivity)robotApplication.getJobActivity()).getJobScheduleServiceComponent());
 
@@ -138,8 +138,8 @@ public class RobotJobFactory {
         if(robotJobType==RobotJobType.SOP_AGENT_SEND_MOMENT){
             return new SopAgentSendMomentJob();
         }
-        if(robotJobType==RobotJobType.GROUP_SEND_MOMENT){
-            return new GroupSendMomentJob();
+        if(robotJobType==RobotJobType.GROUP_SEND_MESSAGE){
+            return new GroupSendMessageJob();
         }
         if(robotJobType==RobotJobType.CUSTOMER_AGENT_SEND_MOMENT){
             return new CustomerFriendCircleJob();

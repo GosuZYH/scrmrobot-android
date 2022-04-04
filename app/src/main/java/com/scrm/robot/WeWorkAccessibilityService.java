@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
 import com.scrm.robot.floatwindow.TaskStartStopBtnClickListener;
@@ -42,7 +43,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     private Button startStopBtn;
 //    public static TextView logView;
 
-    private RobotAccessibilityContext robotAccessibilityContext;
+//    private RobotAccessibilityContext robotAccessibilityContext;
     private final LifecycleRegistry lifecycleRegistry=new LifecycleRegistry(this);
 
 
@@ -56,30 +57,36 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     @Override
     public void onServiceConnected() {
         super.onServiceConnected();
-        this.robotAccessibilityContext = new RobotAccessibilityContext();
+//        this.robotAccessibilityContext = new RobotAccessibilityContext();
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        // 主线程，不要执行耗时操作
         if (packageName.equals(event.getPackageName())) {
-            Log.d(TAG, event.toString());
+//            Log.d(TAG, event.toString());
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
-            robotAccessibilityContext.setCurrentEvent(event);
-            robotAccessibilityContext.setRootNodeInfo(rootInfo);
-            this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
+//            robotAccessibilityContext.setCurrentEvent(event);
+//            robotAccessibilityContext.setRootNodeInfo(rootInfo);
+//            this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
 
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-            application.setRobotAccessibilityContext(robotAccessibilityContext);
-
+//            application.setRobotAccessibilityContext(robotAccessibilityContext);
+            application.setWeWorkAccessibilityService(this);
             //special situation solve
-            AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
+//            AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
+            //region 方法1 直接处理
+//            BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
+//            if (job != null) {
+//                job.process();
+//            }
+            //endregion
 
-            BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
-            if (job != null) {
-                job.process();
-            }
+            //region 方案2 服务处理
+            WeWorkAccessibilityEventService.startWithEvent(getApplicationContext(), event, rootInfo);
+            //endregion
         }
     }
 
@@ -88,14 +95,14 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
     }
 
-    private void initObserve(){
+    private void initObserve() {
         FloatViewModel.isFloatWindowShow.observe(this, new Observer<Boolean>() {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     showFloatWindow();
-                }else {
+                } else {
                     closeFloatWindow();
                 }
             }
@@ -103,30 +110,26 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         FloatViewModel.jobStartStop.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                try {
-                    if(startStopBtn!=null) {
-                        RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+                if (startStopBtn != null) {
+                    String action = aBoolean ? "启动" : "停止";
+                    String taskName = FloatViewModel.currentOnClickJob.getValue().name;
+                    Logger.d("%s 任务 %s", action, taskName);
+
+                    try {
+                        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
                         if (!aBoolean) {
                             startStopBtn.setText("启动");
-//                            MainActivity.jobScheduler.stop();
-//                            MainActivity.jobScheduler.getRobotJobExecutor().getCurrentJob().stop();
-
-//                            application.getRobotJobScheduler().stop();
-//                            if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {
-//                                application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().stop();
-//                            }
                         } else {
                             startStopBtn.setText("停止");
-//                            MainActivity.jobScheduler.start();
-//                            MainActivity.jobScheduler.addJob(FloatViewModel.currentOnClickJob.getValue());
                             application.getRobotJobScheduler().startAndRunJob(FloatViewModel.currentOnClickJob.getValue());
                             //打开企微
                             Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
                             startActivity(intent);
                         }
+
+                    } catch (Exception e) {
+                        Logger.e("%s错误：%s", action, e);
                     }
-                }catch (Exception e){
-                    System.out.println(e.getMessage());
                 }
             }
         });
@@ -141,7 +144,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("ClickableViewAccessibility")
     private void showFloatWindow() {
-        Log.d(TAG, "[开启悬浮窗]启动中...");
+        Logger.d("开启悬浮窗-启动中...");
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -177,7 +180,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         startStopBtn.setWidth(70);
         startStopBtn.setHeight(70);
         windowManager.addView(startStopBtn, layoutParams);
-        Log.d(TAG, "[开启悬浮窗]启动成功");
+        Logger.d( "开启悬浮窗-启动成功");
 
         //log window
 //        logView = new TextView(getApplicationContext());

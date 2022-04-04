@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.utils.HttpConnThread;
 
 import java.io.BufferedReader;
@@ -75,10 +76,12 @@ public class LoginActivity extends Activity{
         // endregion
 
         if (TextUtils.isEmpty(accountNum.getText().toString())) {
+            Logger.w("登录账号不能为空");
             Toast.makeText(this, "账号不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(passWord.getText().toString())) {
+        if (TextUtils.isEmpty(passWord.getText().toString())) {            Logger.e("登录账号不能为空");
+            Logger.w("登录密码不能为空");
             Toast.makeText(this, "请输入密码",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -89,15 +92,18 @@ public class LoginActivity extends Activity{
         try {
             postThread.join();
         } catch (InterruptedException e) {
+            Logger.e("登录失败: %s ",e);
             e.printStackTrace();
         }
 
         if(HttpConnThread.userName != null){
+            Logger.i("登录成功");
             Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
             finish();
         }else {
+            Logger.w("登录信息错误");
             Toast.makeText(this, "账号/密码输入不正确，请检查后重试。", Toast.LENGTH_SHORT).show();
         }
     }

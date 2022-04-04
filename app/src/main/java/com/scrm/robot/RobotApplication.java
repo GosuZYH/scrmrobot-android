@@ -11,6 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.CsvFormatStrategy;
 import com.orhanobut.logger.DiskLogAdapter;
 import com.orhanobut.logger.DiskLogStrategy;
@@ -23,10 +24,13 @@ import com.scrm.robot.taskmanager.RobotJobScheduler;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 
 public class RobotApplication extends Application {
    private RobotAccessibilityContext robotAccessibilityContext;
+    private WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
+
     private LocalBroadcastManager localBroadcastManager;
     private static JobSchedulerMessageReceiver receiver;
 
@@ -47,15 +51,24 @@ public class RobotApplication extends Application {
 
         ApplicationUtil.init(this);
         this.initLogger();
-        Logger.d("[应用创建]");
+        Logger.i("应用创建");
     }
 
-    public RobotAccessibilityContext getRobotAccessibilityContext() {
-        return robotAccessibilityContext;
+//    public RobotAccessibilityContext getRobotAccessibilityContext() {
+//        return robotAccessibilityContext;
+//    }
+//
+//    public void setRobotAccessibilityContext(RobotAccessibilityContext robotAccessibilityContext) {
+//        this.robotAccessibilityContext = robotAccessibilityContext;
+//    }
+//
+
+    public  WeWorkAccessibilityService getWeWorkAccessibilityService() {
+        return weWorkAccessibilityService.get();
     }
 
-    public void setRobotAccessibilityContext(RobotAccessibilityContext robotAccessibilityContext) {
-        this.robotAccessibilityContext = robotAccessibilityContext;
+    public void setWeWorkAccessibilityService(WeWorkAccessibilityService weWorkAccessibilityService) {
+        this.weWorkAccessibilityService =new WeakReference<WeWorkAccessibilityService>(weWorkAccessibilityService);
     }
 
     public int generateJobId(){
@@ -97,6 +110,7 @@ public class RobotApplication extends Application {
 
     private void initLogger(){
         try {
+            // region 文件log
             String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             String folder = diskPath + File.separatorChar + "smr" + File.separatorChar +"log";
             HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
@@ -111,8 +125,13 @@ public class RobotApplication extends Application {
 
             //创建缓存策略
             FormatStrategy strategy = CsvFormatStrategy.newBuilder().logStrategy(new DiskLogStrategy(handler)).build();
-            DiskLogAdapter adapter = new DiskLogAdapter(strategy);
-            Logger.addLogAdapter(adapter);
+            DiskLogAdapter diskLogAdapter = new DiskLogAdapter(strategy);
+            // endregion
+
+
+            Logger.addLogAdapter(diskLogAdapter);
+            Logger.addLogAdapter(new AndroidLogAdapter());
+
         }catch (Exception ex){
             ex.printStackTrace();
 

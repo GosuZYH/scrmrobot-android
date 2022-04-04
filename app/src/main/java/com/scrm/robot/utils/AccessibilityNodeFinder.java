@@ -3,8 +3,6 @@ package com.scrm.robot.utils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.scrm.robot.exception.AccessibilityNodeNotFoundException;
-
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class AccessibilityNodeFinder {
         long start = new Date().getTime();
 
         while ((new Date().getTime() - start) < timeout) {
-            Log.d(TAG, DateUtil.getLogDate()+" finding node..");
+            Log.d(TAG, DateUtils.getLogDate()+" finding node..");
 
             AccessibilityNodeInfo nodeInfo = findNodeByViewId(source, id);
             if (nodeInfo != null) {

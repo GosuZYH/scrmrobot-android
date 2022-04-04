@@ -5,20 +5,19 @@ import android.annotation.SuppressLint;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.Constants;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
 import com.scrm.robot.taskmanager.enums.RobotSchedulerJobState;
 import com.scrm.robot.utils.ApplicationUtil;
-
-import java.util.Date;
+import com.scrm.robot.utils.DateUtils;
 
 @SuppressLint("SpecifyJobSchedulerIdRange")
 public class JobSchedulerService extends JobService {
@@ -53,7 +52,7 @@ public class JobSchedulerService extends JobService {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        Log.d(TAG, "job start: " + new Date() + jobParameters.getJobId());
+        Logger.d("任务运行: %s %s", jobParameters.getJobId() , DateUtils.getLogDate());
         RobotApplication robotApplication = (RobotApplication) ApplicationUtil.getApplication();
         try {
             robotApplication.getRobotJobScheduler().runJob(jobParameters);

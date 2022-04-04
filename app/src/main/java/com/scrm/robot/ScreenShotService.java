@@ -222,8 +222,8 @@ public class ScreenShotService extends Service implements LifecycleOwner{
                 return null;
             }
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-            RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
-            accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+            accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
 
             JobStateViewModel.sopType.postValue("new");
             Image image = params[0];

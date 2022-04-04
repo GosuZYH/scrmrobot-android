@@ -1,7 +1,6 @@
 package com.scrm.robot;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -15,30 +14,23 @@ import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Messenger;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.floatwindow.FloatViewModel;
-import com.scrm.robot.taskmanager.JobSchedulerMessageHandler;
 import com.scrm.robot.taskmanager.JobSchedulerService;
 import com.scrm.robot.taskmanager.RobotJobFactory;
 import com.scrm.robot.taskmanager.RobotJobScheduler;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.utils.ApplicationUtil;
-import com.scrm.robot.utils.LogUtil;
-import static com.scrm.robot.utils.LogUtil.appendToFile_One;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -85,9 +77,7 @@ public class MainActivity extends FragmentActivity{
 
         this.requestCapturePermission();
 
-        //log文件输出
-//        LogUtil.d("主页已加载");
-//        LogUtil.appendToFile_Third("/storage/emulated/0/scrm.log","主页已加载");
+        WeWorkDeamonWatchService.startWatch(getApplicationContext());
         selectTab(0);
     }
 
@@ -203,7 +193,7 @@ public class MainActivity extends FragmentActivity{
             if(isCheckPermissionsOk(view)){
                 Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
                 this.openCloseFloatView();
-                FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MOMENT);
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MESSAGE);
             }
 //            WeWorkAccessibilityService.logView.setText("正在执行群发助手任务");
         } catch (Exception ignored) {
@@ -253,13 +243,16 @@ public class MainActivity extends FragmentActivity{
                 return;
             }
             if(isCheckPermissionsOk(view)){
+                Logger.d("执行所有任务-开始中");
                 Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
                 this.openCloseFloatView();
-                FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);                Logger.d("执行所有任务-开始");
+                Logger.d("执行所有任务-开始成功");
             }
 //            WeWorkAccessibilityService.logView.setText("正在循环执行所有任务");
-        } catch (Exception ignored) {
-            Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(MainActivity.this, "应用错误", Toast.LENGTH_SHORT).show();
+            Logger.e("执行所有任务-错误: %s", ex);
         }
     }
 
@@ -389,12 +382,15 @@ public class MainActivity extends FragmentActivity{
     }
 
     public Boolean isCheckPermissionsOk(View view){
+        Logger.d("检查应用服务权限");
         boolean permissions = true;
         if(!isAccessibilitySettingsOn(getApplicationContext())){
+            Logger.w("辅助服务没有开启");
             showNoticeDialog(view);
             permissions = false;
         }
         if (!Settings.canDrawOverlays(this)) {
+            Logger.w("悬浮窗权限没有开启");
             showFloatWindowNotice(view);
             permissions = false;
         }
@@ -429,11 +425,13 @@ public class MainActivity extends FragmentActivity{
     public void openFloatWindow(View view){
         if (!Settings.canDrawOverlays(this)) {
             //没有权限，需要申请悬浮球权限
+            Logger.w("悬浮窗权限没有开");
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
             intent.setData(Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, 100);
         } else {
             //已经有权限，可以直接显示悬浮窗
+            Logger.d("悬浮窗权限已打开");
             Toast.makeText(MainActivity.this, "suspension-Window have accessed！", Toast.LENGTH_SHORT).show();
         }
     }

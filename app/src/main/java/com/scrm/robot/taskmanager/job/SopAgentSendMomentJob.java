@@ -1,7 +1,6 @@
 package com.scrm.robot.taskmanager.job;
 
 import android.annotation.SuppressLint;
-import android.app.job.JobScheduler;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +9,11 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
-import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -63,21 +62,17 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void process() {
-        if(this.getJobState()==RobotRunState.STOPPED){
-            Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
+        super.process();
+        if(this.canProcess()){
+            Logger.d( "Sop朋友圈 %s 处理，任务不可运行 状态: %s", this.getJobId(),this.getJobState());
             return;
         }
-
-        if(this.getJobState()==RobotRunState.WAITING){
-            Log.d(TAG, String.format("%s processing is [waiting]", this.getJobId()));
-            return;
-        }
-
-        Log.d(TAG, String.format("%s processing", this.getJobId()));
+        Logger.d( "Sop朋友圈-任务处理中 %s", this.getJobId());
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
 
-        this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+        this.accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
         try {
             tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
             selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;

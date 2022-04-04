@@ -8,26 +8,25 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
-import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class GroupSendMomentJob  extends BaseRobotJob {
-    private final static String TAG = GroupSendMomentJob.class.getName();
+public class GroupSendMessageJob extends BaseRobotJob {
+    private final static String TAG = GroupSendMessageJob.class.getName();
     public static boolean findMsg = false;
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static int afterClickGroupSend = 0;
 
-    public GroupSendMomentJob(){
+    public GroupSendMessageJob(){
         super();
         this.setTaskId(2);
         this.setTaskStatus("START_GROUP_TASK");
@@ -36,28 +35,27 @@ public class GroupSendMomentJob  extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-//        Log.d(TAG, String.format("%s start run", this.getJobId()));
-//        this.setJobState(RobotRunState.STARTED);
-//        this.setStartTime(new Date());
         super.run();
     }
 
     @Override
     public void stop() {
-        Log.d(TAG, String.format("%s stop", this.getJobId()));
+        Logger.d("客户群发消息-任务停止 %s", this.getJobId());
         super.stop();
     }
 
     @SuppressLint("ResourceType")
     @Override
     public void process() {
-        if(this.getJobState()==RobotRunState.STOPPED){
-            Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
+        super.process();
+        if(!this.canProcess()){
+            Logger.d( "客户群发消息-任务 %s 处理，任务已停止", this.getJobId());
             return;
         }
-        Log.d(TAG, String.format("%s processing", this.getJobId()));
+        Logger.d( "客户群发消息-任务处理中 %s", this.getJobId());
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
         AccessibilityEvent currentEvent = robotAccessibilityContext.getCurrentEvent();
         if(findMsg){
             if(currentEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
@@ -65,7 +63,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
             }
         }
 
-        this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+        this.accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;

@@ -1,33 +1,28 @@
 package com.scrm.robot.taskmanager.job;
 
-import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.provider.Settings;
+import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.Toast;
 
-import androidx.annotation.StringRes;
+import androidx.annotation.RequiresApi;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
-import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class CustomerFriendCircleJob extends BaseRobotJob {
-    private final static String TAG = GroupSendMomentJob.class.getName();
+    private final static String TAG = GroupSendMessageJob.class.getName();
     public AccessibilityGestureUtil accessibilityGestureUtil;
     public static Boolean turnPageFlag = true;
     public static Boolean notificationFlag = true;
@@ -41,35 +36,35 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         this.setTaskStatus("START_CUSTOMER_TASK");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-//        Log.d(TAG, String.format("%s start run", this.getJobId()));
-//        this.setJobState(RobotRunState.STARTED);
-//        this.setStartTime(new Date());
         super.run();
     }
 
     @Override
     public void stop() {
-        Log.d(TAG, String.format("%s stop", this.getJobId()));
+        Logger.d("客户朋友圈-任务停止 %s", this.getJobId());
         super.stop();
     }
 
     @SuppressLint("ResourceType")
     @Override
     public void process() {
-        if(this.getJobState()==RobotRunState.STOPPED){
-            Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
+        super.process();
+        if(!this.canProcess()){
+            Logger.d( "客户朋友圈-任务 %s 处理，任务已停止", this.getJobId());
             return;
         }
-        Log.d(TAG, String.format("%s processing", this.getJobId()));
+        Logger.d( "客户朋友圈-任务处理中 %s", this.getJobId());
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
 
         turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         notificationFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
 
-        this.accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+        this.accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
             return;
@@ -186,7 +181,11 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> timeUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_TIME);
         List<AccessibilityNodeInfo> sendUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_BUTTON);
         if(targetUis.size() > 0){
-            Log.d(TAG,"当前没有任何企业通知");
+//            Log.d(TAG,"当前没有任何企业通知");
+            Logger.d("客户朋友圈-当前没有任何企业通知");
+
+            this.backToMainEnd(rootNodeInfo);
+
             this.setTaskStatus("CUSTOMER_TASK_END");
         }else if(notificationUis.size() > 0){
             Log.d(TAG,"当前页面有企业通知");
@@ -260,11 +259,12 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
 
     public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面、任务结束
+        Logger.d("客户朋友圈-开始返回主界面");
         List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (chatUis.size()>0 && chatUis.get(0).getChildCount()==5){
-            Log.d(TAG,"已返回到主界面，task2 end..");
+            Logger.d("已返回到主界面，客户朋友圈-任务结束");
             this.setTaskStatus("TASK2_END");
         }else if(backUis.size()>0){
             performClick(backUis.get(0));

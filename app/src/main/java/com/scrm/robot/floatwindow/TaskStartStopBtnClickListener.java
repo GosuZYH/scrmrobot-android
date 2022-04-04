@@ -4,6 +4,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.utils.ApplicationUtil;
@@ -23,8 +24,10 @@ public class TaskStartStopBtnClickListener implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(!FloatViewModel.jobStartStop.getValue()){
+            Logger.d("控制按钮点击: 启动");
             FloatViewModel.jobStartStop.postValue(true);
         }else {
+            Logger.d("控制按钮点击: 停止");
             RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
             application.getRobotJobScheduler().stop();
             if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {

@@ -7,19 +7,17 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
-import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
-import java.util.Date;
-
 public class AllTaskJob extends BaseRobotJob {
 
-    private final static String TAG = GroupSendMomentJob.class.getName();
+    private final static String TAG = GroupSendMessageJob.class.getName();
     private static final SopAgentSendMomentJob task1 = new SopAgentSendMomentJob();
-    private static final GroupSendMomentJob task2 = new GroupSendMomentJob();
+    private static final GroupSendMessageJob task2 = new GroupSendMessageJob();
     private static final CustomerFriendCircleJob task3 = new CustomerFriendCircleJob();
     public AccessibilityGestureUtil accessibilityGestureUtil;
 
@@ -48,15 +46,20 @@ public class AllTaskJob extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void process() {
-        if(this.getJobState()==RobotRunState.STOPPED){
-            Log.d(TAG, String.format("%s processing is [stopped]", this.getJobId()));
+        super.process();
+        if(!this.canProcess()){
+            Logger.d( "全部任务 %s 处理，任务不可运行 状态: %s", this.getJobId(),this.getJobState());
             return;
         }
-        Log.d(TAG, String.format("%s processing", this.getJobId()));
-        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        Logger.d( "全部任务-任务处理中 %s", this.getJobId());
 
-        accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
+        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+//        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
+
+        accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
+
+//        accessibilityGestureUtil=new AccessibilityGestureUtil(robotAccessibilityContext.getWeWorkAccessibilityService());
         
         AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
         if (rootNodeInfo == null) {
@@ -64,9 +67,9 @@ public class AllTaskJob extends BaseRobotJob {
         }
         SopAgentSendMomentJob.tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         SopAgentSendMomentJob.selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
-        if(GroupSendMomentJob.findMsg){
+        if(GroupSendMessageJob.findMsg){
             if(robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
-                GroupSendMomentJob.afterClickGroupSend ++;
+                GroupSendMessageJob.afterClickGroupSend ++;
             }
         }
         CustomerFriendCircleJob.turnPageFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;

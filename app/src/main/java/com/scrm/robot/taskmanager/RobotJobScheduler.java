@@ -40,7 +40,11 @@ public class RobotJobScheduler {
     }
 
     public void startAndRunJob(RobotJobType jobType){
-        this.addJob(jobType);
+        if(this.getRobotJobExecutor().getCurrentJob()!=null) {
+            this.getRobotJobExecutor().getCurrentJob().run();
+        }else {
+            this.addJob(jobType);
+        }
         this.start();
     }
 

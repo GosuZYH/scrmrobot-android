@@ -6,6 +6,10 @@ public class Constants {
     public final static String BROADCAST_MSG_TYPE_KEY = "msgType";
 
     public final static int JOB_INTERVAL_MILL_SECONDS = 5 * 1000;
+    /**
+     * job 延时时间，20s
+     */
+    public final static int JOB_TIMEOUT_MILL_SECONDS = 20 * 1000;
 
     public final static String MESSENGER_INTENT_KEY = "mainMessenger";
 
