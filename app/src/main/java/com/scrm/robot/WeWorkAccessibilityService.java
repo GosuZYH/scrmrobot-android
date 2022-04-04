@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer;
 
 import com.scrm.robot.floatwindow.FloatViewModel;
 import com.scrm.robot.floatwindow.FloatViewTouchListener;
+import com.scrm.robot.floatwindow.TaskStartStopBtnClickListener;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -158,16 +159,20 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         } else {
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
+        //启停任务悬浮窗初始属性
+        layoutParams.x = displayMetrics.widthPixels;
+        layoutParams.y = (int)(-displayMetrics.heightPixels*0.3);
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.format = PixelFormat.TRANSPARENT;
         startStopBtn = new Button(getApplicationContext());
         floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null);
-        floatRootView.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
+//        floatRootView.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
 
         windowManager.addView(floatRootView, layoutParams);
-        startStopBtn.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
+//        startStopBtn.setOnTouchListener(new FloatViewTouchListener(layoutParams, windowManager));
+        startStopBtn.setOnClickListener(new TaskStartStopBtnClickListener(layoutParams, windowManager));
         startStopBtn.setText("启动");
         startStopBtn.setWidth(70);
         startStopBtn.setHeight(70);

@@ -177,18 +177,18 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                 //create task time
                 Calendar taskTime = Calendar.getInstance();
                 taskTime.setTime(new Date());
-                if (time.contains(":")){
-                    List<String> list = Arrays.asList(time.split(":"));
-                    taskTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(list.get(0)));  //时
-                    taskTime.set(Calendar.MINUTE, Integer.parseInt(list.get(1)));   //分
+                if (time.contains("上午") || time.contains("下午") || time.contains("刚刚") || time.contains("分钟前")){
+                    taskTime.add(Calendar.HOUR_OF_DAY, -3);  //时-3h
                 }else if (time.contains("月")){
                     List<String> list1 = Arrays.asList(time.split("月"));
                     taskTime.set(Calendar.MONTH, Integer.parseInt(list1.get(0))-1);  //月
                     taskTime.set(Calendar.DAY_OF_MONTH, Integer.parseInt(list1.get(1).substring(0,list1.get(1).indexOf("日"))));  //天
                 }else if (time.contains("昨天")){
                     taskTime.add(Calendar.DAY_OF_MONTH,-1);  //天-1d
-                }else if (time.contains("上午") || time.contains("下午") || time.contains("刚刚") || time.contains("分钟前")){
-                    taskTime.add(Calendar.HOUR_OF_DAY, -3);  //时-3h
+                }else  if (time.contains(":")){
+                    List<String> list = Arrays.asList(time.split(":"));
+                    taskTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(list.get(0)));  //时
+                    taskTime.set(Calendar.MINUTE, Integer.parseInt(list.get(1)));   //分
                 }else if (time.contains("星期")){
                     if(!application.getString(R.string.groupWeekDay).contains(time)){
                         taskTime.add(Calendar.DAY_OF_MONTH,-7);  //天-1d
@@ -203,7 +203,7 @@ public class GroupSendMomentJob  extends BaseRobotJob {
                     this.setTaskStatus("NO_MSG");
                 }
             }catch (Exception e){
-                Log.d(TAG,"出现小错误："+e);
+                Log.d(TAG,"群发消息错误："+e);
             }
         }
     }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class FileUtil {
 
-    public static final String SCREENCAPTURE_PATH = "aaa"  + File.separator;
+    public static final String SCREENCAPTURE_PATH = "smr"  + File.separator;
 
     public static final String SCREENSHOT_NAME = "Screenshot";
 

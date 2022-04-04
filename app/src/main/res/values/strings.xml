@@ -37,6 +37,8 @@
     <string name="loginOut">退出登录</string>
 
     <!-- task config -->
+    <string name="loginServer">test</string>
+    <string name="version">当前版本:v1.0.0</string>
     <integer name="sopDay">0</integer>
     <integer name="sopHour">0</integer>
     <integer name="sopMin">0</integer>

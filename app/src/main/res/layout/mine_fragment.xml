@@ -19,39 +19,64 @@
 
     <TextView
         android:id="@+id/userName"
-        android:layout_width="209dp"
-        android:layout_height="42dp"
+        android:layout_width="210dp"
+        android:layout_height="32dp"
         android:text="请登录"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.831"
+        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053" />
+        app:layout_constraintVertical_bias="0.052" />
 
     <TextView
-        android:id="@+id/userId"
-        android:layout_width="230dp"
+        android:id="@+id/id"
+        android:layout_width="227dp"
         android:layout_height="32dp"
         android:text="ID："
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.911"
+        app:layout_constraintHorizontal_bias="0.938"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintVertical_bias="0.108" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="334dp"
         android:layout_height="51dp"
-        android:text="@string/loginOut"
         android:onClick="loginOut"
+        android:text="@string/loginOut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954" />
+        app:layout_constraintVertical_bias="0.929" />
+
+    <TextView
+        android:id="@+id/outTime"
+        android:layout_width="228dp"
+        android:layout_height="35dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.163" />
+
+    <TextView
+        android:id="@+id/mineVersion"
+        android:layout_width="112dp"
+        android:layout_height="26dp"
+        android:text="当前版本:v1.0.0"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
 </androidx.constraintlayout.widget.ConstraintLayout>

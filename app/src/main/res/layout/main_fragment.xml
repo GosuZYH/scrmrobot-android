@@ -25,6 +25,7 @@
         android:layout_height="85dp"
         android:layout_marginStart="23dp"
         android:layout_marginTop="24dp"
+        android:background="@color/purple_200"
         android:onClick="customerFriendCircleTask"
         android:text="@string/taskCustomerCircle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,6 +39,7 @@
         android:id="@+id/accessibilityService"
         android:layout_width="125dp"
         android:layout_height="55dp"
+        android:background="@color/purple_200"
         android:onClick="showNoticeDialog"
         android:text="@string/accessibility"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,28 +51,29 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="150dp"
-        android:layout_height="24dp"
+        android:layout_width="177dp"
+        android:layout_height="23dp"
         android:text="@string/checkPermission"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.439" />
+        app:layout_constraintVertical_bias="0.442" />
 
     <Button
         android:id="@+id/suspendedBall"
         android:layout_width="125dp"
         android:layout_height="55dp"
+        android:background="@color/purple_200"
         android:onClick="showFloatWindowNotice"
         android:text="@string/ball"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/accessibilityService"
-        app:layout_constraintVertical_bias="0.268" />
+        app:layout_constraintVertical_bias="0.266" />
 
     <Button
         android:id="@+id/groupSend"
@@ -78,6 +81,7 @@
         android:layout_height="85dp"
         android:onClick="groupSendTask"
         android:text="@string/taskGroupSend"
+        android:background="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.193"
@@ -89,6 +93,7 @@
         android:id="@+id/sopFriendCircle"
         android:layout_width="127dp"
         android:layout_height="85dp"
+        android:background="@color/purple_200"
         android:onClick="sopFriendCircleTask"
         android:text="@string/taskSop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -102,6 +107,7 @@
         android:id="@+id/taskall"
         android:layout_width="127dp"
         android:layout_height="85dp"
+        android:background="@color/purple_200"
         android:onClick="allTask"
         android:text="@string/alltask"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -149,6 +155,7 @@
         android:id="@+id/button2"
         android:layout_width="272dp"
         android:layout_height="44dp"
+        android:background="@color/purple_200"
         android:text="@string/cancelSchedulerBtnText"
         android:onClick="btnCancelScheduleJobClick"
         app:layout_constraintBottom_toBottomOf="parent"

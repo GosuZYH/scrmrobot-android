@@ -40,6 +40,8 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.7.1'
     implementation 'androidx.lifecycle:lifecycle-service:2.3.1'
     implementation 'com.alibaba:fastjson:1.2.80'
+    implementation 'com.orhanobut:logger:2.2.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

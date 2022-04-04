@@ -18,4 +18,9 @@ public class Constants {
     public final static String JOB_SCHEDULER_MSG_RECEIVER = "com.scrm.robot.receiver.jobScheduleMsgReceiver";
 
     public final static  int REQUEST_MEDIA_PROJECTION=100;
+
+    /**
+     * 5000kb, 50mb
+     */
+    public final static  int MAX_BYTES=50*1000;
 }
