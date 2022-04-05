@@ -21,15 +21,20 @@ import com.scrm.robot.taskmanager.JobSchedulerMessageReceiver;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.RobotJobFactory;
 import com.scrm.robot.taskmanager.RobotJobScheduler;
+import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.util.Base64;
+import java.util.Date;
 
 public class RobotApplication extends Application {
    private RobotAccessibilityContext robotAccessibilityContext;
-    private WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
+   private Date lastEventTime;
+//    private WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
+    private WeWorkAccessibilityService  weWorkAccessibilityService;
 
     private LocalBroadcastManager localBroadcastManager;
     private static JobSchedulerMessageReceiver receiver;
@@ -38,6 +43,7 @@ public class RobotApplication extends Application {
     private RobotJobFactory robotJobFactory;
     private Activity jobActivity;
     private int jobId=0;
+    private String currentWeWorkActivity=null;
 
     @Override
     public void onCreate() {
@@ -54,21 +60,40 @@ public class RobotApplication extends Application {
         Logger.i("应用创建");
     }
 
-//    public RobotAccessibilityContext getRobotAccessibilityContext() {
-//        return robotAccessibilityContext;
-//    }
-//
-//    public void setRobotAccessibilityContext(RobotAccessibilityContext robotAccessibilityContext) {
-//        this.robotAccessibilityContext = robotAccessibilityContext;
-//    }
-//
+    public RobotAccessibilityContext getRobotAccessibilityContext() {
+        return robotAccessibilityContext;
+    }
+
+    public void setRobotAccessibilityContext(RobotAccessibilityContext robotAccessibilityContext) {
+        this.robotAccessibilityContext = robotAccessibilityContext;
+        if(robotAccessibilityContext.getWeWorkActivityClassName()!=null){
+            this.currentWeWorkActivity=robotAccessibilityContext.getWeWorkActivityClassName();
+        }
+        this.lastEventTime=new Date();
+    }
+
+    public Date getLastEventTime() {
+        return lastEventTime;
+    }
+
+    public void setLastEventTime(Date lastEventTime) {
+        this.lastEventTime = lastEventTime;
+    }
+
+    public String getCurrentWeWorkActivityClassName() {
+        return currentWeWorkActivity;
+    }
+
+    public void setCurrentWeWorkActivity(String currentWeWorkActivity) {
+        this.currentWeWorkActivity = currentWeWorkActivity;
+    }
 
     public  WeWorkAccessibilityService getWeWorkAccessibilityService() {
-        return weWorkAccessibilityService.get();
+        return weWorkAccessibilityService;
     }
 
     public void setWeWorkAccessibilityService(WeWorkAccessibilityService weWorkAccessibilityService) {
-        this.weWorkAccessibilityService =new WeakReference<WeWorkAccessibilityService>(weWorkAccessibilityService);
+        this.weWorkAccessibilityService  =weWorkAccessibilityService;
     }
 
     public int generateJobId(){
@@ -108,6 +133,13 @@ public class RobotApplication extends Application {
         this.localBroadcastManager = localBroadcastManager;
     }
 
+    public BaseRobotJob getCurrentJob(){
+        if(this.getRobotJobScheduler()!=null && this.getRobotJobScheduler().getRobotJobExecutor()!=null){
+            return this.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
+        }
+        return null;
+    }
+
     private void initLogger(){
         try {
             // region 文件log
@@ -123,7 +155,7 @@ public class RobotApplication extends Application {
             constructor.setAccessible(true);
             Handler handler = (Handler) constructor.newInstance(ht.getLooper(), folder, Constants.MAX_BYTES * 1024);
 
-            //创建缓存策略
+            //创建磁盘存储策略
             FormatStrategy strategy = CsvFormatStrategy.newBuilder().logStrategy(new DiskLogStrategy(handler)).build();
             DiskLogAdapter diskLogAdapter = new DiskLogAdapter(strategy);
             // endregion

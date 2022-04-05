@@ -39,6 +39,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public SopAgentSendMomentJob(){
         super();
+        this.initTask();
+    }
+
+    public void initTask(){
         this.setTaskId(1);
         this.setTaskStatus("INIT_SOP_TASK");
     }
@@ -578,8 +582,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->点击消息
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (chatUis.size()>0){
@@ -597,7 +601,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CHAT);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
         if (chatUis.size()>0){

@@ -9,7 +9,8 @@ public class Constants {
     /**
      * job 延时时间，20s
      */
-    public final static int JOB_TIMEOUT_MILL_SECONDS = 20 * 1000;
+    // TODO NOW 改为20s
+    public final static int JOB_TIMEOUT_MILL_SECONDS = 10 * 1000;
 
     public final static String MESSENGER_INTENT_KEY = "mainMessenger";
 

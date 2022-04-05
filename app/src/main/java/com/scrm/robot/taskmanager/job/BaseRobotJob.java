@@ -37,7 +37,6 @@ public abstract class BaseRobotJob implements IRobotJob{
     private RobotAccessibilityContext robotAccessibilityContext;
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void run() {
         Log.d(TAG, String.format("%s start run", this.getJobId()));
         this.setJobState(RobotRunState.STARTED);
@@ -45,6 +44,7 @@ public abstract class BaseRobotJob implements IRobotJob{
         // TODO DEBUGING 停止启动后再运行，因为没有事件，无法触发
         this.process();
     }
+
 
     @Override
     public  void process() {
@@ -56,6 +56,10 @@ public abstract class BaseRobotJob implements IRobotJob{
         this.setJobState(RobotRunState.WAITING);
     }
 
+
+    public void reRun(){
+        this.run();
+    }
 
     @Override
     public  void stop() {
@@ -162,7 +166,7 @@ public abstract class BaseRobotJob implements IRobotJob{
         this.robotAccessibilityContext = robotAccessibilityContext;
     }
 
-    public boolean canProcess(){
-        return this.jobState==RobotRunState.STARTED&&this.robotAccessibilityContext!=null;
+    public boolean canProcess() {
+        return this.jobState == RobotRunState.STARTED && this.robotAccessibilityContext != null;
     }
 }

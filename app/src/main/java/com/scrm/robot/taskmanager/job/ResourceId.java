@@ -1,6 +1,9 @@
 package com.scrm.robot.taskmanager.job;
 
 public class ResourceId {
+    public final static String WEWORK_MAIN_UI_CLASS_NAME="com.tencent.wework.launch.WwMainActivity";
+
+
     //server
     public static final String testServer = "SMR-代开发-test";
     public static final String prodServer = "SMR-代开发";
@@ -14,7 +17,8 @@ public class ResourceId {
     //SOP朋友圈
     public static final String SEARCH = "com.tencent.wework:id/kci";
     public static final String SEARCH_LABEL = "com.tencent.wework:id/iqz";
-    public static final String CHAT = "com.tencent.wework:id/js1";
+    // 底部导航，ViewGroup
+    public static final String BOTTOM_NAVIGATE_BAR = "com.tencent.wework:id/js1";
     public static final String WORKSTATION = "com.tencent.wework:id/fz4";
     public static final String SKIP = "com.tencent.wework:id/anv";
     public static final String TEXT = "android.widget.TextView";

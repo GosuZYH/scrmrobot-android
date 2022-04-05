@@ -23,6 +23,14 @@ public class AllTaskJob extends BaseRobotJob {
 
     public AllTaskJob(){
         super();
+        this.initTask();
+    }
+
+    private void initTask(){
+        task1.initTask();
+        task2.initTask();
+        task3.initTask();
+
         this.setTaskId(1);
         this.setTaskStatus("START_SOP_TASK");
     }
@@ -35,6 +43,12 @@ public class AllTaskJob extends BaseRobotJob {
 //        this.setStartTime(new Date());
 //        this.process();
         super.run();
+    }
+
+    @Override
+    public void reRun(){
+        this.initTask();
+        super.reRun();
     }
 
     @Override

@@ -66,14 +66,17 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     public void onAccessibilityEvent(AccessibilityEvent event) {
         // 主线程，不要执行耗时操作
         if (packageName.equals(event.getPackageName())) {
-//            Log.d(TAG, event.toString());
+            Log.d(TAG, event.toString());
+            Log.d(TAG,"event class-----> "+event.getClassName().toString());
+
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
-//            robotAccessibilityContext.setCurrentEvent(event);
-//            robotAccessibilityContext.setRootNodeInfo(rootInfo);
+            RobotAccessibilityContext robotAccessibilityContext=new RobotAccessibilityContext();
+            robotAccessibilityContext.setCurrentEvent(event);
+            robotAccessibilityContext.setRootNodeInfo(rootInfo);
 //            this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
 
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-//            application.setRobotAccessibilityContext(robotAccessibilityContext);
+            application.setRobotAccessibilityContext(robotAccessibilityContext);
             application.setWeWorkAccessibilityService(this);
             //special situation solve
 //            AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
@@ -122,9 +125,8 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                         } else {
                             startStopBtn.setText("停止");
                             application.getRobotJobScheduler().startAndRunJob(FloatViewModel.currentOnClickJob.getValue());
-                            //打开企微
-                            Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
-                            startActivity(intent);
+                            // 打开企微
+                            openWeWork();
                         }
 
                     } catch (Exception e) {
@@ -133,6 +135,12 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
                 }
             }
         });
+    }
+
+    public void openWeWork(){
+        //打开企微
+        Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
+        startActivity(intent);
     }
 
     @NonNull

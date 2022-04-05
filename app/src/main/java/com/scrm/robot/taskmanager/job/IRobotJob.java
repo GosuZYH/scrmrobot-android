@@ -7,5 +7,7 @@ public interface IRobotJob {
 
     void pause();
 
+    void reRun();
+
     void  stop();
 }

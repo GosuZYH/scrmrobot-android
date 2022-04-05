@@ -9,7 +9,7 @@ import com.scrm.robot.WeWorkAccessibilityService;
 import java.lang.ref.WeakReference;
 
 public class RobotAccessibilityContext {
-    private  WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
+//    private  WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
     private WeakReference<AccessibilityEvent> currentEvent;
     private String weWorkActivityClassName;
     private WeakReference<AccessibilityNodeInfo> rootNodeInfo;
@@ -22,7 +22,7 @@ public class RobotAccessibilityContext {
         this.currentEvent = new WeakReference<>(currentEvent);
         String className = currentEvent.getClassName().toString();
         Logger.d("EventClassName %s", className);
-        if (className.endsWith("UI")) {
+        if (className.endsWith("Activity")) {
             this.setWeWorkActivityClassName(className);
         }
     }
