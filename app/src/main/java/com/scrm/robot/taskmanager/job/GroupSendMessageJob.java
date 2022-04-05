@@ -12,6 +12,7 @@ import com.orhanobut.logger.Logger;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -28,6 +29,7 @@ public class GroupSendMessageJob extends BaseRobotJob {
 
     public GroupSendMessageJob(){
         super();
+        this.setJobType(RobotJobType.GROUP_SEND_MESSAGE);
         this.initTask();
     }
 
@@ -36,27 +38,15 @@ public class GroupSendMessageJob extends BaseRobotJob {
         this.setTaskStatus("START_GROUP_TASK");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void run() {
-        super.run();
-    }
-
-    @Override
-    public void stop() {
-        Logger.d("客户群发消息-任务停止 %s", this.getJobId());
-        super.stop();
-    }
-
     @SuppressLint("ResourceType")
     @Override
     public void process() {
         super.process();
         if(!this.canProcess()){
-            Logger.d( "客户群发消息-任务 %s 处理，任务已停止", this.getJobId());
+            Logger.d( "任务不可处理: %s", this.toString());
             return;
         }
-        Logger.d( "客户群发消息-任务处理中 %s", this.getJobId());
+        Logger.d( "任务处理中: %s", this.toString());
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
 //        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
         RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();

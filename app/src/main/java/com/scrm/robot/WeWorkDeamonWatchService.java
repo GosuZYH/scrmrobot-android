@@ -67,8 +67,8 @@ public class WeWorkDeamonWatchService extends IntentService {
                                     job.pause();
                                 }
                                 // TODO NOW 回到主页
-                                if(job.getJobState()!= RobotRunState.STOPPED) {
-                                    backToMain();
+                                if(job.getJobState()!= RobotRunState.FINISH) {
+                                    resetUiToInitPoint();
                                 }
                             }
                             job = application.getCurrentJob();
@@ -84,7 +84,7 @@ public class WeWorkDeamonWatchService extends IntentService {
 
                 Logger.d("监控服务-任务无事件超时检查-结束");
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(Constants.WATCH_INTERVAL_MILL_SECONDS);
                 } catch (Exception ex) {
 
                 }
@@ -93,9 +93,9 @@ public class WeWorkDeamonWatchService extends IntentService {
     }
 
     /**
-     * 回到主界面, 且点击到第一个 消息 页面
+     * 重置UI,回到主界面, 且点击到第一个 消息 页面
      */
-    private void  backToMain(){
+    private void resetUiToInitPoint(){
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
 
         RobotAccessibilityContext robotAccessibilityContext=application.getRobotAccessibilityContext();
@@ -106,7 +106,7 @@ public class WeWorkDeamonWatchService extends IntentService {
                 // 返回上个页面
                 weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(Constants.RESET_UI_INTERVAL_MILL_SECONDS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -120,7 +120,8 @@ public class WeWorkDeamonWatchService extends IntentService {
                 // 底部导航按钮
                 List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
                 if (barNodeParents.size() > 0 ) {
-                    AccessibilityNodeInfo barNodeParent = barNodeParents.get(0);
+                    // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
+                    AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size()-1);
                     if(barNodeParent.getChildCount()==5) {
                         Logger.d("监控服务-切换到导航栏第一个功能");
                         // 点击第5个
@@ -137,28 +138,28 @@ public class WeWorkDeamonWatchService extends IntentService {
         }
 
     }
-
-    public  AccessibilityEvent obtainEvent() {
-        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
-        try {
-            if (job != null) {
-                RobotAccessibilityContext robotAccessibilityContext = job.getRobotAccessibilityContext();
-                if (robotAccessibilityContext != null) {
-                    String className = robotAccessibilityContext.getWeWorkActivityClassName();
-                    if (className != null) {
-                        Constructor<AccessibilityEvent> constructor = AccessibilityEvent.class.getDeclaredConstructor();
-                        constructor.setAccessible(true);
-                        AccessibilityEvent accessibilityEvent = constructor.newInstance();
-                        accessibilityEvent.setEventType(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
-                        accessibilityEvent.setClassName(className);
-                        return accessibilityEvent;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Logger.e("监控服务-获取事件错误：%s", ex);
-        }
-        return null;
-    }
+//
+//    public  AccessibilityEvent obtainEvent() {
+//        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+//        BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
+//        try {
+//            if (job != null) {
+//                RobotAccessibilityContext robotAccessibilityContext = job.getRobotAccessibilityContext();
+//                if (robotAccessibilityContext != null) {
+//                    String className = robotAccessibilityContext.getWeWorkActivityClassName();
+//                    if (className != null) {
+//                        Constructor<AccessibilityEvent> constructor = AccessibilityEvent.class.getDeclaredConstructor();
+//                        constructor.setAccessible(true);
+//                        AccessibilityEvent accessibilityEvent = constructor.newInstance();
+//                        accessibilityEvent.setEventType(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+//                        accessibilityEvent.setClassName(className);
+//                        return accessibilityEvent;
+//                    }
+//                }
+//            }
+//        } catch (Exception ex) {
+//            Logger.e("监控服务-获取事件错误：%s", ex);
+//        }
+//        return null;
+//    }
 }

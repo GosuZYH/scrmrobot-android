@@ -13,8 +13,6 @@ import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.utils.ApplicationUtil;
 
-import java.util.concurrent.LinkedBlockingDeque;
-
 public class RobotJobScheduler {
     private final static String TAG = RobotJobScheduler.class.getName();
     private final RobotJobExecutor robotJobExecutor;
@@ -24,7 +22,7 @@ public class RobotJobScheduler {
     private RobotRunState runState;
 
     public RobotJobScheduler() {
-        this.runState=RobotRunState.STOPPED;
+        this.runState=RobotRunState.FINISH;
         this.robotJobExecutor=new RobotJobExecutor();
     }
 
@@ -33,19 +31,17 @@ public class RobotJobScheduler {
     }
 
     public void stop(){
-        this.runState = RobotRunState.STOPPED;
+        this.runState = RobotRunState.FINISH;
         if(this.robotJobExecutor.getCurrentJob() != null){
-            this.robotJobExecutor.getCurrentJob().stop();
+            this.robotJobExecutor.getCurrentJob().finish();
         }
     }
 
     public void startAndRunJob(RobotJobType jobType){
-        if(this.getRobotJobExecutor().getCurrentJob()!=null) {
-            this.getRobotJobExecutor().getCurrentJob().run();
-        }else {
+        this.start();
+        if(this.getRobotJobExecutor().getCurrentJob()==null ||!this.getRobotJobExecutor().getCurrentJob().reRun()) {
             this.addJob(jobType);
         }
-        this.start();
     }
 
     public JobScheduler getJobScheduler() {
@@ -62,13 +58,6 @@ public class RobotJobScheduler {
 
     public void setJobSchedulerService(JobSchedulerService jobSchedulerService) {
         this.jobSchedulerService = jobSchedulerService;
-    }
-
-    public void genNextJob(){
-        // TODO NOW 获取当前任务，已生成下一个任务
-        if(this.runState==RobotRunState.STARTED) {
-            this.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
-        }
     }
 
     /**

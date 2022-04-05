@@ -35,8 +35,7 @@ public class JobSchedulerMessageHandler extends Handler {
         JobParameters jobParameters = (JobParameters) message.obj;
         Log.d(TAG,"handle message: "+message.what);
         if(RobotSchedulerJobState.FINISH.value ==message.what) {
-           RobotApplication robotApplication= (RobotApplication) ApplicationUtil.getApplication();
-           robotApplication.getRobotJobScheduler().genNextJob();
+//           RobotApplication robotApplication= (RobotApplication) ApplicationUtil.getApplication();
         }
     }
 }

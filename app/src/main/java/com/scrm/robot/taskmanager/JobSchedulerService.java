@@ -119,6 +119,9 @@ public class JobSchedulerService extends JobService {
         intent.putExtra(Constants.BROADCAST_MSG_TYPE_KEY, RobotBroadcastType.JOB_STATE_BROADCAST.value);
         intent.putExtra(Constants.INTENT_JOB_INFO_ID_KEY, jobParameters.getJobId());
         intent.putExtra(Constants.MSG_SCHEDULER_JOB_STATE_KEY, schedulerJobState.value);
+        if(jobParameters.getExtras().containsKey(Constants.INTENT_JOB_INFO_TYPE_KEY)) {
+            intent.putExtra(Constants.INTENT_JOB_INFO_TYPE_KEY, jobParameters.getExtras().getInt(Constants.INTENT_JOB_INFO_TYPE_KEY));
+        }
         LocalBroadcastManager localBroadcastManager = ((RobotApplication)ApplicationUtil.getApplication()).getLocalBroadcastManager();
         localBroadcastManager.sendBroadcast(intent);
     }

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.Constants;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
+import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.taskmanager.enums.RobotSchedulerJobState;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
@@ -28,9 +30,16 @@ public class JobSchedulerMessageReceiver extends BroadcastReceiver {
         if(broadcastType==RobotBroadcastType.JOB_STATE_BROADCAST) {
             int jobId = intent.getIntExtra(Constants.INTENT_JOB_INFO_ID_KEY, 0);
             int schedulerJobState = intent.getIntExtra(Constants.MSG_SCHEDULER_JOB_STATE_KEY, 0);
-            Log.d(TAG, "receive: " + context + " : " + jobId + " : " + schedulerJobState);
+            Logger.d("调度器广播 接受:%s 任务状态： %s", context, schedulerJobState);
+
             if (RobotSchedulerJobState.FINISH.value == schedulerJobState) {
-                robotApplication.getRobotJobScheduler().genNextJob();
+                // 获取需要被调度的任务
+                int jobTypeValue=intent.getIntExtra(Constants.INTENT_JOB_INFO_TYPE_KEY,-1);
+                RobotJobType jobType=RobotJobType.getByValue(jobTypeValue);
+                if(jobType!=null) {
+                    Logger.d("> 调度器广播-重新调度任务类型：%s ", jobType.name);
+                    robotApplication.getRobotJobScheduler().startAndRunJob(jobType);
+                }
             }
         }else if(broadcastType==RobotBroadcastType.SCREENSHOT_FINISH_BROADCAST){
             String sopType = intent.getStringExtra("sopType");

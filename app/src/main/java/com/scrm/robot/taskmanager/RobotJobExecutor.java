@@ -26,6 +26,7 @@ public class RobotJobExecutor {
         if(jobInfo!=null) {
             int robotJobTypeValue = jobInfo.getExtras().getInt(INTENT_JOB_INFO_TYPE_KEY);
             RobotJobType robotJobType = RobotJobType.getByValue(robotJobTypeValue);
+            jobParameters.getExtras().putInt(INTENT_JOB_INFO_TYPE_KEY,robotJobType.value);
             BaseRobotJob robotJob = application.getRobotJobFactory().buildRobotJob(robotJobType);
             if (robotJob != null) {
                 robotJob.setJobParameters(jobParameters);

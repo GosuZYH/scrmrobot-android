@@ -7,7 +7,8 @@ import java.util.UUID;
 
 public class IdUtil {
     final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
     public static String generateTimeId(String prefix) {
-        return prefix+simpleDateFormat.format(new Date()) + "_" + UUID.randomUUID().toString();
+        return prefix + simpleDateFormat.format(new Date());
     }
 }

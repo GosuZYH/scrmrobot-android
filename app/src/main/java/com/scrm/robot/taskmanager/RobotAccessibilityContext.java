@@ -21,7 +21,7 @@ public class RobotAccessibilityContext {
     public void setCurrentEvent(AccessibilityEvent currentEvent) {
         this.currentEvent = new WeakReference<>(currentEvent);
         String className = currentEvent.getClassName().toString();
-        Logger.d("EventClassName %s", className);
+//        Logger.d("EventClassName %s", className);
         if (className.endsWith("Activity")) {
             this.setWeWorkActivityClassName(className);
         }

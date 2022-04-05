@@ -246,7 +246,7 @@ public class MainActivity extends FragmentActivity{
                 Logger.d("执行所有任务-开始中");
                 Toast.makeText(MainActivity.this, "循环执行所有任务", Toast.LENGTH_SHORT).show();
                 this.openCloseFloatView();
-                FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);                Logger.d("执行所有任务-开始");
+                FloatViewModel.currentOnClickJob.postValue(RobotJobType.ALL_TASK_MOMENT);
                 Logger.d("执行所有任务-开始成功");
             }
 //            WeWorkAccessibilityService.logView.setText("正在循环执行所有任务");

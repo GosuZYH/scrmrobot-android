@@ -9,8 +9,16 @@ public class Constants {
     /**
      * job 延时时间，20s
      */
-    // TODO NOW 改为20s
-    public final static int JOB_TIMEOUT_MILL_SECONDS = 10 * 1000;
+    public final static int JOB_TIMEOUT_MILL_SECONDS = 20 * 1000;
+    /**
+     * 重置UI到初始页面 检测等待频率
+     */
+    public final static int RESET_UI_INTERVAL_MILL_SECONDS = 20 * 1000;
+
+    /**
+     * 监控服务频率
+     */
+    public final static int WATCH_INTERVAL_MILL_SECONDS = 10 * 1000;
 
     public final static String MESSENGER_INTENT_KEY = "mainMessenger";
 

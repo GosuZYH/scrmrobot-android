@@ -73,13 +73,10 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
             RobotAccessibilityContext robotAccessibilityContext=new RobotAccessibilityContext();
             robotAccessibilityContext.setCurrentEvent(event);
             robotAccessibilityContext.setRootNodeInfo(rootInfo);
-//            this.robotAccessibilityContext.setWeWorkAccessibilityService(this);
 
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
             application.setRobotAccessibilityContext(robotAccessibilityContext);
             application.setWeWorkAccessibilityService(this);
-            //special situation solve
-//            AccessibilityNodeInfo rootNodeInfo = robotAccessibilityContext.getRootNodeInfo();
             //region 方法1 直接处理
 //            BaseRobotJob job = application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob();
 //            if (job != null) {
@@ -87,7 +84,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 //            }
             //endregion
 
-            //region 方案2 服务处理
+            //region 方案2 后台服务处理，不阻塞主线程
             WeWorkAccessibilityEventService.startWithEvent(getApplicationContext(), event, rootInfo);
             //endregion
         }

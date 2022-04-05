@@ -14,6 +14,7 @@ import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -39,6 +40,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public SopAgentSendMomentJob(){
         super();
+        this.setJobType(RobotJobType.SOP_AGENT_SEND_MOMENT);
         this.initTask();
     }
 
@@ -47,31 +49,17 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         this.setTaskStatus("INIT_SOP_TASK");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void run() {
-//        Log.d(TAG, String.format("%s start run", this.getJobId()));
-//        this.setJobState(RobotRunState.STARTED);
-//        this.setStartTime(new Date());
-        super.run();
-    }
-
-    @Override
-    public void stop() {
-        Log.d(TAG, String.format("%s stop", this.getJobId()));
-        super.stop();
-    }
-
     @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void process() {
         super.process();
-        if(this.canProcess()){
-            Logger.d( "Sop朋友圈 %s 处理，任务不可运行 状态: %s", this.getJobId(),this.getJobState());
+        if(!this.canProcess()){
+            Logger.d( "任务不可处理: %s", this.toString());
             return;
         }
-        Logger.d( "Sop朋友圈-任务处理中 %s", this.getJobId());
+        Logger.d( "任务处理中: %s", this.toString());
+
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
 //        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
         RobotAccessibilityContext robotAccessibilityContext = this.getRobotAccessibilityContext();
@@ -386,7 +374,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                                 if(!JobStateViewModel.isScreenShot.getValue()){
                                     // TODO 暂停任务，不是停止？
                                     this.pause();
-                                    Log.d(TAG,"截图功能开启");
+                                    Logger.d("截图功能开启");
                                     JobStateViewModel.isScreenShot.postValue(true);
                                 }
                                 this.setTaskStatus("SCREENSHOT_CV");
@@ -395,7 +383,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                                 this.setTaskStatus("BACK_TO_MAIN");
                             }
                         } catch (ParseException e) {
-                            Log.d(TAG,"SOP任务在信息处理中出现错误"+e);
+                            Logger.e("SOP任务在信息处理中出现错误: %s",e);
                             this.setTaskStatus("BACK_TO_MAIN");
                         }
                         return;

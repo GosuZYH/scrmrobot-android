@@ -1,7 +1,6 @@
 package com.scrm.robot.taskmanager.job;
 
 import android.os.Build;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -10,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
@@ -23,6 +23,7 @@ public class AllTaskJob extends BaseRobotJob {
 
     public AllTaskJob(){
         super();
+        this.setJobType(RobotJobType.ALL_TASK_MOMENT);
         this.initTask();
     }
 
@@ -35,26 +36,28 @@ public class AllTaskJob extends BaseRobotJob {
         this.setTaskStatus("START_SOP_TASK");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
-    public void run() {
-//        Log.d(TAG, String.format("%s start run", this.getJobId()));
-//        this.setJobState(RobotRunState.STARTED);
-//        this.setStartTime(new Date());
-//        this.process();
-        super.run();
-    }
-
-    @Override
-    public void reRun(){
+    public boolean reRun() {
         this.initTask();
-        super.reRun();
+        return super.reRun();
     }
 
     @Override
-    public void stop() {
-        Log.d(TAG, String.format("%s stop", this.getJobId()));
-        super.stop();
+    public void finish() {
+        task1.finish();
+        task2.finish();
+        task3.finish();
+
+        super.finish();
+    }
+
+    @Override
+    public void finishAndReschedule() {
+        task1.finish();
+        task2.finish();
+        task3.finish();
+
+        super.finishAndReschedule();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -62,10 +65,10 @@ public class AllTaskJob extends BaseRobotJob {
     public void process() {
         super.process();
         if(!this.canProcess()){
-            Logger.d( "全部任务 %s 处理，任务不可运行 状态: %s", this.getJobId(),this.getJobState());
+            Logger.d( "任务不可处理: %s", this.toString());
             return;
         }
-        Logger.d( "全部任务-任务处理中 %s", this.getJobId());
+        Logger.d( "任务处理中: %s", this.toString());
 
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
 //        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
@@ -117,9 +120,11 @@ public class AllTaskJob extends BaseRobotJob {
                 task3.accessibilityGestureUtil = accessibilityGestureUtil;
                 String res3 = task3.customerFriendCircleTask(rootNodeInfo);
                 if("INIT_SOP_TASK".equals(res3)){
-                    this.setTaskId(1);
-                    task1.setTaskStatus("INIT_SOP_TASK");
-                    this.setTaskStatus("INIT_SOP_TASK");
+                    // TODO NOW 此时应该停止任务，重新发放新调度任务
+                    this.finishAndReschedule();
+//                    this.setTaskId(1);
+//                    task1.setTaskStatus("INIT_SOP_TASK");
+//                    this.setTaskStatus("INIT_SOP_TASK");
                 }
                 break;
         }

@@ -1,12 +1,10 @@
 package com.scrm.robot.floatwindow;
 
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
-import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.utils.ApplicationUtil;
 
 public class TaskStartStopBtnClickListener implements View.OnClickListener {
@@ -31,7 +29,7 @@ public class TaskStartStopBtnClickListener implements View.OnClickListener {
             RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
             application.getRobotJobScheduler().stop();
             if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {
-                application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().stop();
+                application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().finish();
             }
             FloatViewModel.jobStartStop.postValue(false);
         }

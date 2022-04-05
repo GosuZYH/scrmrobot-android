@@ -7,7 +7,15 @@ public interface IRobotJob {
 
     void pause();
 
-    void reRun();
+    boolean reRun();
 
-    void  stop();
+    /**
+     * 停止任务
+     */
+    void finish();
+
+    /**
+     * 停止并且重新规划任务
+     */
+    void finishAndReschedule();
 }
