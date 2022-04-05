@@ -67,7 +67,6 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
         // 主线程，不要执行耗时操作
         if (packageName.equals(event.getPackageName())) {
             Log.d(TAG, event.toString());
-            Log.d(TAG,"event class-----> "+event.getClassName().toString());
 
             AccessibilityNodeInfo rootInfo = getRootInActiveWindow();
             RobotAccessibilityContext robotAccessibilityContext=new RobotAccessibilityContext();
