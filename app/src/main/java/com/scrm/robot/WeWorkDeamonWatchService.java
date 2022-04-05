@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
+import com.scrm.robot.taskmanager.enums.RobotRunState;
 import com.scrm.robot.taskmanager.job.BaseRobotJob;
 import com.scrm.robot.taskmanager.job.ResourceId;
 import com.scrm.robot.utils.ApplicationUtil;
@@ -61,11 +62,15 @@ public class WeWorkDeamonWatchService extends IntentService {
 //                                if (event != null) {
                             Logger.d("监控服务-触发事件 %s", event);
                             BaseRobotJob job = application.getCurrentJob();
-                            if (job != null) {
-                                job.pause();
+                            if (job != null ) {
+                                if( job.canProcess()) {
+                                    job.pause();
+                                }
+                                // TODO NOW 回到主页
+                                if(job.getJobState()!= RobotRunState.STOPPED) {
+                                    backToMain();
+                                }
                             }
-                            // TODO NOW 回到主页
-                            backToMain();
                             job = application.getCurrentJob();
                             if (job != null) {
                                 job.reRun();

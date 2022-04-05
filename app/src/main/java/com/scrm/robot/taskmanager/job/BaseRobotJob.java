@@ -58,6 +58,9 @@ public abstract class BaseRobotJob implements IRobotJob{
 
 
     public void reRun(){
+        if(this.getJobState()==RobotRunState.STOPPED){
+            return;
+        }
         this.run();
     }
 
