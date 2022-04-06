@@ -41,6 +41,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public void initTask(){
         this.setTaskId(3);
         this.setTaskStatus("START_CUSTOMER_TASK");
+        publishedNum = 0;
     }
 
 
