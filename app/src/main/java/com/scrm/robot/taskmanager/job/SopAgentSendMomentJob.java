@@ -49,7 +49,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         this.setTaskId(1);
         this.setTaskStatus("INIT_SOP_TASK");
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        searchSMR = application.getApplicationInfo().metaData.getString("input_text");
+        // TODO NOW FIX HARDCODE
+        searchSMR ="SMR-代开发-test" ;//application.getApplicationInfo().metaData.getString("input_text");
     }
 
     @SuppressLint("ResourceType")

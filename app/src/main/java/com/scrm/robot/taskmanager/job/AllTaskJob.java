@@ -82,6 +82,9 @@ public class AllTaskJob extends BaseRobotJob {
         if (rootNodeInfo == null) {
             return;
         }
+        if(robotAccessibilityContext.getCurrentEvent()==null){
+            return;
+        }
         SopAgentSendMomentJob.tagFindFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_VIEW_SCROLLED;
         SopAgentSendMomentJob.selectAllCustomerFlag = robotAccessibilityContext.getCurrentEvent().getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
         if(GroupSendMessageJob.findMsg){

@@ -10,16 +10,21 @@ import java.lang.ref.WeakReference;
 
 public class RobotAccessibilityContext {
 //    private  WeakReference<WeWorkAccessibilityService> weWorkAccessibilityService;
-    private WeakReference<AccessibilityEvent> currentEvent;
+//    private WeakReference<AccessibilityEvent> currentEvent;
+//    private WeakReference<AccessibilityNodeInfo> rootNodeInfo;
+
+
+    private  AccessibilityEvent currentEvent;
+    private  AccessibilityNodeInfo rootNodeInfo;
+
     private String weWorkActivityClassName;
-    private WeakReference<AccessibilityNodeInfo> rootNodeInfo;
 
     public AccessibilityEvent getCurrentEvent() {
-        return currentEvent.get();
+        return currentEvent;
     }
 
     public void setCurrentEvent(AccessibilityEvent currentEvent) {
-        this.currentEvent = new WeakReference<>(currentEvent);
+        this.currentEvent =  currentEvent;
         if(currentEvent.getClassName()!=null) {
             String className = currentEvent.getClassName().toString();
             if (className.endsWith("Activity")) {
@@ -29,11 +34,11 @@ public class RobotAccessibilityContext {
     }
 
     public AccessibilityNodeInfo getRootNodeInfo() {
-        return rootNodeInfo.get();
+        return rootNodeInfo;
     }
 
     public void setRootNodeInfo(AccessibilityNodeInfo rootNodeInfo) {
-        this.rootNodeInfo = new WeakReference<>(rootNodeInfo);
+        this.rootNodeInfo =  rootNodeInfo;
     }
 
     public String getWeWorkActivityClassName() {
