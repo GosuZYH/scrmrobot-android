@@ -89,9 +89,10 @@
 
     <TextView
         android:id="@+id/version"
-        android:layout_width="112dp"
-        android:layout_height="26dp"
-        android:text="当前版本:v1.0.0"
+        android:layout_width="185dp"
+        android:layout_height="32dp"
+        android:text="@string/version"
+        android:textAlignment="center"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

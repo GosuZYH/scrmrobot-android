@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,6 +26,8 @@ public class userSettingActivity extends Activity {
     private static EditText y1;
     private static EditText x2;
     private static EditText y2;
+    private WindowManager windowManager;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -38,6 +42,12 @@ public class userSettingActivity extends Activity {
         back = findViewById(R.id.bcak);
         save = findViewById(R.id.saveSetting);
         title.setText("用户参数配置");
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+
         if(JobStateViewModel.x1.getValue()!=null){x1.setText(JobStateViewModel.x1.getValue().toString());}
         if(JobStateViewModel.y1.getValue()!=null){y1.setText(JobStateViewModel.y1.getValue().toString());}
         if(JobStateViewModel.x2.getValue()!=null){x2.setText(JobStateViewModel.x2.getValue().toString());}

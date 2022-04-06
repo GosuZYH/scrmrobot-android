@@ -2,7 +2,6 @@
     <string name="app_name">洛书执行器</string>
     <string name="callWeWorkBtnTxt">启动企微</string>
     <string name="accessSettingBtnTxt">辅助设置</string>
-
     <string name="startSchedulerBtnText">启动定时任务</string>
     <string name="cancelSchedulerBtnText">退出任务执行</string>
 
@@ -39,7 +38,7 @@
 
     <!-- task config -->
     <string name="loginServer">test</string>
-    <string name="version">当前版本:v1.0.0</string>
+    <string name="version">v1.0.0_beta</string>
     <integer name="sopDay">0</integer>
     <integer name="sopHour">0</integer>
     <integer name="sopMin">0</integer>

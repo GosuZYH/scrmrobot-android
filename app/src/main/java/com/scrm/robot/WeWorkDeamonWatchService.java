@@ -68,7 +68,7 @@ public class WeWorkDeamonWatchService extends IntentService {
                                 }
                                 // TODO NOW 回到主页
                                 if(job.getJobState()!= RobotRunState.FINISH) {
-                                    resetUiToInitPoint();
+//                                    resetUiToInitPoint();
                                 }
                             }
                             job = application.getCurrentJob();

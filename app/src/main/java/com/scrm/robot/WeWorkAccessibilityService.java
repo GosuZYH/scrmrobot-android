@@ -7,12 +7,14 @@ import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
@@ -94,6 +96,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     private void initObserve() {
         FloatViewModel.isFloatWindowShow.observe(this, new Observer<Boolean>() {
             @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -156,11 +159,14 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
-
+        Point size=new Point();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        windowManager.getDefaultDisplay().getSize(size);
+
         JobStateViewModel.width.postValue(displayMetrics.widthPixels);
         JobStateViewModel.height.postValue(displayMetrics.heightPixels);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Logger.d("开启悬浮窗-启动中: 宽 %s 高 %s", displayMetrics.widthPixels,displayMetrics.heightPixels);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;

@@ -162,7 +162,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 if(JobStateViewModel.x1.getValue()!=null && JobStateViewModel.y1.getValue()!=null){
                     this.accessibilityGestureUtil.click((int)(JobStateViewModel.x1.getValue()*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.y1.getValue()*JobStateViewModel.height.getValue()));
                 }else{
-                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+//                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.height.getValue()+150-10));
                 }
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
