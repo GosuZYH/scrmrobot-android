@@ -168,6 +168,10 @@ public abstract class BaseRobotJob implements IRobotJob{
     }
 
     public boolean canProcess() {
+        RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+        if(!application.getRobotJobScheduler().isRunning()){
+            return false;
+        }
         return this.jobState == RobotRunState.STARTED && this.robotAccessibilityContext != null;
     }
 

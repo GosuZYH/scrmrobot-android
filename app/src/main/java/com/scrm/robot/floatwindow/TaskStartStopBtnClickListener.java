@@ -28,9 +28,6 @@ public class TaskStartStopBtnClickListener implements View.OnClickListener {
             Logger.d("控制按钮点击: 停止");
             RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
             application.getRobotJobScheduler().stop();
-            if(application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob()!=null) {
-                application.getRobotJobScheduler().getRobotJobExecutor().getCurrentJob().finish();
-            }
             FloatViewModel.jobStartStop.postValue(false);
         }
     }

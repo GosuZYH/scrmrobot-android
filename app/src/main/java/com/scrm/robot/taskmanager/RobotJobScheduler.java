@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
 import com.scrm.robot.taskmanager.enums.RobotRunState;
@@ -31,10 +32,16 @@ public class RobotJobScheduler {
     }
 
     public void stop(){
+        Logger.d("调度器停止");
         this.runState = RobotRunState.FINISH;
         if(this.robotJobExecutor.getCurrentJob() != null){
+            Logger.d("调度器当前任务-结束");
             this.robotJobExecutor.getCurrentJob().finish();
         }
+    }
+
+    public boolean isRunning(){
+        return this.runState==RobotRunState.STARTED;
     }
 
     public void startAndRunJob(RobotJobType jobType){
