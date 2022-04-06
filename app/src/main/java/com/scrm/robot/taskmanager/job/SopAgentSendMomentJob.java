@@ -205,6 +205,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 }
                 if(!tagName.get(0).getParent().getParent().getParent().getParent().getParent().isScrollable()){
                     System.out.println("当前没有多余标签页可翻");
+                    performClick(tagName.get(0).getChild(0));
                     this.setTaskStatus("REPLY_SOP");
                     tempTag = "";
                     return;
