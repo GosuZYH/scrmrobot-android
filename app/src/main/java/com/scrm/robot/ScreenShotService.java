@@ -1,5 +1,6 @@
 package com.scrm.robot;
 
+import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
@@ -9,7 +10,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -20,7 +20,6 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -39,19 +38,11 @@ import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.scrm.robot.taskmanager.JobSchedulerMessageReceiver;
 import com.scrm.robot.taskmanager.JobStateViewModel;
-import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotBroadcastType;
 import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
-import com.scrm.robot.utils.FileUtil;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
@@ -225,6 +216,8 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
             accessibilityGestureUtil=new AccessibilityGestureUtil(application.getWeWorkAccessibilityService());
 
+            WeWorkAccessibilityService weWorkAccessibilityService= application.getWeWorkAccessibilityService();
+
             JobStateViewModel.sopType.postValue("new");
             Image image = params[0];
 
@@ -253,20 +246,29 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             if (color.red() >0.52 && color.red()<0.56 && color.green()>0.65 && color.green()<0.69 && color.blue()>0.84 &color.blue()<0.88){
                 //已回执
                 accessibilityGestureUtil.click((int)(0.3*width), (int)(0.35*height));
+//                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                 sopType = "noneed";
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                 //未回执
 //                accessibilityGestureUtil.click((int)(0.5*width), (int)(0.968*height));
-                if(JobStateViewModel.x1.getValue()!=null && JobStateViewModel.y1.getValue()!=null){
-                    accessibilityGestureUtil.click((int)(JobStateViewModel.x1.getValue()*width), (int)(JobStateViewModel.y1.getValue()*height));
-                }else{
-                    accessibilityGestureUtil.click((int)(0.3*width), (int)(1.007*height));
-                }
+//                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
+//                    accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
+//                }else{
+//                    accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+//                }
 //                this.accessibilityGestureUtil.click(540, 2070);
+                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
+                    accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
+                }else{
+                    accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+                }
+
                 sopType = "need";
             }else {
                 //加载未完成
                 accessibilityGestureUtil.swip((int)(width*0.5),(int)(height*0.5),(int)(width*0.5),(int)(height*0.4));
+
+//                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                 sopType = "loading";
             }
             //for test

@@ -10,22 +10,24 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.scrm.robot.taskmanager.JobStateViewModel;
+import com.scrm.robot.utils.ApplicationUtil;
 
 public class userSettingActivity extends Activity {
 
-    private static TextView title;
-    private static Button back;
-    private static Button save;
-    private static EditText x1;
-    private static EditText y1;
-    private static EditText x2;
-    private static EditText y2;
+    private  TextView title;
+    private  Button back;
+    private  Button save;
+    private  EditText sopMomentShareBtnXErrorET;
+    private  EditText sopMomentShareBtnYErrorET;
+    private  EditText sopMomentReceiptBtnXErrorET;
+    private  EditText sopMomentReceiptBtnYErrorET;
+    private TextView windowWidthTV;
+    private TextView windowHeightTV;
+
     private WindowManager windowManager;
 
 
@@ -34,10 +36,14 @@ public class userSettingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_settings_activity);
-        x1 = findViewById(R.id.editX1);
-        y1 = findViewById(R.id.editY1);
-        x2 = findViewById(R.id.editX2);
-        y2 = findViewById(R.id.editY2);
+        windowWidthTV=findViewById(R.id.windowWidthTV);
+        windowHeightTV=findViewById(R.id.windowHeightTV);
+
+        sopMomentShareBtnXErrorET = findViewById(R.id.sopMomentShareBtnXErrorET);
+        sopMomentShareBtnYErrorET = findViewById(R.id.sopMomentShareBtnYErrorET);
+
+        sopMomentReceiptBtnXErrorET = findViewById(R.id.editX2);
+        sopMomentReceiptBtnYErrorET = findViewById(R.id.editY2);
         title = findViewById(R.id.title_text);
         back = findViewById(R.id.bcak);
         save = findViewById(R.id.saveSetting);
@@ -46,12 +52,19 @@ public class userSettingActivity extends Activity {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        windowWidthTV.setText(String.valueOf( displayMetrics.widthPixels));
+        windowHeightTV.setText(String.valueOf( displayMetrics.heightPixels));
 
 
-        if(JobStateViewModel.x1.getValue()!=null){x1.setText(JobStateViewModel.x1.getValue().toString());}
-        if(JobStateViewModel.y1.getValue()!=null){y1.setText(JobStateViewModel.y1.getValue().toString());}
-        if(JobStateViewModel.x2.getValue()!=null){x2.setText(JobStateViewModel.x2.getValue().toString());}
-        if(JobStateViewModel.y2.getValue()!=null){y2.setText(JobStateViewModel.y2.getValue().toString());}
+        if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null){
+            sopMomentShareBtnXErrorET.setText(JobStateViewModel.sopMomentShareBtnXError.getValue().toString());}
+        if(JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
+            sopMomentShareBtnYErrorET.setText(JobStateViewModel.sopMomentShareBtnYError.getValue().toString());}
+
+        if(JobStateViewModel.sopMomentReceiptBtnXError.getValue()!=null){
+            sopMomentReceiptBtnXErrorET.setText(JobStateViewModel.sopMomentReceiptBtnXError.getValue().toString());}
+        if(JobStateViewModel.sopMomentReceiptBtnYError.getValue()!=null){
+            sopMomentReceiptBtnYErrorET.setText(JobStateViewModel.sopMomentReceiptBtnYError.getValue().toString());}
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,18 +77,21 @@ public class userSettingActivity extends Activity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(x1.getText().toString())) {
-                    JobStateViewModel.x1.setValue(Double.parseDouble(x1.getText().toString()));
+                if (!TextUtils.isEmpty(sopMomentShareBtnXErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentShareBtnXError.setValue(Double.parseDouble(sopMomentShareBtnXErrorET.getText().toString()));
                 }
-                if (!TextUtils.isEmpty(y1.getText().toString())) {
-                    JobStateViewModel.y1.setValue(Double.parseDouble(y1.getText().toString()));
+                if (!TextUtils.isEmpty(sopMomentShareBtnYErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentShareBtnYError.setValue(Double.parseDouble(sopMomentShareBtnYErrorET.getText().toString()));
                 }
-                if (!TextUtils.isEmpty(x2.getText().toString())) {
-                    JobStateViewModel.x2.setValue(Double.parseDouble(x2.getText().toString()));
+                if (!TextUtils.isEmpty(sopMomentReceiptBtnXErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentReceiptBtnXError.setValue(Double.parseDouble(sopMomentReceiptBtnXErrorET.getText().toString()));
                 }
-                if (!TextUtils.isEmpty(y2.getText().toString())) {
-                    JobStateViewModel.y2.setValue(Double.parseDouble(y2.getText().toString()));
+                if (!TextUtils.isEmpty(sopMomentReceiptBtnYErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentReceiptBtnYError.setValue(Double.parseDouble(sopMomentReceiptBtnYErrorET.getText().toString()));
                 }
+                RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+                application.saveAppSettings();
+
                 Toast.makeText(userSettingActivity.this, "参数配置修改成功！", Toast.LENGTH_SHORT).show();
             }
         });

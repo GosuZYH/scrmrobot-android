@@ -1,15 +1,16 @@
 package com.scrm.robot;
 
 public class Constants {
+    public final static String SP_APP_SETTINGS_NAME="AppSettings";
 
     public final static String WEWORK_PACKAGE_NAME = "com.tencent.wework";
     public final static String BROADCAST_MSG_TYPE_KEY = "msgType";
 
     public final static int JOB_INTERVAL_MILL_SECONDS = 5 * 1000;
     /**
-     * job 延时时间，20s
+     * job 延时时间，30s
      */
-    public final static int JOB_TIMEOUT_MILL_SECONDS = 20 * 1000;
+    public final static int JOB_TIMEOUT_MILL_SECONDS = 30 * 1000;
     /**
      * 重置UI到初始页面 检测等待频率
      */

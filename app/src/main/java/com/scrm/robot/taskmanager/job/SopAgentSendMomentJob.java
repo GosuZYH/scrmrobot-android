@@ -1,5 +1,6 @@
 package com.scrm.robot.taskmanager.job;
 
+import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.WeWorkAccessibilityService;
 import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.enums.RobotJobType;
@@ -145,25 +147,28 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("SdCardPath")
     private void openCv(AccessibilityNodeInfo rootNodeInfo) {
+        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+        WeWorkAccessibilityService weWorkAccessibilityService= application.getWeWorkAccessibilityService();
+
         switch (JobStateViewModel.sopType.getValue()) {
             case "noneed":
                 Log.d(TAG, "CV:当前SOP已回执");
                 deleteTag = targetTag;
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
-                this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
+                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+
+//                this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
                 this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
                 break;
             case "need":
                 Log.d(TAG, "CV:当前SOP未回执");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
-//                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.968*JobStateViewModel.height.getValue()));
-                if(JobStateViewModel.x1.getValue()!=null && JobStateViewModel.y1.getValue()!=null){
-                    this.accessibilityGestureUtil.click((int)(JobStateViewModel.x1.getValue()*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.y1.getValue()*JobStateViewModel.height.getValue()));
+                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
+                    this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
                 }else{
-//                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
-                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.height.getValue()+150-10));
+                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
                 }
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
@@ -172,7 +177,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
 //                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
-                this.accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.4));
+//                this.accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.4));
+                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+
                 this.setTaskStatus("BACK_TO_SOP_LIST");
                 break;
         }
@@ -564,8 +571,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
             System.out.println("点击'回执'");
             sysSleep(600);
-            if(JobStateViewModel.x2.getValue()!=null && JobStateViewModel.y2.getValue()!=null){
-                this.accessibilityGestureUtil.click((int)(JobStateViewModel.x2.getValue()*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.y2.getValue()*JobStateViewModel.height.getValue()));
+            if(JobStateViewModel.sopMomentReceiptBtnXError.getValue()!=null && JobStateViewModel.sopMomentReceiptBtnYError.getValue()!=null){
+                this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()-JobStateViewModel.sopMomentReceiptBtnXError.getValue()),
+                        (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentReceiptBtnYError.getValue()));
             }else{
                 this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
             }

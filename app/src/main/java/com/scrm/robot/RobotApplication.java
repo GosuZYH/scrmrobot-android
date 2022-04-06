@@ -2,7 +2,9 @@ package com.scrm.robot;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -18,6 +20,7 @@ import com.orhanobut.logger.DiskLogStrategy;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.taskmanager.JobSchedulerMessageReceiver;
+import com.scrm.robot.taskmanager.JobStateViewModel;
 import com.scrm.robot.taskmanager.RobotAccessibilityContext;
 import com.scrm.robot.taskmanager.RobotJobFactory;
 import com.scrm.robot.taskmanager.RobotJobScheduler;
@@ -57,6 +60,7 @@ public class RobotApplication extends Application {
 
         ApplicationUtil.init(this);
         this.initLogger();
+        this.initAppSettings();
         Logger.i("应用创建");
     }
 
@@ -168,6 +172,45 @@ public class RobotApplication extends Application {
             ex.printStackTrace();
 
         }
+
+    }
+
+    private void initAppSettings() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(
+                Constants.SP_APP_SETTINGS_NAME,
+                Context.MODE_PRIVATE
+        );
+        float defaultFloat = -99999;
+        float sopMomentShareBtnXError = sharedPreferences.getFloat("sopMomentShareBtnXError", defaultFloat);
+        if (sopMomentShareBtnXError != defaultFloat) {
+            JobStateViewModel.sopMomentShareBtnXError.setValue(Double.valueOf(sopMomentShareBtnXError));
+        }
+        float sopMomentShareBtnYError = sharedPreferences.getFloat("sopMomentShareBtnYError", defaultFloat);
+        if (sopMomentShareBtnYError != defaultFloat) {
+            JobStateViewModel.sopMomentShareBtnYError.setValue(Double.valueOf(sopMomentShareBtnYError));
+        }
+        float sopMomentReceiptBtnXError = sharedPreferences.getFloat("sopMomentReceiptBtnXError", defaultFloat);
+        if (sopMomentReceiptBtnXError != defaultFloat) {
+            JobStateViewModel.sopMomentReceiptBtnXError.setValue(Double.valueOf(sopMomentReceiptBtnXError));
+        }
+        float sopMomentReceiptBtnYError = sharedPreferences.getFloat("sopMomentReceiptBtnYError", defaultFloat);
+        if (sopMomentReceiptBtnYError != defaultFloat) {
+            JobStateViewModel.sopMomentReceiptBtnYError.setValue(Double.valueOf(sopMomentReceiptBtnYError));
+        }
+    }
+
+    public void saveAppSettings(){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(
+                Constants.SP_APP_SETTINGS_NAME,
+                Context.MODE_PRIVATE
+        );
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+        editor.putFloat("sopMomentShareBtnXError",Float.parseFloat( JobStateViewModel.sopMomentShareBtnXError.getValue().toString()));
+        editor.putFloat("sopMomentShareBtnYError",Float.parseFloat( JobStateViewModel.sopMomentShareBtnYError.getValue().toString()));
+        editor.putFloat("sopMomentReceiptBtnXError", Float.parseFloat(JobStateViewModel.sopMomentReceiptBtnXError.getValue().toString()));
+        editor.putFloat("sopMomentReceiptBtnYError", Float.parseFloat(JobStateViewModel.sopMomentReceiptBtnYError.getValue().toString()));
+        editor.commit();
 
     }
 }

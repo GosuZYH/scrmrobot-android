@@ -71,8 +71,8 @@ public class LoginActivity extends Activity{
 
     public void loginIn(View view) {
         // region HARDCODE
-        accountNum.setText("18000000001");
-        passWord.setText("a123456");
+//        accountNum.setText("18000000001");
+//        passWord.setText("a123456");
         // endregion
 
         if (TextUtils.isEmpty(accountNum.getText().toString())) {

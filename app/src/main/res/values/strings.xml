@@ -55,10 +55,9 @@
     <string name="settings">功能设置</string>
     <string name="todayTask">只执行今日任务</string>
     <string name="chooseTime">选择时间执行:</string>
-    <string name="x1">x1:</string>
-    <string name="y1">y1:</string>
-    <string name="x2">x2:</string>
-    <string name="y2">y2:</string>
+    <string name="windowWidth">窗口宽度:</string>
+    <string name="windowHeight">窗口高度:</string>
+
     <string name="saveSetting">保存修改</string>
 
 </resources>
