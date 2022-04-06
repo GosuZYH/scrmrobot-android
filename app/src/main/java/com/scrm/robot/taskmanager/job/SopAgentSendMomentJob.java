@@ -564,7 +564,11 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
             System.out.println("点击'回执'");
             sysSleep(600);
-            this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
+            if(JobStateViewModel.x2.getValue()!=null && JobStateViewModel.y2.getValue()!=null){
+                this.accessibilityGestureUtil.click((int)(JobStateViewModel.x2.getValue()*JobStateViewModel.width.getValue()), (int)(JobStateViewModel.y2.getValue()*JobStateViewModel.height.getValue()));
+            }else{
+                this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
+            }
             sysSleep(600);
             deleteTag = targetTag;
             this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
