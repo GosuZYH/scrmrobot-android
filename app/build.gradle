@@ -20,7 +20,7 @@ android {
             manifestPlaceholders = [
                     "app_name":"洛书执行器",
                     "LOGIN_SERVER":"prod",
-                    "input_text":"SMR-代开发"
+                    "input_text":"洛书SMR"
             ]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
