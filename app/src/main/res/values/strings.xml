@@ -51,5 +51,9 @@
     <integer name="groupSendHour">0</integer>
     <integer name="groupSendMin">0</integer>
     <string name="groupWeekDay">星期一星期二星期三星期四星期五星期天</string>
+    <string name="back"><![CDATA[<]]></string>
+    <string name="settings">功能设置</string>
+    <string name="todayTask">只执行今日任务</string>
+    <string name="chooseTime">选择时间执行:</string>
 
 </resources>

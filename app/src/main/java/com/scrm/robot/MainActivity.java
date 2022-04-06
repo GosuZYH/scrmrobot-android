@@ -191,11 +191,12 @@ public class MainActivity extends FragmentActivity{
                 return;
             }
             if(isCheckPermissionsOk(view)){
-                Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
-                this.openCloseFloatView();
-                FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MESSAGE);
+                Intent intent = new Intent(this,JobActivity.class);
+                startActivity(intent);
+//                Toast.makeText(MainActivity.this, "执行群发助手任务", Toast.LENGTH_SHORT).show();
+//                this.openCloseFloatView();
+//                FloatViewModel.currentOnClickJob.postValue(RobotJobType.GROUP_SEND_MOMENT);
             }
-//            WeWorkAccessibilityService.logView.setText("正在执行群发助手任务");
         } catch (Exception ignored) {
             Toast.makeText(MainActivity.this, "error..", Toast.LENGTH_SHORT).show();
         }
