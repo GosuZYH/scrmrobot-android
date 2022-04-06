@@ -257,7 +257,11 @@ public class ScreenShotService extends Service implements LifecycleOwner{
             }else if (color.red() > 0.20 && color.red() < 0.24 && color.green() > 0.43 && color.green() < 0.47 && color.blue() > 0.75 & color.blue() < 0.79) {
                 //未回执
 //                accessibilityGestureUtil.click((int)(0.5*width), (int)(0.968*height));
-                accessibilityGestureUtil.click((int)(0.3*width), (int)(1.007*height));
+                if(JobStateViewModel.x1.getValue()!=null && JobStateViewModel.y1.getValue()!=null){
+                    accessibilityGestureUtil.click((int)(JobStateViewModel.x1.getValue()*width), (int)(JobStateViewModel.y1.getValue()*height));
+                }else{
+                    accessibilityGestureUtil.click((int)(0.3*width), (int)(1.007*height));
+                }
 //                this.accessibilityGestureUtil.click(540, 2070);
                 sopType = "need";
             }else {

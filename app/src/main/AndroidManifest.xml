@@ -51,6 +51,13 @@
             android:theme="@style/Theme.SCRMRobot">
         </activity>
 
+        <activity
+            android:name=".userSettingActivity"
+            android:exported="true"
+            android:enabled="true"
+            android:theme="@style/Theme.SCRMRobot">
+        </activity>
+
         <service android:name=".WeWorkAccessibilityService"
             android:enabled="true"
             android:exported="true"

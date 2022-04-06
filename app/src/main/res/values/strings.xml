@@ -35,6 +35,7 @@
     <string name="login">登录</string>
     <string name="weworkLogin">企微登录</string>
     <string name="loginOut">退出登录</string>
+    <string name="userSetting">参数配置</string>
 
     <!-- task config -->
     <string name="loginServer">test</string>
@@ -55,5 +56,10 @@
     <string name="settings">功能设置</string>
     <string name="todayTask">只执行今日任务</string>
     <string name="chooseTime">选择时间执行:</string>
+    <string name="x1">x1:</string>
+    <string name="y1">y1:</string>
+    <string name="x2">x2:</string>
+    <string name="y2">y2:</string>
+    <string name="saveSetting">保存修改</string>
 
 </resources>

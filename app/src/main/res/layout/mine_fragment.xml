@@ -50,10 +50,10 @@
         android:text="@string/loginOut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.929" />
+        app:layout_constraintVertical_bias="0.938" />
 
     <TextView
         android:id="@+id/outTime"
@@ -79,4 +79,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.977" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="339dp"
+        android:layout_height="48dp"
+        android:onClick="userSetting"
+        android:text="@string/userSetting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.836" />
 </androidx.constraintlayout.widget.ConstraintLayout>

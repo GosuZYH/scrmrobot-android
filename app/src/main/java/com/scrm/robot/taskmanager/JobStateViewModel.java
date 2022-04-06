@@ -8,8 +8,8 @@ public class JobStateViewModel extends ViewModel {
     public static MutableLiveData<String> sopType=new MutableLiveData<>("new");
     public static MutableLiveData<Integer> width = new MutableLiveData<>(null);
     public static MutableLiveData<Integer> height = new MutableLiveData<>(null);
-    public static MutableLiveData<Integer> x1 = new MutableLiveData<>(null);
-    public static MutableLiveData<Integer> y1 = new MutableLiveData<>(null);
-    public static MutableLiveData<Integer> x2 = new MutableLiveData<>(null);
-    public static MutableLiveData<Integer> y2 = new MutableLiveData<>(null);
+    public static MutableLiveData<Double> x1 = new MutableLiveData<>(null);
+    public static MutableLiveData<Double> y1 = new MutableLiveData<>(null);
+    public static MutableLiveData<Double> x2 = new MutableLiveData<>(null);
+    public static MutableLiveData<Double> y2 = new MutableLiveData<>(null);
 }

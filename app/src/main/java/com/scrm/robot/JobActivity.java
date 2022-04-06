@@ -18,7 +18,7 @@ public class JobActivity extends Activity {
     }
 
     public void backToMain(View view){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(JobActivity.this,MainActivity.class);
         startActivity(intent);
         finish();
     }

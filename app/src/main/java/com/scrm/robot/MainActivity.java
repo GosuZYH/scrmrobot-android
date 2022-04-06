@@ -489,6 +489,12 @@ public class MainActivity extends FragmentActivity{
         }
     }
 
+    public void userSetting(View view){
+        Toast.makeText(this, "用户设备参数设置", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,userSettingActivity.class);
+        startActivity(intent);
+    }
+
     public void loginOut(View view){
         Toast.makeText(this, "注销成功！", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this,LoginActivity.class);
