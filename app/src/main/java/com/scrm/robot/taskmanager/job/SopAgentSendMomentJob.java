@@ -29,6 +29,7 @@ import java.util.List;
 public class SopAgentSendMomentJob extends BaseRobotJob {
     private final static String TAG = SopAgentSendMomentJob.class.getName();
 
+    private static String searchSMR = "";
     private static String targetTag = "获取失败";
     private static String tempTag = "";
     public static String deleteTag = "";
@@ -47,6 +48,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public void initTask(){
         this.setTaskId(1);
         this.setTaskStatus("INIT_SOP_TASK");
+        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
+        searchSMR = application.getApplicationInfo().metaData.getString("input_text");
     }
 
     @SuppressLint("ResourceType")
@@ -280,7 +283,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         try {
             targetInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
             Bundle arguments = new Bundle();
-            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, ResourceId.testServer);
+            arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, searchSMR);
             targetInfo.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
         }catch (Exception e){
             System.out.println("输入失败");
@@ -302,7 +305,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH_LABEL);
 //        System.out.println("找到'搜索框'ui数量"+targetUis.size());
         if(targetUis.size()>0){
-            System.out.println("输入:"+ResourceId.testServer);
+            System.out.println("输入:"+searchSMR);
             inputText(targetUis.get(0));
         }
     }
@@ -311,7 +314,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         //寻找->尝试点击搜索结果
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH_RESULT);
         if(targetUis.size()>0){
-            System.out.println("找到结果:"+ResourceId.testServer);
+            System.out.println("找到结果:"+searchSMR);
             performClick(targetUis.get(0).getParent());
         }
     }
@@ -321,7 +324,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         //寻找->sop朋友圈消息->尝试点击进入
         List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
-        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             System.out.println("当前已在SOP页");
             if(targetUis.size()>0){
                 Collections.reverse(targetUis);
@@ -607,7 +610,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             setTaskStatus("START_SOP_TASK");
         }else {
             if(backUis.size()>0){
@@ -624,7 +627,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
-        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(ResourceId.testServer)){
+        if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             deleteFlag = true;
             this.setTaskStatus("SOP_DELETE");
         }else {

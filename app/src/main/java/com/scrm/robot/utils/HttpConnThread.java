@@ -1,5 +1,8 @@
 package com.scrm.robot.utils;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
 import com.scrm.robot.LoginActivity;
 
 //import org.json.JSONObject;
@@ -37,7 +40,8 @@ public class HttpConnThread extends Thread{
         userVerifyUrl = "api/wecom/user/profile";
         companyVerifyUrl = "api/system/v1/tenant/profile";
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        String loginServer = application.getString(R.string.loginServer);
+        String loginServer = application.getApplicationInfo().metaData.getString("LOGIN_SERVER");
+
         if(loginServer.equals("test")){
             loginUrl = testServer + loginUrl;
             userVerifyUrl = testServer + userVerifyUrl;

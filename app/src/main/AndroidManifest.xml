@@ -18,7 +18,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label="@string/app_name"
+        android:label="${app_name}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
@@ -86,6 +86,15 @@
         <service android:name=".WeWorkDeamonWatchService"
             android:enabled="true"
             android:exported="true"/>
+
+        <meta-data
+            android:name="LOGIN_SERVER"
+            android:value="${LOGIN_SERVER}" />
+
+        <meta-data
+            android:name="input_text"
+            android:value="${input_text}" />
     </application>
+
 
 </manifest>

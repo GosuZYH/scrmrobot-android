@@ -17,8 +17,22 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders = [
+                    "app_name":"洛书执行器",
+                    "LOGIN_SERVER":"prod",
+                    "input_text":"SMR-代开发"
+            ]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    "app_name":"洛书执行器test",
+                    "LOGIN_SERVER":"test",
+                    "input_text":"SMR-代开发-test"
+            ]
         }
     }
     compileOptions {

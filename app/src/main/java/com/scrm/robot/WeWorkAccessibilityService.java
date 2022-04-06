@@ -136,7 +136,11 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     public void openWeWork(){
         //打开企微
         Intent intent = getPackageManager().getLaunchIntentForPackage(Constants.WEWORK_PACKAGE_NAME);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        }catch (Exception e){
+
+        }
     }
 
     @NonNull
