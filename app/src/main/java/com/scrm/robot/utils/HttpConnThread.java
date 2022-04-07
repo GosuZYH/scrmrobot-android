@@ -1,8 +1,10 @@
 package com.scrm.robot.utils;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import com.scrm.robot.BuildConfig;
 import com.scrm.robot.LoginActivity;
 
 //import org.json.JSONObject;
@@ -19,7 +21,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class HttpConnThread extends Thread{
@@ -41,7 +45,7 @@ public class HttpConnThread extends Thread{
         companyVerifyUrl = "api/system/v1/tenant/profile";
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         // TODO NOW FIX HARDCODE
-        String loginServer = "test";//application.getApplicationInfo().metaData.getString("LOGIN_SERVER");
+        String loginServer = BuildConfig.loginServer;//application.getApplicationInfo().metaData.getString("LOGIN_SERVER");
 
         if(loginServer.equals("test")){
             loginUrl = testServer + loginUrl;
@@ -195,6 +199,8 @@ public class HttpConnThread extends Thread{
                     outTime = dataJson.getString("expireAt");
                     List<String> list = Arrays.asList(outTime.split("T"));
                     outTime = list.get(0);
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date outtime = sdf.parse(outTime);
                 }
             }else{
                 System.out.println("ResponseCode is an error code:" + conn.getResponseCode());

@@ -11,6 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.RequiresApi;
 
 import com.orhanobut.logger.Logger;
+import com.scrm.robot.BuildConfig;
 import com.scrm.robot.R;
 import com.scrm.robot.RobotApplication;
 import com.scrm.robot.WeWorkAccessibilityService;
@@ -52,7 +53,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         this.setTaskStatus("INIT_SOP_TASK");
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
         // TODO NOW FIX HARDCODE
-        searchSMR ="SMR-代开发-test" ;//application.getApplicationInfo().metaData.getString("input_text");
+        searchSMR = BuildConfig.inputText;//application.getApplicationInfo().metaData.getString("input_text");
     }
 
     @SuppressLint("ResourceType")

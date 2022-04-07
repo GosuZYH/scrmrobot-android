@@ -1,7 +1,9 @@
 package com.scrm.robot;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +24,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class LoginActivity extends Activity{
     public EditText accountNum;
@@ -35,6 +40,7 @@ public class LoginActivity extends Activity{
     public View mainView;
     public static String Account;
     public static String PWd;
+    private final String PREFS_NAME = "UserPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class LoginActivity extends Activity{
      */
     protected void initViews() {
         //初始化布局加载器
+//        getUserInfo();
         mInflater = LayoutInflater.from(this);
         //加载登录页面
         loginView = mInflater.inflate(R.layout.activity_login, null);
@@ -97,11 +104,17 @@ public class LoginActivity extends Activity{
         }
 
         if(HttpConnThread.userName != null){
-            Logger.i("登录成功");
-            Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-            finish();
+            if(HttpConnThread.outTime != null){
+                Logger.i("登录成功");
+                Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+//                saveUserInfo(); //保存登录信息
+                finish();
+            }else {
+                Logger.w("身份验证过期");
+                Toast.makeText(this, "该账户已过期", Toast.LENGTH_SHORT).show();
+            }
         }else {
             Logger.w("登录信息错误");
             Toast.makeText(this, "账号/密码输入不正确，请检查后重试。", Toast.LENGTH_SHORT).show();
@@ -112,5 +125,31 @@ public class LoginActivity extends Activity{
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void saveUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.OnSharedPreferenceChangeListener changeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+
+            }
+        };
+        //userInfo注册监听事件
+        userInfo.registerOnSharedPreferenceChangeListener(changeListener);
+        SharedPreferences.Editor editor = userInfo.edit();//获取Editor
+        //得到Editor后，写入需要保存的数据
+        editor.putString("account", Account);
+        editor.putString("passTime", HttpConnThread.outTime);
+        editor.commit();
+        Logger.d("保存用户信息成功！");
+    }
+
+    private void getUserInfo(){
+        SharedPreferences userInfo = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String account = userInfo.getString("account", null);//读取username
+        String loginTime = userInfo.getString("passTime", null);//读取age
+        Logger.i("读取用户信息");
+        Logger.i("account:" + account + "， loginTime:" + loginTime);
     }
 }

@@ -22,17 +22,22 @@ android {
                     "LOGIN_SERVER":"prod",
                     "input_text":"洛书SMR"
             ]
+            buildConfigField "String", "loginServer", "\"prod\""
+            buildConfigField "String", "inputText", "\"洛书SMR\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
             manifestPlaceholders = [
                     "app_name":"洛书执行器test",
                     "LOGIN_SERVER":"test",
                     "input_text":"SMR-代开发-test"
             ]
+            buildConfigField "String", "loginServer", "\"test\""
+            buildConfigField "String", "inputText", "\"SMR-代开发-test\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
