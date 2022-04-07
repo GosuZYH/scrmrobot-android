@@ -164,11 +164,11 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 Log.d(TAG, "CV:当前SOP未回执");
                 JobStateViewModel.isScreenShot.postValue(false);
                 JobStateViewModel.sopType.postValue("new");
-                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
-                    this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
-                }else{
-                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
-                }
+//                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
+//                    this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
+//                }else{
+//                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
+//                }
                 this.setTaskStatus("READY_TO_SHARE");
                 break;
             case "loading":
