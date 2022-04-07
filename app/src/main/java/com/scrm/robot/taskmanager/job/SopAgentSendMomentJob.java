@@ -51,8 +51,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     public void initTask(){
         this.setTaskId(1);
         this.setTaskStatus("INIT_SOP_TASK");
-        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        // TODO NOW FIX HARDCODE
         searchSMR = BuildConfig.inputText;//application.getApplicationInfo().metaData.getString("input_text");
     }
 
@@ -329,9 +327,13 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         //寻找->尝试点击搜索结果
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH_RESULT);
         if(targetUis.size()>0){
-            System.out.println("找到结果:"+searchSMR);
-            performClick(targetUis.get(0).getParent());
-            sysSleep(1000);
+            for(int i=0;i<targetUis.size();i++){
+                if(targetUis.get(i).getChildCount()==1 && searchSMR.equals(targetUis.get(i).getChild(0).getChild(0).getText().toString())){
+                    System.out.println("找到结果:"+searchSMR);
+                    performClick(targetUis.get(i).getParent().getParent().getParent());
+                    sysSleep(1000);
+                }
+            }
         }
     }
 

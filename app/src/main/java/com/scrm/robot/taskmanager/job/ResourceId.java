@@ -22,7 +22,7 @@ public class ResourceId {
     public static final String WORKSTATION = "com.tencent.wework:id/fz4";
     public static final String SKIP = "com.tencent.wework:id/anv";
     public static final String TEXT = "android.widget.TextView";
-    public static final String SEARCH_RESULT = "com.tencent.wework:id/bu5";
+    public static final String SEARCH_RESULT = "com.tencent.wework:id/esq";
     public static final String SMR_TITLE = "com.tencent.wework:id/kbp";
     public static final String SOP = "com.tencent.wework:id/gb8";
     public static final String SOP_TYPE = "com.tencent.wework:id/ggh";
@@ -56,7 +56,7 @@ public class ResourceId {
     public static final String SEND_FLAG = "com.tencent.wework:id/k1m";
     public static final String SEND_FLAG1 = "com.tencent.wework:id/ijd";
     public static final String MSG_NUM_TITLE = "com.tencent.wework:id/kap";
-    public static final String NEW_USER = "com.tencent.wework:id/jg5";
+    public static final String NEW_USER = "com.tencent.wework:id/jh2";
     public static final String CLEAR_TEXT = "com.tencent.wework:id/iq1";
     public static final String SEND_PAGE = "com.tencent.wework:id/i5r";
     public static final String NO_MSG_PAGE = "com.tencent.wework:id/d9i";

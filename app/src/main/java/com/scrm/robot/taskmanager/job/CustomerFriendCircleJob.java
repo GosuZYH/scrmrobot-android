@@ -120,10 +120,15 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         //寻找->点击客户朋友圈
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText("客户朋友圈");
         List<AccessibilityNodeInfo> PYQUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ);
+        List<AccessibilityNodeInfo> newUserUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.NEW_USER);
         if(targetUis.size() > 0){
             try {
                 Log.d(TAG,"点击客户朋友圈");
                 performClick(targetUis.get(0).getParent().getParent());
+                if(newUserUis.size() > 0 && "立即使用".equals(newUserUis.get(0).getText().toString())){
+                    Log.d(TAG,"点击立即使用");
+                    performClick(newUserUis.get(0));
+                }
                 if(PYQUis.size() > 0){
                     this.setTaskStatus("CHECK_NEW");
                 }
