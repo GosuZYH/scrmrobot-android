@@ -119,6 +119,7 @@ public class WeWorkDeamonWatchService extends IntentService {
             if(rootNodeInfo!=null) {
                 // 底部导航按钮
                 List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+                List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
                 if (barNodeParents.size() > 0 ) {
                     // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
                     AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size()-1);
@@ -131,6 +132,10 @@ public class WeWorkDeamonWatchService extends IntentService {
                     }else {
                         Logger.d("监控服务-无法找到导航栏");
                     }
+                }
+                if(confirmUis.size() > 0){
+                    Logger.d("监控服务-出现了取消编辑按钮");
+                    confirmUis.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }else {
                 Logger.d("监控服务-无法找到任何节点");
