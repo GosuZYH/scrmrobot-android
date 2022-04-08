@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,12 +53,27 @@ public class LoginActivity extends Activity{
      */
     protected void initViews() {
         //初始化布局加载器
-//        getUserInfo();
         mInflater = LayoutInflater.from(this);
-        //加载登录页面
-        loginView = mInflater.inflate(R.layout.activity_login, null);
-        //调用setContentView(View view)方法，传入一个View
-        setContentView(loginView);
+        Date passTime = getUserInfo();
+        if(checkUserInfo()){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            Date today = calendar.getTime();
+            if (passTime != null && passTime.after(today)){
+                //加载主页
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                //加载登录页面
+                loginView = mInflater.inflate(R.layout.activity_login, null);
+                setContentView(loginView);
+            }
+        }else{
+            //加载登录页面
+            loginView = mInflater.inflate(R.layout.activity_login, null);
+            setContentView(loginView);
+        }
     }
 
     /**
@@ -109,7 +125,7 @@ public class LoginActivity extends Activity{
                 Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this,MainActivity.class);
                 startActivity(intent);
-//                saveUserInfo(); //保存登录信息
+                saveUserInfo(); //保存登录信息
                 finish();
             }else {
                 Logger.w("身份验证过期");
@@ -121,10 +137,21 @@ public class LoginActivity extends Activity{
         }
     }
 
-    public void weworkLoginIn(View view) {
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
-        finish();
+    public Boolean checkUserInfo() {
+        HttpConnThread postThread = new HttpConnThread();
+        postThread.start();
+        try {
+            postThread.join();
+        } catch (InterruptedException e) {
+            Logger.e("登录失败: %s ",e);
+            e.printStackTrace();
+            return false;
+        }
+        if(HttpConnThread.userName == null){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     private void saveUserInfo(){
@@ -140,16 +167,27 @@ public class LoginActivity extends Activity{
         SharedPreferences.Editor editor = userInfo.edit();//获取Editor
         //得到Editor后，写入需要保存的数据
         editor.putString("account", Account);
+        editor.putString("pwd", PWd);
         editor.putString("passTime", HttpConnThread.outTime);
         editor.commit();
         Logger.d("保存用户信息成功！");
     }
 
-    private void getUserInfo(){
+    private Date getUserInfo(){
         SharedPreferences userInfo = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        String account = userInfo.getString("account", null);//读取username
-        String loginTime = userInfo.getString("passTime", null);//读取age
-        Logger.i("读取用户信息");
-        Logger.i("account:" + account + "， loginTime:" + loginTime);
+        Account = userInfo.getString("account", null);//读取账号
+        PWd = userInfo.getString("pwd", null);//读取密码
+        String passTime = userInfo.getString("passTime", null);//读取过期时间
+//        Logger.i("读取用户信息");
+//        Logger.i("account:" + Account + ",pwd:"+PWd+",loginTime:" + passTime);
+        if(passTime != null){
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                return sim.parse(passTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -499,6 +500,10 @@ public class MainActivity extends FragmentActivity{
         Toast.makeText(this, "注销成功！", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
+        SharedPreferences userInfo = getSharedPreferences("UserPrefsFile", MODE_PRIVATE);
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = userInfo.edit();
+        editor.clear();
+        editor.commit();
         finish();
     }
 
