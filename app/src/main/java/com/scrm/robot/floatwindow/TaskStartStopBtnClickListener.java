@@ -5,6 +5,7 @@ import android.view.WindowManager;
 
 import com.orhanobut.logger.Logger;
 import com.scrm.robot.RobotApplication;
+import com.scrm.robot.taskmanager.job.ResourceId;
 import com.scrm.robot.utils.ApplicationUtil;
 
 public class TaskStartStopBtnClickListener implements View.OnClickListener {
@@ -23,6 +24,8 @@ public class TaskStartStopBtnClickListener implements View.OnClickListener {
     public void onClick(View view) {
         if(!FloatViewModel.jobStartStop.getValue()){
             Logger.d("控制按钮点击: 启动");
+            // 启动的时候装载企微版本号对应的元素map
+            ResourceId.reloadResourceId();
             FloatViewModel.jobStartStop.postValue(true);
         }else {
             Logger.d("控制按钮点击: 停止");

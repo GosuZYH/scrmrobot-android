@@ -197,6 +197,10 @@ public class RobotApplication extends Application {
         if (sopMomentReceiptBtnYError != defaultFloat) {
             JobStateViewModel.sopMomentReceiptBtnYError.setValue(Double.valueOf(sopMomentReceiptBtnYError));
         }
+        String weworkVersion = sharedPreferences.getString("weworkVersion", null);
+        if (weworkVersion != null) {
+            JobStateViewModel.weworkVersion.setValue(weworkVersion);
+        }
     }
 
     public void saveAppSettings(){
@@ -210,6 +214,7 @@ public class RobotApplication extends Application {
         editor.putFloat("sopMomentShareBtnYError",Float.parseFloat( JobStateViewModel.sopMomentShareBtnYError.getValue().toString()));
         editor.putFloat("sopMomentReceiptBtnXError", Float.parseFloat(JobStateViewModel.sopMomentReceiptBtnXError.getValue().toString()));
         editor.putFloat("sopMomentReceiptBtnYError", Float.parseFloat(JobStateViewModel.sopMomentReceiptBtnYError.getValue().toString()));
+        editor.putString("weworkVersion", JobStateViewModel.weworkVersion.getValue());
         editor.commit();
 
     }
