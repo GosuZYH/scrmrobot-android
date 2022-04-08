@@ -99,10 +99,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
 
     private void findCustomerFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击工作台
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
             if(targetUis.size() > 0){
                 Log.d(TAG,"点击工作台");
@@ -119,8 +119,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     private void _findCustomerFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击客户朋友圈
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText("客户朋友圈");
-        List<AccessibilityNodeInfo> PYQUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ);
-        List<AccessibilityNodeInfo> newUserUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.NEW_USER);
+        List<AccessibilityNodeInfo> PYQUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PYQ"));
+        List<AccessibilityNodeInfo> newUserUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("NEW_USER"));
         if(targetUis.size() > 0){
             try {
                 Log.d(TAG,"点击客户朋友圈");
@@ -139,8 +139,8 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
 
     private void turnToCompanyNotice(AccessibilityNodeInfo rootNodeInfo){
         //打开到企业通知页面
-        List<AccessibilityNodeInfo> redPointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ_MSG1);
-        List<AccessibilityNodeInfo> threePointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ_MSG);
+        List<AccessibilityNodeInfo> redPointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PYQ_MSG1"));
+        List<AccessibilityNodeInfo> threePointUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PYQ_MSG"));
         if(redPointUis.size() > 0){
             Log.d(TAG,"点击新消息红点");
             sysSleep(500);
@@ -161,7 +161,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
         if(!notificationFlag){
             return;
         }
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.COMPANY_NOTIFICATION);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("COMPANY_NOTIFICATION"));
         if(targetUis.size() > 0){
             Log.d(TAG,"点击企业通知");
             sysSleep(500);
@@ -179,10 +179,10 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
             return;
         }
         Log.d(TAG,"当前在企业通知页");
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.NO_CUSTOMER_PYQ);
-        List<AccessibilityNodeInfo> notificationUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_PAGE);
-        List<AccessibilityNodeInfo> timeUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_TIME);
-        List<AccessibilityNodeInfo> sendUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_BUTTON);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("NO_CUSTOMER_PYQ"));
+        List<AccessibilityNodeInfo> notificationUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_PAGE"));
+        List<AccessibilityNodeInfo> timeUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_TIME"));
+        List<AccessibilityNodeInfo> sendUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_BUTTON"));
         if(targetUis.size() > 0){
 //            Log.d(TAG,"当前没有任何企业通知");
             Logger.d("客户朋友圈-当前没有任何企业通知");
@@ -249,9 +249,9 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
 
     public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
         }else if(backUis.size()>0){
             performClick(backUis.get(0));
@@ -263,9 +263,9 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面、任务结束
         Logger.d("客户朋友圈-开始返回主界面");
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0 && chatUis.get(0).getChildCount()==5){
             Logger.d("已返回到主界面，客户朋友圈-任务结束");
             this.setTaskStatus("TASK2_END");

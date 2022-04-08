@@ -91,10 +91,10 @@ public class GroupSendMessageJob extends BaseRobotJob {
 
     private void findGroupSendHelper(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击工作台
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
             if(targetUis.size() > 0){
                 Log.d(TAG,"点击工作台");
@@ -127,8 +127,8 @@ public class GroupSendMessageJob extends BaseRobotJob {
         }
         findMsg = false;
         afterClickGroupSend = 0;
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG);
-        List<AccessibilityNodeInfo> _targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_FLAG1);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_FLAG"));
+        List<AccessibilityNodeInfo> _targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_FLAG1"));
         if(targetUis.size() > 0){
             System.out.println("点击待发送入口");
             performClick(targetUis.get(0));
@@ -146,8 +146,8 @@ public class GroupSendMessageJob extends BaseRobotJob {
     @SuppressLint("ResourceType")
     private void sendMsg(AccessibilityNodeInfo rootNodeInfo){
         //处理待发送消息
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEND_PAGE);
-        List<AccessibilityNodeInfo> noMSGUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.NO_MSG_PAGE);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEND_PAGE"));
+        List<AccessibilityNodeInfo> noMSGUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("NO_MSG_PAGE"));
         if(targetUis.size() > 0){
             if(noMSGUis.size() > 0){
                 if(noMSGUis.get(0).getText()!=null){
@@ -202,9 +202,9 @@ public class GroupSendMessageJob extends BaseRobotJob {
 
     public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
         }else if(backUis.size()>0){
             performClick(backUis.get(0));
@@ -215,9 +215,9 @@ public class GroupSendMessageJob extends BaseRobotJob {
 
     public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
             Log.d(TAG,"已返回到主界面，task1 end..");
             this.setTaskStatus("TASK1_END");

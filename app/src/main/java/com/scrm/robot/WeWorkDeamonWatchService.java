@@ -118,7 +118,7 @@ public class WeWorkDeamonWatchService extends IntentService {
             AccessibilityNodeInfo rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
             if(rootNodeInfo!=null) {
                 // 底部导航按钮
-                List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
+                List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
                 if (barNodeParents.size() > 0 ) {
                     // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
                     AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size()-1);

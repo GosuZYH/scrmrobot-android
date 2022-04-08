@@ -193,7 +193,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void chooseTag(AccessibilityNodeInfo rootNodeInfo){
         //寻找->选择对应标签
-        List<AccessibilityNodeInfo> tagName = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PERSONAL_TAG);
+        List<AccessibilityNodeInfo> tagName = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PERSONAL_TAG"));
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByText(targetTag);
 //        System.out.println("标签组ui数量："+tagGroup.size());
         if (!tagFindFlag){
@@ -305,8 +305,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void uiSearch(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->尝试点击搜索
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH);
-//        System.out.println("找到'搜索'ui数量"+targetUis.size());
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEARCH"));
+//        System.out.println("搜索的model值"+ResourceId.ResourceIdModel.get("")ResourceIdModel.get(""));
         if(targetUis.size() > 0){
             System.out.println("点击搜索");
             performClick(targetUis.get(0));
@@ -315,7 +315,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void uiSearchLabel(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->搜索框聚焦->输入
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH_LABEL);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEARCH_LABEL"));
 //        System.out.println("找到'搜索框'ui数量"+targetUis.size());
         if(targetUis.size()>0){
             System.out.println("输入:"+searchSMR);
@@ -325,7 +325,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void searchResult(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->尝试点击搜索结果
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SEARCH_RESULT);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SEARCH_RESULT"));
         if(targetUis.size()>0){
             for(int i=0;i<targetUis.size();i++){
                 if(targetUis.get(i).getChildCount()==1 && searchSMR.equals(targetUis.get(i).getChild(0).getChild(0).getText().toString())){
@@ -340,8 +340,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
     @SuppressLint("ResourceType")
     private void sopClickIn(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->sop朋友圈消息->尝试点击进入
-        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
+        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PAGE_TITLE"));
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SOP"));
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             System.out.println("当前已在SOP页");
             if(targetUis.size()>0){
@@ -419,7 +419,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void sopDelete(AccessibilityNodeInfo rootNodeInfo){
         //长按+删除
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.SOP);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("SOP"));
         List<AccessibilityNodeInfo> deleteUis = rootNodeInfo.findAccessibilityNodeInfosByText("删除");
         if(targetUis.size()>0) {
             Collections.reverse(targetUis);
@@ -449,7 +449,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void confirmDelete(AccessibilityNodeInfo rootNodeInfo) {
         //长按删除后的确定
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_3);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_3"));
         if(confirmUis.size()>0){
             performClick(confirmUis.get(0));
             this.setTaskStatus("START_SOP_TASK");
@@ -458,8 +458,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void chooseVisibleCustomer(AccessibilityNodeInfo rootNodeInfo){
         //寻找->可见的客户并点击
-        List<AccessibilityNodeInfo> pageUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_PAGE);
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_0);
+        List<AccessibilityNodeInfo> pageUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("VISIBLE_PAGE"));
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("VISIBLE_0"));
         List<AccessibilityNodeInfo> targetUis1 = rootNodeInfo.findAccessibilityNodeInfosByText("公开");
         if(targetUis.size()>0 && targetUis1.size()>0){
             System.out.println("点击可见的客户");
@@ -473,7 +473,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void choosePartialCustomer(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击部分可见
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_1);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("VISIBLE_1"));
         if(targetUis.size()>0 && targetUis.get(0).getChild(2).getChildCount()==0){
             System.out.println("点击部分可见");
             performClick(targetUis.get(0));
@@ -492,7 +492,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void confirmTag(AccessibilityNodeInfo rootNodeInfo){
         //确定标签
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_0);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_0"));
         if(targetUis.size()>0){
             System.out.println("点击标签-确定");
             performClick(targetUis.get(0));
@@ -505,7 +505,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             return;
         }
         List<AccessibilityNodeInfo> allCustomer = rootNodeInfo.findAccessibilityNodeInfosByText("全部客户");
-        List<AccessibilityNodeInfo> confirm = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_1);
+        List<AccessibilityNodeInfo> confirm = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_1"));
 //        int allCustomerUis = allCustomer.size();
 //        int confirmUis = confirm.size();
 //        System.out.println("'全部客户'数量："+allCustomerUis+"确定数量："+confirmUis);
@@ -524,7 +524,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void confirmCustomer(AccessibilityNodeInfo rootNodeInfo){
         //全选客户后点击
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_1);
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_1"));
         if(confirmUis.size()>0){
             System.out.println("发现确定按钮："+confirmUis.get(0).getText().toString());
             if(!confirmUis.get(0).getText().toString().equals("确定")){
@@ -538,8 +538,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void _confirmCustomer(AccessibilityNodeInfo rootNodeInfo){
         //部分可见->确定
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.VISIBLE_1);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_2);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("VISIBLE_1"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_2"));
         if(targetUis.size()>0 && targetUis.get(0).getChild(2).getChildCount()!=0 && confirmUis.size()>0){
             System.out.println("点击'确定'");
             performClick(confirmUis.get(0));
@@ -548,7 +548,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void publishFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //发表
-        List<AccessibilityNodeInfo> publishUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PUBLISH);
+        List<AccessibilityNodeInfo> publishUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PUBLISH"));
         if(publishUis.size()>0){
             System.out.println("点击发表");
             performClick(publishUis.get(0));
@@ -557,8 +557,8 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void friendCircleBack(AccessibilityNodeInfo rootNodeInfo){
         //跳转到朋友圈界面就返回
-        List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PYQ);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
+        List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PYQ"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
         if(pyqUis.size()>0 && backUis.size()>0){
             System.out.println("点击'返回'");
             performClick(backUis.get(0));
@@ -568,9 +568,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     private void sopReplied(AccessibilityNodeInfo rootNodeInfo){
         //点击回执
-        List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PAGE_TITLE"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
             System.out.println("点击'回执'");
             sysSleep(600);
@@ -596,10 +596,10 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void initToMain(AccessibilityNodeInfo rootNodeInfo) {
         //寻找->点击消息
-        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
             if(targetUis.size() > 0){
                 Log.d(TAG,"点击消息");
@@ -615,9 +615,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void backToMainEnd(AccessibilityNodeInfo rootNodeInfo) {
         //返回主界面
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BOTTOM_NAVIGATE_BAR);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (chatUis.size()>0){
             Log.d(TAG,"已返回到主界面，task3 end..");
             this.setTaskStatus("TASK3_END");
@@ -630,9 +630,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void backToSopList(AccessibilityNodeInfo rootNodeInfo) {
         //返回到SOP列表
-        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PAGE_TITLE"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             setTaskStatus("START_SOP_TASK");
         }else {
@@ -647,9 +647,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
 
     public void backToSopListAndDelete(AccessibilityNodeInfo rootNodeInfo) {
         //返回到SOP列表
-        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.PAGE_TITLE);
-        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.BACK);
-        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.CONFIRM_4);
+        List<AccessibilityNodeInfo> sopTitle = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PAGE_TITLE"));
+        List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
+        List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
         if (sopTitle.size()>0 && sopTitle.get(0).getText().toString().equals(searchSMR)){
             deleteFlag = true;
             this.setTaskStatus("SOP_DELETE");
