@@ -100,15 +100,12 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     private void findCustomerFriendCircle(AccessibilityNodeInfo rootNodeInfo){
         //寻找->点击工作台
         List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
-        List<AccessibilityNodeInfo> chatUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
-        if (chatUis.size()>0){
-            if(targetUis.size() > 0){
-                Log.d(TAG,"点击工作台");
-                performClick(targetUis.get(0).getChild(3));
-                this.setTaskStatus("CUSTOMER_FRIEND_CIRCLE");
-            }
+        if (targetUis.size()>0){
+            Log.d(TAG,"点击工作台");
+            performClick(targetUis.get(0).getChild(3));
+            this.setTaskStatus("CUSTOMER_FRIEND_CIRCLE");
         }else if(backUis.size()>0){
             performClick(backUis.get(0));
         }else if(confirmUis.size()>0){
@@ -240,9 +237,14 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
                 }
             }
             sysSleep(500);
-            System.out.println("翻一整页");
-            performScroll(notificationUis.get(0));
-            sysSleep(500);
+            if(notificationUis.get(0).isScrollable()){
+                System.out.println("翻一整页");
+                performScroll(notificationUis.get(0));
+                sysSleep(500);
+            }else{
+                this.setTaskStatus("CUSTOMER_TASK_END");
+                return;
+            }
         }
         turnPageFlag = false;
     }
@@ -297,7 +299,7 @@ public class CustomerFriendCircleJob extends BaseRobotJob {
     private void sysSleep(int msecond) {
         //睡眠 param:seconds
         try {
-            System.out.println("睡眠一秒");
+            System.out.println("睡眠");
             Thread.sleep(msecond);
         } catch (InterruptedException e) {
             e.printStackTrace();
