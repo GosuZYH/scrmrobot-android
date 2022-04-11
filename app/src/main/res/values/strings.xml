@@ -38,7 +38,7 @@
 
     <!-- task config -->
     <string name="loginServer">test</string>
-    <string name="version">v1.0.0_beta</string>
+    <string name="version">v1.0.1_beta</string>
     <integer name="sopDay">0</integer>
     <integer name="sopHour">0</integer>
     <integer name="sopMin">0</integer>
@@ -50,7 +50,7 @@
     <integer name="groupSendDay">0</integer>
     <integer name="groupSendHour">0</integer>
     <integer name="groupSendMin">0</integer>
-    <string name="groupWeekDay">星期一星期二星期三星期四星期五星期天</string>
+    <string name="groupWeekDay">星期</string>
     <string name="back"><![CDATA[<]]></string>
     <string name="settings">功能设置</string>
     <string name="todayTask">只执行今日任务</string>
