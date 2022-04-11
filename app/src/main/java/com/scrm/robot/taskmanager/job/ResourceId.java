@@ -101,7 +101,7 @@ public class ResourceId {
             ResourceIdModel.put("COMPANY_NOTIFICATION", "com.tencent.wework:id/g3u"); //右上角点开后的企业通知
             ResourceIdModel.put("NO_CUSTOMER_PYQ",      "com.tencent.wework:id/dad"); //没客户朋友圈的空页
             ResourceIdModel.put("SEND_FLAG",            "com.tencent.wework:id/k9v"); //消息通知下方通知
-            ResourceIdModel.put("SEND_FLAG1",           "com.tencent.wework:id/c6z"); //消息通知上方通知
+            ResourceIdModel.put("SEND_FLAG1",           "com.tencent.wework:id/iq6"); //消息通知上方通知
             ResourceIdModel.put("SEND_PAGE",            "com.tencent.wework:id/ibi"); //全部消息父节点
             ResourceIdModel.put("NO_MSG_PAGE",          "com.tencent.wework:id/dad"); //没有私聊群发的空页
             ResourceIdModel.put("SEND_TIME",            "com.tencent.wework:id/jhz"); //企业朋友圈任务发送时间
