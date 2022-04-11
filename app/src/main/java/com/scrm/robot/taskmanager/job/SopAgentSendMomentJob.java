@@ -506,6 +506,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         }
         List<AccessibilityNodeInfo> allCustomer = rootNodeInfo.findAccessibilityNodeInfosByText("全部客户");
         List<AccessibilityNodeInfo> confirm = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_1"));
+        List<AccessibilityNodeInfo> noCustomerUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("NO_CUSTOMER"));
 //        int allCustomerUis = allCustomer.size();
 //        int confirmUis = confirm.size();
 //        System.out.println("'全部客户'数量："+allCustomerUis+"确定数量："+confirmUis);
@@ -513,12 +514,14 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             System.out.println("点击'全部客户'");
             performClick(allCustomer.get(0).getParent().getParent().getParent().getParent().getParent().getParent());
             this.setTaskStatus("CONFIRM_CUSTOMER");
-        }else {
-            canNotSelectAllCustomerTimes ++;
-            if (canNotSelectAllCustomerTimes >3){
-                Log.d(TAG,"找不到标签对应的客户");
-                this.setTaskStatus("REPLY_SOP");
-            }
+        } else if(noCustomerUis.size()>0 && "当前没有满足发表条件的客户".equals(noCustomerUis.get(0).getText())){
+            Log.d(TAG,"找不到标签对应的客户");
+            this.setTaskStatus("REPLY_SOP");
+//            canNotSelectAllCustomerTimes ++;
+//            if (canNotSelectAllCustomerTimes >3){
+//                Log.d(TAG,"找不到标签对应的客户");
+//                this.setTaskStatus("REPLY_SOP");
+//            }
         }
     }
 

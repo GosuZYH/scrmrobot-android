@@ -47,6 +47,7 @@ public class ResourceId {
             ResourceIdModel.put("CONFIRM_3","com.tencent.wework:id/ceq");
             ResourceIdModel.put("CONFIRM_4","com.tencent.wework:id/cen");
             ResourceIdModel.put("PYQ","com.tencent.wework:id/i5r");
+            ResourceIdModel.put("NO_CUSTOMER","com.tencent.wework:id/d_m");
             //企业朋友圈
             ResourceIdModel.put("CUSTOMER_PYQ","com.tencent.wework:id/grd");
             ResourceIdModel.put("PYQ_MSG","com.tencent.wework:id/kc8");
