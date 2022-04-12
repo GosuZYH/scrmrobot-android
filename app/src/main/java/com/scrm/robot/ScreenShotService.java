@@ -240,7 +240,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            Color color = bitmap.getColor(933,1733);
 //            int pixel = bitmap.getPixel(933,1733);
             //for xiaoMi
-            Color color = bitmap.getColor((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentReceiptRGBXError.getValue()),(int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentReceiptRGBYError.getValue()));
+            Color color = bitmap.getColor((int)(JobStateViewModel.sopMomentReceiptRGBXError.getValue().intValue()),(int)(JobStateViewModel.sopMomentReceiptRGBYError.getValue().intValue()));
 //            Color color = bitmap.getColor(623,1321);
             Log.d(TAG,"color："+color);
 //            int pixel = bitmap.getPixel(623,1321);
@@ -259,7 +259,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //                }
 
                 if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
-                    accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
+                    accessibilityGestureUtil.click((int)(JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.sopMomentShareBtnYError.getValue().intValue()));
                 }else{
                     accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
                 }

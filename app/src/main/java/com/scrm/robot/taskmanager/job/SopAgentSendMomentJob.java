@@ -578,8 +578,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             System.out.println("点击'回执'");
             sysSleep(600);
             if(JobStateViewModel.sopMomentReceiptBtnXError.getValue()!=null && JobStateViewModel.sopMomentReceiptBtnYError.getValue()!=null){
-                this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()-JobStateViewModel.sopMomentReceiptBtnXError.getValue()),
-                        (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentReceiptBtnYError.getValue()));
+                this.accessibilityGestureUtil.click((int)(JobStateViewModel.sopMomentReceiptBtnXError.getValue().intValue()),(int)(JobStateViewModel.sopMomentReceiptBtnYError.getValue().intValue()));
             }else{
                 this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
             }

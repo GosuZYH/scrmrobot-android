@@ -49,6 +49,7 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
     private final LifecycleRegistry lifecycleRegistry=new LifecycleRegistry(this);
 
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public void onCreate(){
         super.onCreate();
@@ -159,10 +160,15 @@ public class WeWorkAccessibilityService extends AccessibilityService implements 
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
         Point size=new Point();
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        windowManager.getDefaultDisplay().getMetrics(realDisplayMetrics);
+
         windowManager.getDefaultDisplay().getSize(size);
 
+        JobStateViewModel.realWidth.postValue(displayMetrics.widthPixels);
+        JobStateViewModel.realHeight.postValue(displayMetrics.heightPixels);
         JobStateViewModel.width.postValue(displayMetrics.widthPixels);
         JobStateViewModel.height.postValue(displayMetrics.heightPixels);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
