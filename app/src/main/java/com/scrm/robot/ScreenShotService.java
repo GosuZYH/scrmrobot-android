@@ -240,7 +240,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            Color color = bitmap.getColor(933,1733);
 //            int pixel = bitmap.getPixel(933,1733);
             //for xiaoMi
-            Color color = bitmap.getColor((int)(JobStateViewModel.sopMomentReceiptRGBXError.getValue().intValue()),(int)(JobStateViewModel.sopMomentReceiptRGBYError.getValue().intValue()));
+            Color color = bitmap.getColor((int)(JobStateViewModel.sopMomentReceiptBtnXError.getValue().intValue()),(int)(JobStateViewModel.sopMomentReceiptBtnYError.getValue().intValue()));
 //            Color color = bitmap.getColor(623,1321);
             Log.d(TAG,"color："+color);
 //            int pixel = bitmap.getPixel(623,1321);
