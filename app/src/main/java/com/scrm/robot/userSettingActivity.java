@@ -66,7 +66,7 @@ public class userSettingActivity extends Activity {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
         windowWidthTV.setText(String.valueOf( displayMetrics.widthPixels));
         windowHeightTV.setText(String.valueOf( displayMetrics.heightPixels));
 
