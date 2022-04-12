@@ -12,5 +12,7 @@ public class JobStateViewModel extends ViewModel {
     public static MutableLiveData<Double> sopMomentShareBtnYError = new MutableLiveData<Double>(-100.0);
     public static MutableLiveData<Double> sopMomentReceiptBtnXError = new MutableLiveData<>(90.0);
     public static MutableLiveData<Double> sopMomentReceiptBtnYError = new MutableLiveData<>(100.0);
+    public static MutableLiveData<Double> sopMomentReceiptRGBXError = new MutableLiveData<>(90.0);
+    public static MutableLiveData<Double> sopMomentReceiptRGBYError = new MutableLiveData<>(100.0);
     public static MutableLiveData<String> weworkVersion = new MutableLiveData<>("v4.0.3");
 }

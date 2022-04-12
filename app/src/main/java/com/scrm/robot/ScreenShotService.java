@@ -44,6 +44,7 @@ import com.scrm.robot.utils.AccessibilityGestureUtil;
 import com.scrm.robot.utils.ApplicationUtil;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 
 public class ScreenShotService extends Service implements LifecycleOwner{
@@ -239,7 +240,7 @@ public class ScreenShotService extends Service implements LifecycleOwner{
 //            Color color = bitmap.getColor(933,1733);
 //            int pixel = bitmap.getPixel(933,1733);
             //for xiaoMi
-            Color color = bitmap.getColor((int)(0.8639*width),(int)(0.857*height));
+            Color color = bitmap.getColor((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentReceiptRGBXError.getValue()),(int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentReceiptRGBYError.getValue()));
 //            Color color = bitmap.getColor(623,1321);
             Log.d(TAG,"color："+color);
 //            int pixel = bitmap.getPixel(623,1321);

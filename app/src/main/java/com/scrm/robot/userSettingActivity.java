@@ -27,6 +27,8 @@ public class userSettingActivity extends Activity {
     private  EditText sopMomentShareBtnYErrorET;
     private  EditText sopMomentReceiptBtnXErrorET;
     private  EditText sopMomentReceiptBtnYErrorET;
+    private  EditText sopMomentReceiptRGBXErrorET;
+    private  EditText sopMomentReceiptRGBYErrorET;
     private TextView windowWidthTV;
     private TextView windowHeightTV;
     private RadioGroup checkVersion;
@@ -49,6 +51,10 @@ public class userSettingActivity extends Activity {
 
         sopMomentReceiptBtnXErrorET = findViewById(R.id.editX2);
         sopMomentReceiptBtnYErrorET = findViewById(R.id.editY2);
+
+        sopMomentReceiptRGBXErrorET = findViewById(R.id.sopMomentReceiptRGBXErrorET);
+        sopMomentReceiptRGBYErrorET = findViewById(R.id.sopMomentReceiptRGBYErrorET);
+
         checkVersion = findViewById(R.id.checkVersion);
         v1 = findViewById(R.id.v4_0_0);
         v2 = findViewById(R.id.v4_0_3);
@@ -73,6 +79,11 @@ public class userSettingActivity extends Activity {
             sopMomentReceiptBtnXErrorET.setText(JobStateViewModel.sopMomentReceiptBtnXError.getValue().toString());}
         if(JobStateViewModel.sopMomentReceiptBtnYError.getValue()!=null){
             sopMomentReceiptBtnYErrorET.setText(JobStateViewModel.sopMomentReceiptBtnYError.getValue().toString());}
+
+        if(JobStateViewModel.sopMomentReceiptRGBXError.getValue()!=null){
+            sopMomentReceiptRGBXErrorET.setText(JobStateViewModel.sopMomentReceiptRGBXError.getValue().toString());}
+        if(JobStateViewModel.sopMomentReceiptRGBYError.getValue()!=null){
+            sopMomentReceiptRGBYErrorET.setText(JobStateViewModel.sopMomentReceiptRGBYError.getValue().toString());}
 
         if(JobStateViewModel.weworkVersion.getValue()!=null){
             if(JobStateViewModel.weworkVersion.getValue().equals(v1.getText())){
@@ -105,6 +116,12 @@ public class userSettingActivity extends Activity {
                 }
                 if (!TextUtils.isEmpty(sopMomentReceiptBtnYErrorET.getText().toString())) {
                     JobStateViewModel.sopMomentReceiptBtnYError.setValue(Double.parseDouble(sopMomentReceiptBtnYErrorET.getText().toString()));
+                }
+                if (!TextUtils.isEmpty(sopMomentReceiptRGBXErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentReceiptRGBXError.setValue(Double.parseDouble(sopMomentReceiptRGBXErrorET.getText().toString()));
+                }
+                if (!TextUtils.isEmpty(sopMomentReceiptRGBYErrorET.getText().toString())) {
+                    JobStateViewModel.sopMomentReceiptRGBYError.setValue(Double.parseDouble(sopMomentReceiptRGBYErrorET.getText().toString()));
                 }
                 if (v1.isChecked()){
                     JobStateViewModel.weworkVersion.setValue(v1.getText().toString());
