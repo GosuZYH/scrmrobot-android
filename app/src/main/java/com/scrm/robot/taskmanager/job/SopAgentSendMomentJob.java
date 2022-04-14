@@ -94,9 +94,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             case "START_SOP_TASK":
                 sopTaskStart(rootNodeInfo);
                 break;
-            case "SCREENSHOT_CV":
-                openCv(rootNodeInfo);
-                break;
             case "READY_TO_SHARE":
                 shareTask(rootNodeInfo);
                 break;
@@ -130,6 +127,9 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
             case "TASK3_END":
                 //for loop all task.
                 return "START_GROUP_TASK";
+            case "CHECK_IF_REPLY":
+                checkIfReply(rootNodeInfo);
+                break;
         }
         return null;
     }
@@ -141,47 +141,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         uiSearchLabel(rootNodeInfo);      //搜索框输入
         searchResult(rootNodeInfo);       //搜索结果
         sopClickIn(rootNodeInfo);         //sop任务页
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @SuppressLint("SdCardPath")
-    private void openCv(AccessibilityNodeInfo rootNodeInfo) {
-        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        WeWorkAccessibilityService weWorkAccessibilityService= application.getWeWorkAccessibilityService();
-
-        switch (JobStateViewModel.sopType.getValue()) {
-            case "noneed":
-                Log.d(TAG, "CV:当前SOP已回执");
-                deleteTag = targetTag;
-                JobStateViewModel.isScreenShot.postValue(false);
-                JobStateViewModel.sopType.postValue("new");
-                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-
-//                this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
-                this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
-                break;
-            case "need":
-                Log.d(TAG, "CV:当前SOP未回执");
-                JobStateViewModel.isScreenShot.postValue(false);
-                JobStateViewModel.sopType.postValue("new");
-//                if(JobStateViewModel.sopMomentShareBtnXError.getValue()!=null && JobStateViewModel.sopMomentShareBtnYError.getValue()!=null){
-//                    this.accessibilityGestureUtil.click((int)(JobStateViewModel.width.getValue()- JobStateViewModel.sopMomentShareBtnXError.getValue().intValue()), (int)(JobStateViewModel.height.getValue()-JobStateViewModel.sopMomentShareBtnYError.getValue()));
-//                }else{
-//                    this.accessibilityGestureUtil.click((int)(0.3*JobStateViewModel.width.getValue()), (int)(1.007*JobStateViewModel.height.getValue()));
-//                }
-                this.setTaskStatus("READY_TO_SHARE");
-                break;
-            case "loading":
-                Log.d(TAG, "CV:当前SOP还未加载成功");
-                JobStateViewModel.isScreenShot.postValue(false);
-                JobStateViewModel.sopType.postValue("new");
-//                this.accessibilityGestureUtil.click((int)(0.5*JobStateViewModel.width.getValue()), (int)(0.35*JobStateViewModel.height.getValue()));
-//                this.accessibilityGestureUtil.swip((int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.5),(int)(JobStateViewModel.width.getValue()*0.5),(int)(JobStateViewModel.height.getValue()*0.4));
-                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-
-                this.setTaskStatus("BACK_TO_SOP_LIST");
-                break;
-        }
     }
 
     private void shareTask(AccessibilityNodeInfo rootNodeInfo) {
@@ -379,30 +338,20 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                             System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
 
                             //for no time limit test
-//                        performClick(targetUi);
-//                        sysSleep(6000);
-//                        // 截图
-//                        if(!JobStateViewModel.isScreenShot.getValue()){
-//                            this.setJobState(RobotRunState.WAITING);
-//                            System.out.println("截图功能开启");
-//                            JobStateViewModel.isScreenShot.postValue(true); }
-//                        this.setTaskStatus("SCREENSHOT_CV");
+                            performClick(targetUi);
+                            sysSleep(10000);
+                            this.setTaskStatus("CHECK_IF_REPLY");
+                            return;
 
-                            if(date.after(flagTime)){
-                                performClick(targetUi);
-                                sysSleep(3000);
-                                // 截图
-                                if(!JobStateViewModel.isScreenShot.getValue()){
-                                    // TODO 暂停任务，不是停止？
-                                    this.pause();
-                                    Logger.d("截图功能开启");
-                                    JobStateViewModel.isScreenShot.postValue(true);
-                                }
-                                this.setTaskStatus("SCREENSHOT_CV");
-                            }else{
-                                Log.d(TAG,"SOP已执行到截至时间点");
-                                this.setTaskStatus("BACK_TO_MAIN");
-                            }
+//                            if(date.after(flagTime)){
+//                                performClick(targetUi);
+//                                sysSleep(5000);
+//                                this.setTaskStatus("CHECK_IF_REPLY");
+//                                return;
+//                            }else{
+//                                Log.d(TAG,"SOP已执行到截至时间点");
+//                                this.setTaskStatus("BACK_TO_MAIN");
+//                            }
                         } catch (ParseException e) {
                             Logger.e("SOP任务在信息处理中出现错误: %s",e);
                             this.setTaskStatus("BACK_TO_MAIN");
@@ -414,6 +363,36 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                 System.out.println("当前没有任何SOP朋友圈消息");
                 this.setTaskStatus("BACK_TO_MAIN");
             }
+        }
+    }
+
+    private void checkIfReply(AccessibilityNodeInfo rootNodeInfo){
+        //Test for webview
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("WEB_VIEW"));
+        try{
+            if(targetUis.size()>0) {
+                System.out.println("当前已打开了Web页");
+                if(targetUis.get(0).getChildCount()>0){
+                    if(targetUis.get(0).getChild(0).getChildCount()>0){
+                        System.out.println("Web页title:朋友圈已加载");
+                        if(targetUis.get(0).getChild(0).getChild(0).getChildCount()>0){
+                            System.out.println("WebView页App子节点数："+targetUis.get(0).getChild(0).getChild(0).getChild(0).getChildCount());
+                            if(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChildCount()>10){
+                                System.out.println("WebView页已加载完整");
+                                System.out.println("当前页的回执情况为："+targetUis.get(0).getChild(0).getChild(0).getChild(0).getChild(0).getText());
+                                if(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChild(0).getText().toString().equals("回执")){
+                                    performClick(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChild(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChildCount()-1));
+                                    this.setTaskStatus("READY_TO_SHARE");
+                                }else if(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChild(0).getText().toString().equals("已回执")){
+                                    deleteTag = targetTag;
+                                    this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception ignored){
         }
     }
 
@@ -507,9 +486,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> allCustomer = rootNodeInfo.findAccessibilityNodeInfosByText("全部客户");
         List<AccessibilityNodeInfo> confirm = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_1"));
         List<AccessibilityNodeInfo> noCustomerUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("NO_CUSTOMER"));
-//        int allCustomerUis = allCustomer.size();
-//        int confirmUis = confirm.size();
-//        System.out.println("'全部客户'数量："+allCustomerUis+"确定数量："+confirmUis);
         if(allCustomer.size()>0 && confirm.size()>0){
             System.out.println("点击'全部客户'");
             performClick(allCustomer.get(0).getParent().getParent().getParent().getParent().getParent().getParent());
@@ -517,11 +493,6 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         } else if(noCustomerUis.size()>0 && "当前没有满足发表条件的客户".equals(noCustomerUis.get(0).getText())){
             Log.d(TAG,"找不到标签对应的客户");
             this.setTaskStatus("REPLY_SOP");
-//            canNotSelectAllCustomerTimes ++;
-//            if (canNotSelectAllCustomerTimes >3){
-//                Log.d(TAG,"找不到标签对应的客户");
-//                this.setTaskStatus("REPLY_SOP");
-//            }
         }
     }
 
@@ -574,17 +545,18 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         List<AccessibilityNodeInfo> pyqUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("PAGE_TITLE"));
         List<AccessibilityNodeInfo> backUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BACK"));
         List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
+        List<AccessibilityNodeInfo> targetUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("WEB_VIEW"));
         if(pyqUis.size()>0 && pyqUis.get(0).getText().toString().equals("朋友圈")){
-            System.out.println("点击'回执'");
-            sysSleep(600);
-            if(JobStateViewModel.sopMomentReceiptBtnXError.getValue()!=null && JobStateViewModel.sopMomentReceiptBtnYError.getValue()!=null){
-                this.accessibilityGestureUtil.click((int)(JobStateViewModel.sopMomentReceiptBtnXError.getValue().intValue()),(int)(JobStateViewModel.sopMomentReceiptBtnYError.getValue().intValue()));
-            }else{
-                this.accessibilityGestureUtil.click((int)(0.86*JobStateViewModel.width.getValue()), (int)(0.857*JobStateViewModel.height.getValue()));
+            if(targetUis.size()>0 && targetUis.get(0).getChild(0).getChild(0).getChild(0).getChildCount()>10){
+                try {
+                    System.out.println("点击'回执'");
+                    performClick(targetUis.get(0).getChild(0).getChild(0).getChild(0).getChild(0));
+                    sysSleep(5000);
+                    deleteTag = targetTag;
+                    this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
+                }catch (Exception ignore){
+                }
             }
-            sysSleep(600);
-            deleteTag = targetTag;
-            this.setTaskStatus("BACK_TO_SOP_LIST_AND_DELETE");
         }else{
             System.out.println("点击'返回'");
             if(backUis.size()>0){

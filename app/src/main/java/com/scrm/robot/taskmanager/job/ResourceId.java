@@ -76,6 +76,7 @@ public class ResourceId {
             ResourceIdModel.put("PAGE_TITLE",           "com.tencent.wework:id/kk7"); //页面title
             ResourceIdModel.put("BACK",                 "com.tencent.wework:id/kk6"); //任一处左上角返回按钮
             //SOP朋友圈
+            ResourceIdModel.put("WEB_VIEW",             "com.tencent.wework:id/m3j"); //webview页面
             ResourceIdModel.put("SEARCH",               "com.tencent.wework:id/kl0"); //搜索按钮
             ResourceIdModel.put("SEARCH_LABEL",         "com.tencent.wework:id/iy7"); //搜索输入框
             // 底部导航，ViewGroup
