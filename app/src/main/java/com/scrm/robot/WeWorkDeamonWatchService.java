@@ -111,7 +111,15 @@ public class WeWorkDeamonWatchService extends IntentService {
                     e.printStackTrace();
                 }
                 weWorkAccessibilityService= application.getWeWorkAccessibilityService();
+                AccessibilityNodeInfo _rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
                 weWorkAccessibilityService.openWeWork();
+                if(_rootNodeInfo!=null) {
+                    List<AccessibilityNodeInfo> confirmUis = _rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
+                    if(confirmUis.size() > 0){
+                        Logger.d("监控服务-出现了取消编辑按钮");
+                        confirmUis.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                }
             }
             Logger.d("监控服务-已经处于主页面，准备切换到第一个功能");
             // 点击消息按钮
@@ -119,7 +127,6 @@ public class WeWorkDeamonWatchService extends IntentService {
             if(rootNodeInfo!=null) {
                 // 底部导航按钮
                 List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
-                List<AccessibilityNodeInfo> confirmUis = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
                 if (barNodeParents.size() > 0 ) {
                     // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
                     AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size()-1);
@@ -132,10 +139,6 @@ public class WeWorkDeamonWatchService extends IntentService {
                     }else {
                         Logger.d("监控服务-无法找到导航栏");
                     }
-                }
-                if(confirmUis.size() > 0){
-                    Logger.d("监控服务-出现了取消编辑按钮");
-                    confirmUis.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }else {
                 Logger.d("监控服务-无法找到任何节点");
