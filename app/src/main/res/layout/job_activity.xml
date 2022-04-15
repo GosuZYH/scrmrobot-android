@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="90dp"
+        android:layout_height="31dp"
+        android:text="@string/note"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.464" />
+
     <include
         android:id="@+id/include"
         layout="@layout/title"
@@ -21,34 +34,63 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintHorizontal_bias="0.115"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintVertical_bias="0.091" />
 
     <RadioGroup
-        android:layout_width="379dp"
-        android:layout_height="185dp"
+        android:id="@+id/radioGroup"
+        android:layout_width="350dp"
+        android:layout_height="106dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintHorizontal_bias="0.615"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.186">
+        app:layout_constraintVertical_bias="0.178">
 
         <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:id="@+id/todayBtn"
+            android:layout_width="350dp"
+            android:layout_height="55dp"
             android:text="@string/todayTask" />
 
         <RadioButton
-            android:id="@+id/radioButton3"
-            android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:id="@+id/timeBtn"
+            android:layout_width="350dp"
+            android:layout_height="51dp"
             android:text="@string/chooseTime" />
 
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="355dp"
+        android:layout_height="91dp"
+        android:text="操作指南：
+        \n第一步，设置好要执行的一对一私聊群发任务的时间范围
+        \n第二步，点击上方“启动企微开始群发”按钮，如果提示
+        “开启辅助”服务，请按照提示开启辅助服务"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.589"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.582" />
+
+    <Button
+        android:id="@+id/startBtn"
+        android:layout_width="353dp"
+        android:layout_height="47dp"
+        android:text="@string/startTask"
+        android:onClick="executeTask"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.637"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.371" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

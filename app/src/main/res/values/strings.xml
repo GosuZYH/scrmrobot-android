@@ -53,6 +53,8 @@
     <string name="groupWeekDay">星期</string>
     <string name="back"><![CDATA[<]]></string>
     <string name="settings">功能设置</string>
+    <string name="note">功能说明</string>
+    <string name="startTask">启动企微开始群发</string>
     <string name="todayTask">只执行今日任务</string>
     <string name="chooseTime">选择时间执行:</string>
     <string name="windowWidth">窗口宽度:</string>
