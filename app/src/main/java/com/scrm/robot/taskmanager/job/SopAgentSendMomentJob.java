@@ -338,20 +338,20 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
                             System.out.println("可发送的时间线为："+flagTime+",执行时间格式为："+ date + "是否可执行："+date.after(flagTime));
 
                             //for no time limit test
-                            performClick(targetUi);
-                            sysSleep(10000);
-                            this.setTaskStatus("CHECK_IF_REPLY");
-                            return;
+//                            performClick(targetUi);
+//                            sysSleep(10000);
+//                            this.setTaskStatus("CHECK_IF_REPLY");
+//                            return;
 
-//                            if(date.after(flagTime)){
-//                                performClick(targetUi);
-//                                sysSleep(5000);
-//                                this.setTaskStatus("CHECK_IF_REPLY");
-//                                return;
-//                            }else{
-//                                Log.d(TAG,"SOP已执行到截至时间点");
-//                                this.setTaskStatus("BACK_TO_MAIN");
-//                            }
+                            if(date.after(flagTime)){
+                                performClick(targetUi);
+                                sysSleep(5000);
+                                this.setTaskStatus("CHECK_IF_REPLY");
+                                return;
+                            }else{
+                                Log.d(TAG,"SOP已执行到截至时间点");
+                                this.setTaskStatus("BACK_TO_MAIN");
+                            }
                         } catch (ParseException e) {
                             Logger.e("SOP任务在信息处理中出现错误: %s",e);
                             this.setTaskStatus("BACK_TO_MAIN");
