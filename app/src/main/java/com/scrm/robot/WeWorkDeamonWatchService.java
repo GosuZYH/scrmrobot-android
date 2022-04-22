@@ -64,7 +64,7 @@ public class WeWorkDeamonWatchService extends IntentService {
                                 }
                                 // TODO NOW 回到主页
                                 if(job.getJobState()!= RobotRunState.FINISH) {
-                                    resetUiToInitPoint();
+                                        resetUiToInitPoint();
                                 }
                             }
                             job = application.getCurrentJob();
@@ -88,56 +88,57 @@ public class WeWorkDeamonWatchService extends IntentService {
     /**
      * 重置UI,回到主界面, 且点击到第一个 消息 页面
      */
-    private void resetUiToInitPoint(){
+    private void resetUiToInitPoint() {
         RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
 
-        RobotAccessibilityContext robotAccessibilityContext=application.getRobotAccessibilityContext();
-        WeWorkAccessibilityService weWorkAccessibilityService= application.getWeWorkAccessibilityService();
-        if(robotAccessibilityContext!=null){
-            weWorkAccessibilityService.openWeWork();
-            while (!ResourceId.WEWORK_MAIN_UI_CLASS_NAME.equals(application.getCurrentWeWorkActivityClassName())){
-                // 返回上个页面
-                weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                try {
-                    Thread.sleep(Constants.RESET_UI_INTERVAL_MILL_SECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                weWorkAccessibilityService= application.getWeWorkAccessibilityService();
-                AccessibilityNodeInfo _rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
+        RobotAccessibilityContext robotAccessibilityContext = application.getRobotAccessibilityContext();
+        WeWorkAccessibilityService weWorkAccessibilityService = application.getWeWorkAccessibilityService();
+        if (robotAccessibilityContext != null) {
+            if (application.getRobotJobScheduler().isRunning()) {
                 weWorkAccessibilityService.openWeWork();
-                if(_rootNodeInfo!=null) {
-                    List<AccessibilityNodeInfo> confirmUis = _rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
-                    if(confirmUis.size() > 0){
-                        Logger.d("监控服务-出现了取消编辑按钮");
-                        confirmUis.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                while (!ResourceId.WEWORK_MAIN_UI_CLASS_NAME.equals(application.getCurrentWeWorkActivityClassName())) {
+                    // 返回上个页面
+                    weWorkAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                    try {
+                        Thread.sleep(Constants.RESET_UI_INTERVAL_MILL_SECONDS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    weWorkAccessibilityService = application.getWeWorkAccessibilityService();
+                    AccessibilityNodeInfo _rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
+                    weWorkAccessibilityService.openWeWork();
+                    if (_rootNodeInfo != null) {
+                        List<AccessibilityNodeInfo> confirmUis = _rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("CONFIRM_4"));
+                        if (confirmUis.size() > 0) {
+                            Logger.d("监控服务-出现了取消编辑按钮");
+                            confirmUis.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        }
                     }
                 }
-            }
-            Logger.d("监控服务-已经处于主页面，准备切换到第一个功能");
-            // 点击消息按钮
-            AccessibilityNodeInfo rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
-            if(rootNodeInfo!=null) {
-                // 底部导航按钮
-                List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
-                if (barNodeParents.size() > 0 ) {
-                    // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
-                    AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size()-1);
-                    if(barNodeParent.getChildCount()==5) {
-                        Logger.d("监控服务-切换到导航栏第一个功能");
-                        // 点击第5个
-                        barNodeParent.getChild(4).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        // 再点击第一个
-                        barNodeParent.getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    }else {
-                        Logger.d("监控服务-无法找到导航栏");
+                Logger.d("监控服务-已经处于主页面，准备切换到第一个功能");
+                // 点击消息按钮
+                AccessibilityNodeInfo rootNodeInfo = weWorkAccessibilityService.getRootInActiveWindow();
+                if (rootNodeInfo != null) {
+                    // 底部导航按钮
+                    List<AccessibilityNodeInfo> barNodeParents = rootNodeInfo.findAccessibilityNodeInfosByViewId(ResourceId.ResourceIdModel.get("BOTTOM_NAVIGATE_BAR"));
+                    if (barNodeParents.size() > 0) {
+                        // 文档页面，底部是第二个，不是第一个;所以取最后一个匹配的
+                        AccessibilityNodeInfo barNodeParent = barNodeParents.get(barNodeParents.size() - 1);
+                        if (barNodeParent.getChildCount() == 5) {
+                            Logger.d("监控服务-切换到导航栏第一个功能");
+                            // 点击第5个
+                            barNodeParent.getChild(4).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            // 再点击第一个
+                            barNodeParent.getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        } else {
+                            Logger.d("监控服务-无法找到导航栏");
+                        }
                     }
+                } else {
+                    Logger.d("监控服务-无法找到任何节点");
                 }
-            }else {
-                Logger.d("监控服务-无法找到任何节点");
             }
         }
-
     }
 //
 //    public  AccessibilityEvent obtainEvent() {
