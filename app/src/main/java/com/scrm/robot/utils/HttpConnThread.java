@@ -43,8 +43,8 @@ public class HttpConnThread extends Thread{
         loginUrl = "api/account/v1/login";
         userVerifyUrl = "api/wecom/user/profile";
         companyVerifyUrl = "api/system/v1/tenant/profile";
-        RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
-        // TODO NOW FIX HARDCODE
+        userName = null;
+        outTime = null;
         String loginServer = BuildConfig.loginServer;//application.getApplicationInfo().metaData.getString("LOGIN_SERVER");
 
         if(loginServer.equals("test")){
