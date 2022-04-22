@@ -45,7 +45,8 @@ public class WeWorkDeamonWatchService extends IntentService {
             RobotApplication application = (RobotApplication) ApplicationUtil.getApplication();
             while (true) {
                 Logger.d("监控服务-任务无事件超时检查-开始");
-                if (application.getRobotJobScheduler() != null && application.getRobotJobScheduler().getRobotJobExecutor() != null) {
+                if (application.getRobotJobScheduler() != null
+                        && application.getRobotJobScheduler().getRobotJobExecutor() != null) {
                     Date jobProcessTime = application.getLastEventTime();
                     if (jobProcessTime != null) {
                         Date now = new Date();
@@ -55,11 +56,6 @@ public class WeWorkDeamonWatchService extends IntentService {
 
                         if (delay > Constants.JOB_TIMEOUT_MILL_SECONDS) {
                             Logger.d("任务已超时 %s 毫秒", delay);
-//                                if (event != null) {
-//                                    event.recycle();
-//                                }
-//                                event = this.obtainEvent();
-//                                if (event != null) {
                             Logger.d("监控服务-触发事件 %s", event);
                             BaseRobotJob job = application.getCurrentJob();
                             if (job != null ) {
@@ -75,9 +71,6 @@ public class WeWorkDeamonWatchService extends IntentService {
                             if (job != null) {
                                 job.reRun();
                             }
-//                                RobotAccessibilityContext robotAccessibilityContext = job.getRobotAccessibilityContext();
-//                                WeWorkAccessibilityEventService.startWithEvent(this, robotAccessibilityContext.getCurrentEvent(), robotAccessibilityContext.getRootNodeInfo());
-//                                }
                         }
                     }
                 }
