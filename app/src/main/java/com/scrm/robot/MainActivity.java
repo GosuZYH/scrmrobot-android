@@ -516,7 +516,7 @@ public class MainActivity extends FragmentActivity{
     @Override
     public void onDestroy(){
         Log.d("test","test");
-        this.stopScheduleJob();
+//        this.stopScheduleJob();
         super.onDestroy();
     }
 }
