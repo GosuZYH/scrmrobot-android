@@ -279,6 +279,7 @@ public class SopAgentSendMomentJob extends BaseRobotJob {
         if(targetUis.size()>0){
             System.out.println("输入:"+searchSMR);
             inputText(targetUis.get(0));
+            sysSleep(500);
         }
     }
 

@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity{
         jobScheduler.setJobScheduler(sysJobScheduler);
         robotApplication.setRobotJobFactory(new RobotJobFactory());
 
-        this.requestCapturePermission();
+//        this.requestCapturePermission();
 
         WeWorkDeamonWatchService.startWatch(getApplicationContext());
         selectTab(0);
