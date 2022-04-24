@@ -365,7 +365,7 @@ public class MainActivity extends FragmentActivity{
 
     public void btnCancelScheduleJobClick(View view){
         Log.d(TAG, "停止定时任务");
-        this.cancelScheduleJob();
+        this.stopScheduleJob();
     }
 
     private void scheduleJob() {
@@ -377,10 +377,12 @@ public class MainActivity extends FragmentActivity{
         jobScheduler.addJob(RobotJobType.SOP_AGENT_SEND_MOMENT);
     }
 
-    private void cancelScheduleJob(){
-        Log.d(TAG,"cancel schedule job");
+    private void stopScheduleJob(){
+        Log.d(TAG,"stop schedule job");
+        RobotApplication application= (RobotApplication) ApplicationUtil.getApplication();
+        application.getRobotJobScheduler().stop();
+
         this.closeFloatView();
-        jobScheduler.stop();
     }
 
     public Boolean isCheckPermissionsOk(View view){
@@ -509,5 +511,12 @@ public class MainActivity extends FragmentActivity{
 
     public ComponentName getJobScheduleServiceComponent() {
         return jobScheduleServiceComponent;
+    }
+
+    @Override
+    public void onDestroy(){
+        Log.d("test","test");
+//        this.stopScheduleJob();
+        super.onDestroy();
     }
 }
